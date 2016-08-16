@@ -15,7 +15,6 @@ WPILib does provide the base robot framework, however this framework is very bas
 * HTML5 UI support
 
 ###Typical Use
-Individuals contributing to the development of this project should clone this repository to their local development environment and should follow GIT workflow to commit changes to this repository.
+Typically, this project would be forked for each season.
 
-
-See [MDHS Wiki](https://github.com/MDHSRobotics/TeamWiki/wiki/) for tutorials on how to clone a repository and how to commit updates to this repository.
+See the [How to Git](https://github.com/MDHSRobotics/TeamWiki/wiki/How%20to%20Git) tutorial for more information on how to fork this project.  
