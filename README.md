@@ -11,7 +11,7 @@ WPILib does provide the base robot framework, however this framework is very bas
 ###Features
 * easier configuration
 * enhanced driving
-* analytics
+* ability to stream events for analytics
 * HTML5 UI support
 
 ###Typical Use
