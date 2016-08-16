@@ -9,8 +9,8 @@ This project is intended to be the base project from which each season's Java Ro
 WPILib does provide the base robot framework, however this framework is very basic.  The purpose of this project is to built upon the foundation provided by WPILib and add additional features that can be used from season to season.
 
 ###Features
+* easier configuration
 * enhanced driving
-* enhanced configuration
 * analytics
 * HTML5 UI support
 
