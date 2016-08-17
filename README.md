@@ -8,11 +8,18 @@ This project is intended to be the base project from which each season's Java Ro
 
 WPILib does provide the base robot framework, however this framework is very basic.  The purpose of this project is to built upon the foundation provided by WPILib and add additional features that can be used from season to season.
 
+Typically, the Robot class is derived from the IterativeRobot class.  MDRobotBase interjects a class in the middle of the hierarchy to add new features and improve other features.
+
+![MDRobotBase Class Hierarchy](https://www.gliffy.com/go/publish/image/11017397/L.png)
+
 ###Features
-* easier configuration
-* enhanced driving
-* ability to stream events for analytics
-* HTML5 UI support
+* Support for the ADIS16448_IMU gyro
+* improved logging / debugging
+* improved configuration
+* configurable drive options
+* improved tunable drive system
+* ability to stream events to database for analytics
+* HTML5 UI console support
 
 ###Typical Use
 Typically, this project would be forked for each season.
