@@ -1,14 +1,23 @@
 
 package org.usfirst.frc.team4141.robot;
 
-import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+
+import org.usfirst.frc.team4141.MDRobotBase.MDDriveSubsystem;
+import org.usfirst.frc.team4141.MDRobotBase.MDDriveSubsystem.MotorPosition;
+import org.usfirst.frc.team4141.MDRobotBase.MDDriveSubsystem.Type;
+import org.usfirst.frc.team4141.MDRobotBase.sensors.MDAnalogInput;
+import org.usfirst.frc.team4141.MDRobotBase.sensors.MDDigitalInput;
+import org.usfirst.frc.team4141.MDRobotBase.sensors.MD_BuiltInAccelerometer;
+import org.usfirst.frc.team4141.MDRobotBase.sensors.RobotDiagnostics;
+import org.usfirst.frc.team4141.MDRobotBase.MDRobotBase;
+import org.usfirst.frc.team4141.MDRobotBase.config.DoubleConfigSetting;
+import org.usfirst.frc.team4141.robot.commands.AutoCommand;
 import org.usfirst.frc.team4141.robot.commands.ExampleCommand;
+import org.usfirst.frc.team4141.robot.subsystems.DiagnosticsSubSystem;
 import org.usfirst.frc.team4141.robot.subsystems.ExampleSubsystem;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Victor;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -18,91 +27,82 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * directory.
  */
 public class Robot extends MDRobotBase {
-
-	public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
-	public static OI oi;
-
-    Command autonomousCommand;
-    SendableChooser chooser;
-
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
-    public void robotInit() {
-		oi = new OI();
-        chooser = new SendableChooser();
-        chooser.addDefault("Default Auto", new ExampleCommand());
-//        chooser.addObject("My Auto", new MyAutoCommand());
-        SmartDashboard.putData("Auto mode", chooser);
-    }
-	
-	/**
-     * This function is called once each time the robot enters Disabled mode.
-     * You can use it to reset any subsystem information you want to clear when
-	 * the robot is disabled.
-     */
-    public void disabledInit(){
 
+	//TODO figure out why the rumbling was needed and refactor into OI
+//	private boolean rumbling = false;
+//	private double rumblestart;
+
+	
+	public Robot(){
+		//Give your robot a name
+		super("Mr. Roboto");
     }
 	
-	public void disabledPeriodic() {
-		Scheduler.getInstance().run();
+	@Override
+	protected void configureRobot() {
+		//configure global settings
+		enableWebSockets();  //enables WebSockets
+		
+		//A robot is composed of subsystems
+		//A robot will typically have 1 drive system and several other fit to purpose subsystems
+		
+		//The Drive system is a special subsystem in that it has specific logic handle the speed controllers
+		add(new MDDriveSubsystem(this, "driveSystem", Type.TankDrive)
+				.add(MotorPosition.left, new Victor(0))
+				.add(MotorPosition.right, new Victor(1))
+				.add("distanceSensor",new MDAnalogInput(0))
+				.add("accelerometer", new MD_BuiltInAccelerometer())
+				.configure()
+		);	
+		add(
+			    new ExampleSubsystem(this,"exampleSubSystem")
+			        .add("tiltMotor", new Victor(3))
+			        .add("shootMotor", new Victor(4))
+			        .add("loadSolenoid",new Solenoid(0))
+			        .add("tiltEncoder", new MDAnalogInput(2))
+			        .add("isLoadedSwitch", new MDDigitalInput(2))
+			        .add("shootSpeed",new DoubleConfigSetting(0.0, 1.0, 0.87))
+			        .configure()
+		);	
+		
+		//Special Subsystem used for RobotDiagnostics
+		add( new DiagnosticsSubSystem(this, "diagnosticsSubsystem")
+				 .add("diagnosticsSensor",new RobotDiagnostics())
+				 .configure()
+		);
+		//A robot will define several commands
+		
+		add(new AutoCommand(this,"autonomousCommand"));
+		add(new ExampleCommand(this,"exampleCommand"));
+
+		autonomousCommand=getCommands().get("AutonomousCommand");
+
 	}
 
-	/**
-	 * This autonomous (along with the chooser code above) shows how to select between different autonomous modes
-	 * using the dashboard. The sendable chooser code works with the Java SmartDashboard. If you prefer the LabVIEW
-	 * Dashboard, remove all of the chooser code and uncomment the getString code to get the auto name from the text box
-	 * below the Gyro
-	 *
-	 * You can add additional auto modes by adding additional commands to the chooser code above (like the commented example)
-	 * or additional comparisons to the switch structure below with additional strings & commands.
-	 */
-    public void autonomousInit() {
-        autonomousCommand = (Command) chooser.getSelected();
-        
-		/* String autoSelected = SmartDashboard.getString("Auto Selector", "Default");
-		switch(autoSelected) {
-		case "My Auto":
-			autonomousCommand = new MyAutoCommand();
-			break;
-		case "Default Auto":
-		default:
-			autonomousCommand = new ExampleCommand();
-			break;
-		} */
-    	
-    	// schedule the autonomous command (example)
-        if (autonomousCommand != null) autonomousCommand.start();
-    }
-
-    /**
-     * This function is called periodically during autonomous
-     */
-    public void autonomousPeriodic() {
-        Scheduler.getInstance().run();
-    }
-
-    public void teleopInit() {
-		// This makes sure that the autonomous stops running when
-        // teleop starts running. If you want the autonomous to 
-        // continue until interrupted by another command, remove
-        // this line or comment it out.
-        if (autonomousCommand != null) autonomousCommand.cancel();
-    }
-
-    /**
-     * This function is called periodically during operator control
-     */
-    public void teleopPeriodic() {
-        Scheduler.getInstance().run();
-    }
-    
-    /**
-     * This function is called periodically during test mode
-     */
-    public void testPeriodic() {
-        LiveWindow.run();
-    }
+	
+	//Override lifecycle methods, as needed
+	//	@Override
+	//	public void teleopPeriodic() {
+	//		super.teleopPeriodic();
+	//		...
+	//	}
+	//	@Override
+	//	public void autonomousPeriodic() {
+	//		super.autonomousPeriodic();
+	//		...
+	//	}	
+	
+		
+		//Event manager WebSocket related methods
+		//Override as needed
+	//	@Override
+	//	public void onConnect(Session session) {
+	//		super.onConnect(session);
+	//		...
+	//	}
+		
 }

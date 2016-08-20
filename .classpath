@@ -1,7 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-  <classpathentry kind="src" path="src"/>
-  <classpathentry kind="var" path="wpilib" sourcepath="wpilib.sources"/>
-  <classpathentry kind="var" path="networktables" sourcepath="networktables.sources"/>
-  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
-  <classpathentry kind="output" path="bin"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="var" path="wpilib" sourcepath="wpilib.sources"/>
+	<classpathentry kind="var" path="networktables" sourcepath="networktables.sources"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="lib" path="tools/gson-2.6.2.jar"/>
+	<classpathentry kind="lib" path="tools/jetty-http-9.3.7.v20160115.jar"/>
+	<classpathentry kind="lib" path="tools/jetty-io-9.3.7.v20160115.jar"/>
+	<classpathentry kind="lib" path="tools/jetty-server-9.3.7.v20160115.jar"/>
+	<classpathentry kind="lib" path="tools/jetty-util-9.3.7.v20160115.jar"/>
+	<classpathentry kind="lib" path="tools/servlet-api-3.1.jar"/>
+	<classpathentry kind="lib" path="tools/websocket-api-9.3.7.v20160115.jar"/>
+	<classpathentry kind="lib" path="tools/websocket-common-9.3.7.v20160115.jar"/>
+	<classpathentry kind="lib" path="tools/websocket-server-9.3.7.v20160115.jar"/>
+	<classpathentry kind="lib" path="tools/websocket-servlet-9.3.7.v20160115.jar"/>
+	<classpathentry kind="output" path="bin"/>
 </classpath>
