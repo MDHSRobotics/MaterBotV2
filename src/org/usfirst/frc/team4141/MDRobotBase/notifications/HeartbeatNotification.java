@@ -4,20 +4,21 @@ import org.usfirst.frc.team4141.MDRobotBase.MDRobotBase;
 import org.usfirst.frc.team4141.MDRobotBase.sensors.Sensor;
 import org.usfirst.frc.team4141.MDRobotBase.sensors.SensorReading;
 
-public class Heartbeat extends RobotNotification {
+public class HeartbeatNotification extends RobotNotification {
 	
 	private MDRobotBase robot;
 
-	public Heartbeat(MDRobotBase robot, boolean display) {
+	public HeartbeatNotification(MDRobotBase robot, boolean display) {
 		this(robot,display,true, false);
 	}
-	public Heartbeat(MDRobotBase robot, boolean display,boolean record,boolean broadcast) {
+	public HeartbeatNotification(MDRobotBase robot, boolean display,boolean record,boolean broadcast) {
 		super("Heartbeat", display,record, broadcast);
 		this.robot = robot;
 		for(Sensor sensor : robot.getSensorsDictionary().values()){
 			sensor.refresh();
 		}
 	}	
+
 
 	@Override
 	protected void addJSONPayload() {

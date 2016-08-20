@@ -1,5 +1,6 @@
 package org.usfirst.frc.team4141.MDRobotBase.config;
 
+import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class DoubleConfigSetting implements ConfigSetting {
 	private Double min;
@@ -7,6 +8,7 @@ public class DoubleConfigSetting implements ConfigSetting {
 	private Double value;
 	private Type type;
 	private String name;
+	private Subsystem subsystem;
 	
 	
 	public DoubleConfigSetting(Double min, Double max, Double value){
@@ -25,6 +27,16 @@ public class DoubleConfigSetting implements ConfigSetting {
 		this.name = name;
 	}
 
+	@Override
+	public Subsystem getSubsystem() {
+		return subsystem;
+	}
+
+	@Override
+	public void setSubsystem(Subsystem subsystem){
+		this.subsystem = subsystem;
+	}
+	
 	@Override
 	public Type getType() {
 		return type;
@@ -50,12 +62,24 @@ public class DoubleConfigSetting implements ConfigSetting {
 		if(min instanceof Double){
 			this.min = (Double)min;
 		}
+		else if (min instanceof Integer){
+			this.min = new Double((Integer)min);
+		}
+		else if (min instanceof String){
+			this.min = Double.valueOf((String)min);
+		}
 	}
 
 	@Override
 	public void setMax(Object max) {
 		if(max instanceof Double){
 			this.max = (Double)max;
+		}
+		else if (max instanceof Integer){
+			this.max = new Double((Integer)max);
+		}
+		else if (max instanceof String){
+			this.max = Double.valueOf((String)max);
 		}
 	}
 
@@ -64,6 +88,12 @@ public class DoubleConfigSetting implements ConfigSetting {
 		if(value instanceof Double){
 			this.value = (Double)value;
 			System.out.printf("setting %s to %f\n",name,value);
+		}
+		else if (value instanceof Integer){
+			this.value = new Double((Integer)value);
+		}
+		else if (value instanceof String){
+			this.value = Double.valueOf((String)value);
 		}
 	}
 
@@ -83,4 +113,27 @@ public class DoubleConfigSetting implements ConfigSetting {
 		return value.toString();
 	}
 
+	@Override
+	public String getPath() {
+		return subsystem.getName()+"."+getName();
+	}
+
+	@Override
+	public String toJSON() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("{\"path\":\"");
+		sb.append(getPath());
+		sb.append("\", \"name\":\"");
+		sb.append(getName());
+		sb.append("\", \"type\":\"");
+		sb.append(getType().toString());
+		sb.append("\", \"value\":");
+		sb.append(getValue().toString());
+		sb.append(", \"min\":");
+		sb.append(getMin().toString());
+		sb.append(", \"max\":");
+		sb.append(getMax().toString());
+		sb.append("}");
+		return sb.toString();
+	}
 }

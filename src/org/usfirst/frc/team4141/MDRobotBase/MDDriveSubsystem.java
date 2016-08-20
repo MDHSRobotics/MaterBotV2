@@ -92,4 +92,10 @@ public class MDDriveSubsystem extends MDSubsystem {
 	protected void initDefaultCommand() {
 		//set up default command, as needed
 	}
+
+	@Override
+	protected void setUp() {
+		//called after configuration is completed
+		
+	}
 }

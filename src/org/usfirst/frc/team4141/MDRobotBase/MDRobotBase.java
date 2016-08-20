@@ -1,7 +1,6 @@
 package org.usfirst.frc.team4141.MDRobotBase;
 
 import java.util.Hashtable;
-import java.util.Map;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -19,10 +18,6 @@ import org.usfirst.frc.team4141.MDRobotBase.notifications.RobotStateNotification
 import org.usfirst.frc.team4141.MDRobotBase.sensors.Sensor;
 import org.usfirst.frc.team4141.MDRobotBase.sensors.SensorReading;
 import org.usfirst.frc.team4141.robot.OI;
-
-
-import com.google.gson.Gson;
-
 
 
 /**
@@ -49,7 +44,7 @@ public abstract class MDRobotBase extends IterativeRobot implements EventManager
 	private Logger logger;
 	private Hashtable<String,MDSubsystem> subsystems;
 	private Hashtable<String,MDCommand> commands;
-	private Gson gson;
+
 	private String name;
 	
 	private Hashtable<String,SensorReading> sensorReadingsDictionary;
@@ -61,8 +56,7 @@ public abstract class MDRobotBase extends IterativeRobot implements EventManager
     //Constructors
 	public MDRobotBase(String name) {
 		this.name = name;
-    	gson = new Gson(); 
-		this.eventManager = new EventManager(this);
+    	this.eventManager = new EventManager(this);
 		sensorReadingsDictionary = new Hashtable<String,SensorReading>();
 	}
 
@@ -106,10 +100,6 @@ public abstract class MDRobotBase extends IterativeRobot implements EventManager
 		eventManager.post(notification);
 	}
 	
-	@SuppressWarnings("rawtypes")
-	public Map  decode(String json){
-		return (Map) gson.fromJson(json, Object.class);
-	}
 	
 //	@Override
 //	public void setEventManager(EventManager eventManager) {

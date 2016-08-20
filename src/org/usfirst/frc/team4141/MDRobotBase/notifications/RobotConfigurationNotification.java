@@ -5,7 +5,6 @@ import java.util.Hashtable;
 import org.usfirst.frc.team4141.MDRobotBase.MDRobotBase;
 import org.usfirst.frc.team4141.MDRobotBase.MDSubsystem;
 import org.usfirst.frc.team4141.MDRobotBase.config.ConfigSetting;
-import org.usfirst.frc.team4141.MDRobotBase.config.ConfigSetting.Type;
 import org.usfirst.frc.team4141.MDRobotBase.sensors.Sensor;
 import org.usfirst.frc.team4141.MDRobotBase.sensors.SensorReading;
 
@@ -189,37 +188,8 @@ public class RobotConfigurationNotification extends RobotNotification {
 		for(String settingName : settings.keySet()){
 			if(first) first = false;
 			else sb.append(',');
-			append(settings.get(settingName));
+			sb.append(settings.get(settingName).toJSON());
 		}
 	}
-	
-	private void append(ConfigSetting setting) {
-		sb.append("{\"name\":\"");
-		sb.append(setting.getName());
-		sb.append("\", \"type\":\"");
-		sb.append(setting.getType());
-		sb.append("\"");
-
-		if(setting.getType() == Type.integer || setting.getType() == Type.doubleNumber){
-			sb.append(",\"value\":");
-			sb.append(setting.getValue());
-			if(setting.getMin()!=null){
-				sb.append(",\"min\":");
-				sb.append(setting.getMin());
-			}
-			if(setting.getMax()!=null){
-				sb.append(",\"max\":");
-				sb.append(setting.getMax());
-			}
-		}
-		else{
-			sb.append(",\"value\":\"");
-			sb.append(setting.getValue());
-			sb.append("\"");
-		}
-		sb.append("}");
-		
-	}
-
 
 }

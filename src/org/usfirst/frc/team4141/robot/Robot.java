@@ -5,16 +5,17 @@ package org.usfirst.frc.team4141.robot;
 import org.usfirst.frc.team4141.MDRobotBase.MDDriveSubsystem;
 import org.usfirst.frc.team4141.MDRobotBase.MDDriveSubsystem.MotorPosition;
 import org.usfirst.frc.team4141.MDRobotBase.MDDriveSubsystem.Type;
+import org.usfirst.frc.team4141.MDRobotBase.MDPrintCommand;
 import org.usfirst.frc.team4141.MDRobotBase.sensors.MDAnalogInput;
 import org.usfirst.frc.team4141.MDRobotBase.sensors.MDDigitalInput;
 import org.usfirst.frc.team4141.MDRobotBase.sensors.MD_BuiltInAccelerometer;
 import org.usfirst.frc.team4141.MDRobotBase.sensors.RobotDiagnostics;
 import org.usfirst.frc.team4141.MDRobotBase.MDRobotBase;
 import org.usfirst.frc.team4141.MDRobotBase.config.DoubleConfigSetting;
-import org.usfirst.frc.team4141.robot.commands.AutoCommand;
 import org.usfirst.frc.team4141.robot.commands.ExampleCommand;
-import org.usfirst.frc.team4141.robot.subsystems.DiagnosticsSubSystem;
-import org.usfirst.frc.team4141.robot.subsystems.ExampleSubsystem;
+import org.usfirst.frc.team4141.robot.subsystems.CoreSubsystem;
+import org.usfirst.frc.team4141.robot.subsystems.DiagnosticsSubsystem;
+
 
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Victor;
@@ -50,6 +51,7 @@ public class Robot extends MDRobotBase {
 		//A robot is composed of subsystems
 		//A robot will typically have 1 drive system and several other fit to purpose subsystems
 		
+		
 		//The Drive system is a special subsystem in that it has specific logic handle the speed controllers
 		add(new MDDriveSubsystem(this, "driveSystem", Type.TankDrive)
 				.add(MotorPosition.left, new Victor(0))
@@ -58,26 +60,26 @@ public class Robot extends MDRobotBase {
 				.add("accelerometer", new MD_BuiltInAccelerometer())
 				.configure()
 		);	
-		add(
-			    new ExampleSubsystem(this,"exampleSubSystem")
-			        .add("tiltMotor", new Victor(3))
-			        .add("shootMotor", new Victor(4))
-			        .add("loadSolenoid",new Solenoid(0))
-			        .add("tiltEncoder", new MDAnalogInput(2))
-			        .add("isLoadedSwitch", new MDDigitalInput(2))
-			        .add("shootSpeed",new DoubleConfigSetting(0.0, 1.0, 0.87))
-			        .configure()
-		);	
+
 		
 		//Special Subsystem used for RobotDiagnostics
-		add( new DiagnosticsSubSystem(this, "diagnosticsSubsystem")
+		add( new DiagnosticsSubsystem(this, "diagnosticsSubsystem")
 				 .add("diagnosticsSensor",new RobotDiagnostics())
+				 .add("diagnosticsScanPeriod",new DoubleConfigSetting(0.02, 20.0, 0.1))
+			     .configure()
+		);
+		
+		//Subsystem to manage robot wide config settings
+		add( new CoreSubsystem(this, "core")
+				 .add("diagnosticsScanPeriod",new DoubleConfigSetting(0.02, 20.0, 0.1))
 				 .configure()
 		);
-		//A robot will define several commands
 		
-		add(new AutoCommand(this,"autonomousCommand"));
+		//A robot will define several commands
+		add(new MDPrintCommand(this,"command1","command1 message")
+				.add(getSubsystems().get("diagnosticsSubsystem")));
 		add(new ExampleCommand(this,"exampleCommand"));
+
 
 		autonomousCommand=getCommands().get("AutonomousCommand");
 

@@ -50,6 +50,8 @@ public abstract class MDSubsystem extends Subsystem {
 	}	
 	public MDSubsystem add(String name, ConfigSetting setting) {
 		if(isConfigured) return this;
+		setting.setName(name);
+		setting.setSubsystem(this);
 		configSettings.put(name, setting);
 		return this;
 	}
@@ -105,6 +107,7 @@ public abstract class MDSubsystem extends Subsystem {
 //      LiveWindow.addSensor("Pivot Switches", "Pivot Shoot Switch", pivotshootswitch);
 		
 		isConfigured = true;
+		setUp();
 		return this;
 	}
 	public String getName() {
@@ -125,5 +128,15 @@ public abstract class MDSubsystem extends Subsystem {
 	
 	@Override
 	protected abstract void initDefaultCommand();
+	
+	
+	protected abstract void setUp();
+	
+	public MDSubsystem add(MDCommand command) {
+		//This add method is used to configure the default command for the subsystem
+		if(!command.doesRequire(this)){ command.add(this);}
+		setDefaultCommand(command);
+		return this;
+	}
 	
 }

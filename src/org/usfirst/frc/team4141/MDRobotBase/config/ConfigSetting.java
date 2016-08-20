@@ -1,8 +1,12 @@
 package org.usfirst.frc.team4141.MDRobotBase.config;
 
+import edu.wpi.first.wpilibj.command.Subsystem;
 
 public interface ConfigSetting {
 	String getName();
+	void setName(String name);
+	Subsystem getSubsystem();
+	void setSubsystem(Subsystem subsystem);
 	Type getType();
 	Object getValue();
 	Object getMin();
@@ -18,4 +22,6 @@ public interface ConfigSetting {
 		doubleNumber,
 		string
 	}
+	String getPath();
+	String toJSON();
 }

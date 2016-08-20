@@ -7,23 +7,12 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public abstract class MDCommand extends Command {
 	private MDRobotBase robot;
-	private String name;
-//	private Hashtable<String,String> attributes;
 
 	public MDCommand(MDRobotBase robot,String name) {
-		super();
-		this.name = name;
+		super(name);
 		this.robot=robot;
-//		this.attributes = new Hashtable<String,String>();
-	}
-	@Override
-	public String getName() {
-		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
 	public void log(String methodName, String message) {
 		getRobot().log(this.getClass().getName()+"."+methodName+"()", message);
 		
@@ -33,21 +22,9 @@ public abstract class MDCommand extends Command {
 		
 	}
 		
-//	public void setAttribute(String name, String value){
-//		attributes.put(name,value);
-//	}
-//	public String getAttribute(String name){
-//		if(attributes.containsKey(name))
-//			return attributes.get(name);
-//		else return null;
-//	}
 	public MDRobotBase getRobot() {
 		return robot;
 	}
-
-//	public Hashtable<String, String> getAttributes() {
-//		return attributes;
-//	}
 
 	private boolean isInitialized = false;
 	@Override
@@ -77,5 +54,9 @@ public abstract class MDCommand extends Command {
 	protected void interrupted() {
     	end();
     }
-
+	public MDCommand add(MDSubsystem subsystem) {
+		// used to indicate a subsystem that the command requires
+		requires(subsystem);
+		return this;
+	}
 }
