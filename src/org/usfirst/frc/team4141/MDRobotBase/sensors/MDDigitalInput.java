@@ -7,11 +7,12 @@ public class MDDigitalInput extends DigitalInput implements Sensor {
 
 	SensorReading[] readings = new SensorReading[1];
 	private String name;	
-	public MDDigitalInput(int channel) {
-		this(channel,true);
+	public MDDigitalInput(String name, int channel) {
+		this(name, channel,true);
 	}
-	public MDDigitalInput(int channel,boolean observe) {
+	public MDDigitalInput(String name, int channel,boolean observe) {
 		super(channel);
+		this.name = name;
 		this.observe = observe;
 		readings[0] = new DigitalSensorReading(name, get());
 	}

@@ -19,7 +19,7 @@ public class Logger {
 	}
 	public void log(Level level,String logOrigin, String message)
 	{
-		getRobot().post(new RobotLogNotification(level, logOrigin, message, false));
+		getRobot().post(new RobotLogNotification(level, logOrigin, message, true));
 	}
 	public void log(String logOrigin, String message)
 	{

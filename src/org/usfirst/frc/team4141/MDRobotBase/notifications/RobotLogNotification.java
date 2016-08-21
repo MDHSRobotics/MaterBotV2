@@ -27,7 +27,7 @@ public class RobotLogNotification extends RobotNotification {
 		this.message = message;
 	}
 	public RobotLogNotification(Level level,String logOrigin, String message,boolean display) {
-		this(level,logOrigin,message,display,true,false);
+		this(level,logOrigin,message,display,false,true);
 	}
 	
 	@Override

@@ -1,8 +1,5 @@
 package org.usfirst.frc.team4141.MDRobotBase.sensors;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.usfirst.frc.team4141.MDRobotBase.MDRobotBase;
 
 import edu.wpi.first.wpilibj.ControllerPower;
@@ -19,14 +16,12 @@ public class RobotDiagnostics implements Sensor {
 	private MDRobotBase robot;
 	private String name;
 	SensorReading[] readings = new SensorReading[getReadingsCount()];
-	
-	List<PowerDistributionPanel> PDPList = new ArrayList<PowerDistributionPanel>();
 
 	public RobotDiagnostics(){
 		this(true);
 	}
 	public RobotDiagnostics(boolean observe){
-		this.observe = observe;
+		this(null,null,observe);
 	}
 	
 	public void setRobot(MDRobotBase robot){
@@ -43,16 +38,18 @@ public class RobotDiagnostics implements Sensor {
 		//from ControllerPower  (14)
 		//from DriverStation (8)
 		//from HALUtil (4)
-		//from PowerDistributionPanel ( 11 + kPDPModules*(kPDPChannels+5) )
+		//from PowerDistributionPanel ( 11 + kPDPModules*(kPDPChannels+5) )   //skipping these for now
 		//from RobotState (5)
 		//from RobotBase  (2)
 		//from Timer (2)
 		//from Utility class (2)
-		return 14+8+4+5+2+2+2+11+(PowerDistributionPanel.kPDPModules*(PowerDistributionPanel.kPDPChannels+5));
+//		return 14+8+4+5+2+2+2+11+(PowerDistributionPanel.kPDPModules*(PowerDistributionPanel.kPDPChannels+5));
+		return 14+8+4+5+2+2+2+11;
 	}
-	RobotDiagnostics(MDRobotBase robot, String name){
+	RobotDiagnostics(MDRobotBase robot, String name,boolean observe){
 		this.robot = robot;
 		this.name = name;
+		this.observe = observe;
 		int i=0;
 		
 		//from ControllerPower  (14)
@@ -84,32 +81,6 @@ public class RobotDiagnostics implements Sensor {
 		readings[i++]=new DigitalSensorReading("HALUtil.FPGAButton", HALUtil.getFPGAButton());
 		readings[i++]=new AnalogSensorReading("HALUtil.FPGATime", HALUtil.getFPGATime());
 		readings[i++]=new AnalogSensorReading("HALUtil.FPGAVersion", HALUtil.getFPGAVersion());
-		//from PowerDistributionPanel ( 11 + kPDPModules*(kPDPChannels+5) )
-		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.kAnalogInputChannels", PowerDistributionPanel.kAnalogInputChannels);
-		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.kAnalogOutputChannels", PowerDistributionPanel.kAnalogOutputChannels);
-		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.kDigitalChannels", PowerDistributionPanel.kDigitalChannels);
-		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.kPDPModules", PowerDistributionPanel.kPDPModules);
-		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.kPDPChannels", PowerDistributionPanel.kPDPChannels);
-		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.kPwmChannels", PowerDistributionPanel.kPwmChannels);
-		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.kRelayChannels", PowerDistributionPanel.kRelayChannels);
-		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.kSolenoidModules", PowerDistributionPanel.kSolenoidModules);
-		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.kSolenoidChannels", PowerDistributionPanel.kSolenoidChannels);
-		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.kSystemClockTicksPerMicrosecond", PowerDistributionPanel.kSystemClockTicksPerMicrosecond);
-		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.DefaultSolenoidModule", PowerDistributionPanel.getDefaultSolenoidModule());
-		//( kPDPModules*(kPDPChannels+5) )
-		for(int k=0;k<PowerDistributionPanel.kPDPModules;k++){
-			PowerDistributionPanel pdp = new PowerDistributionPanel(k);
-			readings[i++]=new AnalogSensorReading("PowerDistributionPanel.module["+k+"].Temperature", pdp.getTemperature());
-			readings[i++]=new AnalogSensorReading("PowerDistributionPanel.module["+k+"].TotalCurrent", pdp.getTotalCurrent());
-			readings[i++]=new AnalogSensorReading("PowerDistributionPanel.module["+k+"].TotalEnergy", pdp.getTotalEnergy());
-			readings[i++]=new AnalogSensorReading("PowerDistributionPanel.module["+k+"].TotalPower", pdp.getTotalPower());
-			readings[i++]=new AnalogSensorReading("PowerDistributionPanel.module["+k+"].Voltage", pdp.getVoltage());
-			//(kPDPChannels)
-			for(int j=0;j<PowerDistributionPanel.kPDPChannels;j++){
-				readings[i++]=new AnalogSensorReading("PowerDistributionPanel.module["+k+"].channel["+j+"].Current", pdp.getCurrent(j));
-			}
-		}
-		
 		//from RobotState (5)
 		readings[i++]=new DigitalSensorReading("RobotState.isAutonomous", RobotState.isAutonomous());
 		readings[i++]=new DigitalSensorReading("RobotState.isDisabled", RobotState.isDisabled());		
@@ -125,6 +96,35 @@ public class RobotDiagnostics implements Sensor {
 		//from Utility class (2)
 		readings[i++]=new AnalogSensorReading("Utility.FPGATime", Utility.getFPGATime());
 		readings[i++]=new DigitalSensorReading("Utility.userButton", Utility.getUserButton());
+		//from PowerDistributionPanel ( 11 + kPDPModules*(kPDPChannels+5) )
+		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.kAnalogInputChannels", PowerDistributionPanel.kAnalogInputChannels);
+		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.kAnalogOutputChannels", PowerDistributionPanel.kAnalogOutputChannels);
+		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.kDigitalChannels", PowerDistributionPanel.kDigitalChannels);
+		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.kPDPModules", PowerDistributionPanel.kPDPModules);
+		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.kPDPChannels", PowerDistributionPanel.kPDPChannels);
+		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.kPwmChannels", PowerDistributionPanel.kPwmChannels);
+		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.kRelayChannels", PowerDistributionPanel.kRelayChannels);
+		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.kSolenoidModules", PowerDistributionPanel.kSolenoidModules);
+		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.kSolenoidChannels", PowerDistributionPanel.kSolenoidChannels);
+		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.kSystemClockTicksPerMicrosecond", PowerDistributionPanel.kSystemClockTicksPerMicrosecond);
+		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.DefaultSolenoidModule", PowerDistributionPanel.getDefaultSolenoidModule());
+		//( kPDPModules*(kPDPChannels+5) )
+/*		try{
+			for(int k=0;k<PowerDistributionPanel.kPDPModules;k++){
+				PowerDistributionPanel pdp = new PowerDistributionPanel(k);
+				readings[i++]=new AnalogSensorReading("PowerDistributionPanel.module["+k+"].Temperature", pdp.getTemperature());
+				readings[i++]=new AnalogSensorReading("PowerDistributionPanel.module["+k+"].TotalCurrent", pdp.getTotalCurrent());
+				readings[i++]=new AnalogSensorReading("PowerDistributionPanel.module["+k+"].TotalEnergy", pdp.getTotalEnergy());
+				readings[i++]=new AnalogSensorReading("PowerDistributionPanel.module["+k+"].TotalPower", pdp.getTotalPower());
+				readings[i++]=new AnalogSensorReading("PowerDistributionPanel.module["+k+"].Voltage", pdp.getVoltage());
+				//(kPDPChannels)
+				for(int j=0;j<PowerDistributionPanel.kPDPChannels;j++){
+					readings[i++]=new AnalogSensorReading("PowerDistributionPanel.module["+k+"].channel["+j+"].Current", pdp.getCurrent(j));
+				}
+			}
+		}catch(Exception e){
+			System.out.println("error getting PDP details");
+		}*/
 	}
 	
 	@Override
@@ -169,31 +169,7 @@ public class RobotDiagnostics implements Sensor {
 		((DigitalSensorReading)readings[i++]).setValue(HALUtil.getFPGAButton());
 		((AnalogSensorReading)readings[i++]).setValue(HALUtil.getFPGATime());
 		((AnalogSensorReading)readings[i++]).setValue(HALUtil.getFPGAVersion());
-		//from PowerDistributionPanel ( 11 + kPDPModules*(kPDPChannels+5) )
-		((AnalogSensorReading)readings[i++]).setValue(PowerDistributionPanel.kAnalogInputChannels);
-		((AnalogSensorReading)readings[i++]).setValue(PowerDistributionPanel.kAnalogOutputChannels);
-		((AnalogSensorReading)readings[i++]).setValue(PowerDistributionPanel.kDigitalChannels);
-		((AnalogSensorReading)readings[i++]).setValue(PowerDistributionPanel.kPDPModules);
-		((AnalogSensorReading)readings[i++]).setValue(PowerDistributionPanel.kPDPChannels);
-		((AnalogSensorReading)readings[i++]).setValue(PowerDistributionPanel.kPwmChannels);
-		((AnalogSensorReading)readings[i++]).setValue(PowerDistributionPanel.kRelayChannels);
-		((AnalogSensorReading)readings[i++]).setValue(PowerDistributionPanel.kSolenoidModules);
-		((AnalogSensorReading)readings[i++]).setValue(PowerDistributionPanel.kSolenoidChannels);
-		((AnalogSensorReading)readings[i++]).setValue(PowerDistributionPanel.kSystemClockTicksPerMicrosecond);
-		((AnalogSensorReading)readings[i++]).setValue(PowerDistributionPanel.getDefaultSolenoidModule());
-		//( kPDPModules*(kPDPChannels+5) )
-		for(int k=0;k<PowerDistributionPanel.kPDPModules;k++){
-			PowerDistributionPanel pdp = new PowerDistributionPanel(k);
-			((AnalogSensorReading)readings[i++]).setValue(pdp.getTemperature());
-			((AnalogSensorReading)readings[i++]).setValue(pdp.getTotalCurrent());
-			((AnalogSensorReading)readings[i++]).setValue(pdp.getTotalEnergy());
-			((AnalogSensorReading)readings[i++]).setValue(pdp.getTotalPower());
-			((AnalogSensorReading)readings[i++]).setValue(pdp.getVoltage());
-			//(kPDPChannels)
-			for(int j=0;j<PowerDistributionPanel.kPDPChannels;j++){
-				((AnalogSensorReading)readings[i++]).setValue(pdp.getCurrent(j));
-			}
-		}
+		
 		
 		//from RobotState (5)
 		((DigitalSensorReading)readings[i++]).setValue(RobotState.isAutonomous());
@@ -209,7 +185,37 @@ public class RobotDiagnostics implements Sensor {
 		((AnalogSensorReading)readings[i++]).setValue(Timer.getMatchTime());
 		//from Utility class (2)
 		((AnalogSensorReading)readings[i++]).setValue(Utility.getFPGATime());
-		((DigitalSensorReading)readings[i++]).setValue(Utility.getUserButton());		
+		((DigitalSensorReading)readings[i++]).setValue(Utility.getUserButton());
+		
+		//from PowerDistributionPanel ( 11 + kPDPModules*(kPDPChannels+5) )
+		((AnalogSensorReading)readings[i++]).setValue(PowerDistributionPanel.kAnalogInputChannels);
+		((AnalogSensorReading)readings[i++]).setValue(PowerDistributionPanel.kAnalogOutputChannels);
+		((AnalogSensorReading)readings[i++]).setValue(PowerDistributionPanel.kDigitalChannels);
+		((AnalogSensorReading)readings[i++]).setValue(PowerDistributionPanel.kPDPModules);
+		((AnalogSensorReading)readings[i++]).setValue(PowerDistributionPanel.kPDPChannels);
+		((AnalogSensorReading)readings[i++]).setValue(PowerDistributionPanel.kPwmChannels);
+		((AnalogSensorReading)readings[i++]).setValue(PowerDistributionPanel.kRelayChannels);
+		((AnalogSensorReading)readings[i++]).setValue(PowerDistributionPanel.kSolenoidModules);
+		((AnalogSensorReading)readings[i++]).setValue(PowerDistributionPanel.kSolenoidChannels);
+		((AnalogSensorReading)readings[i++]).setValue(PowerDistributionPanel.kSystemClockTicksPerMicrosecond);
+		((AnalogSensorReading)readings[i++]).setValue(PowerDistributionPanel.getDefaultSolenoidModule());
+		//( kPDPModules*(kPDPChannels+5) )
+		/*try{
+		for(int k=0;k<PowerDistributionPanel.kPDPModules;k++){
+			PowerDistributionPanel pdp = new PowerDistributionPanel(k);
+			((AnalogSensorReading)readings[i++]).setValue(pdp.getTemperature());
+			((AnalogSensorReading)readings[i++]).setValue(pdp.getTotalCurrent());
+			((AnalogSensorReading)readings[i++]).setValue(pdp.getTotalEnergy());
+			((AnalogSensorReading)readings[i++]).setValue(pdp.getTotalPower());
+			((AnalogSensorReading)readings[i++]).setValue(pdp.getVoltage());
+			//(kPDPChannels)
+			for(int j=0;j<PowerDistributionPanel.kPDPChannels;j++){
+				((AnalogSensorReading)readings[i++]).setValue(pdp.getCurrent(j));
+			}
+		}
+		}catch(Exception e){
+			System.out.println("error getting PDP details");
+		}*/
 	}
 
 	@Override

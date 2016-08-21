@@ -6,10 +6,11 @@ public class DiagnosticScan implements Runnable {
 		
 	}
 	
+	boolean state = true;
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
-
+		
+		state = !state;
 	}
 
 }

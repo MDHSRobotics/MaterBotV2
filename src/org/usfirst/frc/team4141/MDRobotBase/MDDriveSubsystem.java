@@ -43,7 +43,6 @@ public class MDDriveSubsystem extends MDSubsystem {
 
 	public MDDriveSubsystem add(String name,Sensor sensor){
 		super.add(name,sensor);
-		sensor.setName(name);
 		return this;
 	}
 	
@@ -59,22 +58,22 @@ public class MDDriveSubsystem extends MDSubsystem {
 		super.configure();
 		switch(type){
 		case TankDrive:
-			if(getMotors()==null || !getMotors().containsKey(MotorPosition.left) || !getMotors().containsKey(MotorPosition.right)){
+			if(getMotors()==null || !getMotors().containsKey(MotorPosition.left.toString()) || !getMotors().containsKey(MotorPosition.right.toString())){
 				throw new IllegalArgumentException("Invalid motor configuration for TankDrive system.");
 			}				
 			robotDrive = new RobotDrive(get(MotorPosition.left), get(MotorPosition.right));
 			break;
 		case FourWheelDrive:
-			if(getMotors()==null || !getMotors().containsKey(MotorPosition.rearLeft) || !getMotors().containsKey(MotorPosition.frontLeft)
-									  || !getMotors().containsKey(MotorPosition.rearRight) || !getMotors().containsKey(MotorPosition.frontRight)){
+			if(getMotors()==null || !getMotors().containsKey(MotorPosition.rearLeft.toString()) || !getMotors().containsKey(MotorPosition.frontLeft.toString())
+									  || !getMotors().containsKey(MotorPosition.rearRight.toString()) || !getMotors().containsKey(MotorPosition.frontRight.toString())){
 				throw new IllegalArgumentException("Invalid motor configuration for FourWheelDrive system.");
 			}		
 			robotDrive = new RobotDrive(get(MotorPosition.rearLeft), get(MotorPosition.frontLeft),
 					get(MotorPosition.rearRight), get(MotorPosition.frontRight));
 			break;
 		case MecanumDrive:
-			if(getMotors()==null || !getMotors().containsKey(MotorPosition.rearLeft) || !getMotors().containsKey(MotorPosition.frontLeft)
-									  || !getMotors().containsKey(MotorPosition.rearRight) || !getMotors().containsKey(MotorPosition.frontRight)){
+			if(getMotors()==null || !getMotors().containsKey(MotorPosition.rearLeft.toString()) || !getMotors().containsKey(MotorPosition.frontLeft.toString())
+									  || !getMotors().containsKey(MotorPosition.rearRight.toString()) || !getMotors().containsKey(MotorPosition.frontRight.toString())){
 				throw new IllegalArgumentException("Invalid motor configuration for MecanumDrive system.");
 			}	
 			robotDrive = new RobotDrive(get(MotorPosition.rearLeft), get(MotorPosition.frontLeft),

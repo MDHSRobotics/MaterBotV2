@@ -62,6 +62,7 @@ public abstract class MDRobotBase extends IterativeRobot{
 	
 	//register subsystems
     public void add(MDSubsystem subsystem){
+    	System.out.println("adding subsystem "+subsystem.getName());
     	this.subsystems.put(subsystem.getName(),subsystem);
     }
 	public Hashtable<String, MDSubsystem> getSubsystems() {
@@ -79,6 +80,7 @@ public abstract class MDRobotBase extends IterativeRobot{
     
 	//register commands
     public void add(MDCommand command){
+    	System.out.println("adding command "+command.getName());
     	this.commands.put(command.getName(),command);
     }
     public Hashtable<String, MDCommand> getCommands() {

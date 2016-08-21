@@ -5,12 +5,13 @@ import edu.wpi.first.wpilibj.AnalogInput;
 public class MDAnalogInput extends AnalogInput implements Sensor {
 	SensorReading[] readings = new SensorReading[1];
 	private String name;	
-	public MDAnalogInput(int channel) {
-		this(channel,true);
+	public MDAnalogInput(String name, int channel) {
+		this(name,channel,true);
 	}
-	public MDAnalogInput(int channel,boolean observe) {
+	public MDAnalogInput(String name, int channel,boolean observe) {
 		super(channel);
 		this.observe = observe;
+		this.name = name;
 		readings[0] = new AnalogSensorReading(name, getVoltage());
 	}
 

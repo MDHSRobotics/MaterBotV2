@@ -13,7 +13,6 @@ import org.usfirst.frc.team4141.MDRobotBase.MDRobotBase;
 import org.usfirst.frc.team4141.MDRobotBase.config.BooleanConfigSetting;
 import org.usfirst.frc.team4141.MDRobotBase.config.DoubleConfigSetting;
 import org.usfirst.frc.team4141.MDRobotBase.config.StringConfigSetting;
-import org.usfirst.frc.team4141.robot.commands.ExampleCommand;
 import org.usfirst.frc.team4141.robot.subsystems.CoreSubsystem;
 import org.usfirst.frc.team4141.robot.subsystems.DiagnosticsSubsystem;
 import org.usfirst.frc.team4141.robot.subsystems.WebSocketSubsystem;
@@ -48,7 +47,7 @@ public class Robot extends MDRobotBase {
 		add(new MDDriveSubsystem(this, "driveSystem", Type.TankDrive)
 				.add(MotorPosition.left, new Victor(0))
 				.add(MotorPosition.right, new Victor(1))
-				.add("distanceSensor",new MDAnalogInput(0))
+				.add("distanceSensor",new MDAnalogInput("distanceReading",0))
 				.add("accelerometer", new MD_BuiltInAccelerometer())
 				.configure()
 		);	
@@ -76,7 +75,6 @@ public class Robot extends MDRobotBase {
 		//A robot will define several commands
 		add(new MDPrintCommand(this,"command1","command1 message")
 				.add(getSubsystems().get("diagnosticsSubsystem")));
-		add(new ExampleCommand(this,"exampleCommand"));
 
 
 		autonomousCommand=getCommands().get("AutonomousCommand");

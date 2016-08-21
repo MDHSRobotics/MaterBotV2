@@ -40,6 +40,7 @@ public abstract class MDSubsystem extends Subsystem {
 		return solenoids;
 	}	
 	public MDSubsystem add(String name,Sensor sensor) {
+//		System.out.println("adding sensor "+name+" to "+getName());
 		if(isConfigured) return this;
 		sensors.put(name, sensor);
 		sensor.setName(name);
@@ -65,6 +66,7 @@ public abstract class MDSubsystem extends Subsystem {
 		motors = new Hashtable<String,PWM>();
 		solenoids = new Hashtable<String,SolenoidBase>();
 		sensors = new Hashtable<String,Sensor>();
+		configSettings = new Hashtable<String,ConfigSetting>();
 		isConfigured = false;
 	}
 	public MDSubsystem configure(){
