@@ -12,7 +12,6 @@ import org.usfirst.frc.team4141.MDRobotBase.notifications.RobotConfigurationNoti
 public class WebSocketSubsystem extends MDSubsystem implements EventManagerCallBack{
 
 	private EventManager eventManager;
-	private boolean isEnabled = false;
 
 	public WebSocketSubsystem(MDRobotBase robot, String name) {
 		super(robot, name);
@@ -27,15 +26,30 @@ public class WebSocketSubsystem extends MDSubsystem implements EventManagerCallB
 	@Override
 	protected void setUp() {
 		if(getConfigSettings()!=null && getConfigSettings().containsKey("enableWebSockets")){
-			isEnabled = (Boolean)(getConfigSettings().get("enableWebSockets").getValue());
+			if(eventManager!=null){
+				eventManager.setEnableWebSockets((Boolean)(getConfigSettings().get("enableWebSockets").getValue()));
+			}
 		}
+		if(eventManager.isWebSocketsEnabled()){
+			System.out.println("websockets enabled");
+		}
+		else{
+			System.out.println("websockets enabled");
+		}
+		System.out.println("starting event manager");
+		if(eventManager!=null)
+			try {
+				eventManager.start();
+			} catch (Exception e) {
+				System.out.println("error starting event manager");
+			}
 	}
 	
 	
     //
     //EventManager helper methods
 	public void post(Notification notification){
-		if(isEnabled){
+		if(eventManager.isWebSocketsEnabled()){
 			eventManager.post(notification);
 		}
 	}

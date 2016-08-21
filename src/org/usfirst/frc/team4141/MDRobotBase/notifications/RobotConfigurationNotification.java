@@ -35,7 +35,7 @@ public class RobotConfigurationNotification extends RobotNotification {
 		sb.append("\"fpgaTime\":");
 		sb.append(getFpgaTime());
 		Object[] commandNames = robot.getCommands().keySet().toArray();
-		Object[] subsystemNames = robot.getSubsystems().values().toArray();
+		Object[] subsystemNames = robot.getSubsystems().keySet().toArray();
 		
 		if(commandNames.length>0){
 			sb.append(", \"commands\":[");
@@ -141,8 +141,8 @@ public class RobotConfigurationNotification extends RobotNotification {
 			sb.append(", \"readings\":[");
 			boolean first = true;
 			for(SensorReading reading : sensor.getReadings()){
-				if(first) sb.append(", ");
-				else{ first = false;}
+				if(first) first = false;
+				else{ sb.append(", ");}
 				sb.append(reading.toJSON());
 			}
 			sb.append("]");
@@ -171,13 +171,11 @@ public class RobotConfigurationNotification extends RobotNotification {
 		else{
 			sb.append(false);
 		}
-		sb.append(", \"position\":\"");
+		sb.append(", \"position\":");
 		sb.append(motor.getPosition());
-		sb.append("\"");	
-		sb.append("\", \"speed\":\"");
+		sb.append(", \"speed\":");
 		sb.append(motor.getSpeed());
-		sb.append("\"");
-		sb.append("\", \"class\":\"");
+		sb.append(", \"class\":\"");
 		sb.append(motor.getClass().getName());
 		sb.append("\"");
 		sb.append("}");
