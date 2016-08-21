@@ -7,18 +7,16 @@ public class CoreSubsystem extends MDSubsystem {
 
 	public CoreSubsystem(MDRobotBase robot, String name) {
 		super(robot, name);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	protected void initDefaultCommand() {
-
 	}
 
 	@Override
 	protected void setUp() {
-		// TODO Auto-generated method stub
-		
+		if(getConfigSettings().containsKey("name")){
+			getRobot().setName(getConfigSettings().get("name").getString());
+		}
 	}
-
 }

@@ -2,20 +2,20 @@ package org.usfirst.frc.team4141.MDRobotBase.config;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 
-public class DoubleConfigSetting implements ConfigSetting {
-	private Double min;
-	private Double max;
-	private Double value;
+public class BooleanConfigSetting implements ConfigSetting {
+	private Boolean min;
+	private Boolean max;
+	private Boolean value;
 	private Type type;
 	private String name;
 	private Subsystem subsystem;
 	
 	
-	public DoubleConfigSetting(Double min, Double max, Double value){
-		this.min = min;
-		this.max = max;
+	public BooleanConfigSetting(Boolean value){
+		this.min = false;
+		this.max = true;
 		this.value = value;
-		this.type = Type.doubleNumber;	
+		this.type = Type.binary;	
 	}	
 
 	@Override
@@ -59,62 +59,39 @@ public class DoubleConfigSetting implements ConfigSetting {
 
 	@Override
 	public void setMin(Object min) {
-		if(min instanceof Double){
-			this.min = (Double)min;
-		}
-		else if (min instanceof Integer){
-			this.min = new Double((Integer)min);
-		}
-		else if (min instanceof String){
-			this.min = Double.valueOf((String)min);
-		}
-		else if (min instanceof Boolean){
-			this.min = (((Boolean)min).booleanValue()?1.0:0.0);
-		}
 	}
 
 	@Override
 	public void setMax(Object max) {
-		if(max instanceof Double){
-			this.max = (Double)max;
-		}
-		else if (max instanceof Integer){
-			this.max = new Double((Integer)max);
-		}
-		else if (max instanceof String){
-			this.max = Double.valueOf((String)max);
-		}
-		else if (max instanceof Boolean){
-			this.max = (((Boolean)max).booleanValue()?1.0:0.0);
-		}
 	}
 
 	@Override
 	public void setValue(Object value) {
-		if(value instanceof Double){
-			this.value = (Double)value;
-			System.out.printf("setting %s to %f\n",name,value);
+		if(value instanceof Boolean){
+			this.value = (Boolean)value;
+			System.out.printf("setting %s to %s\n",name,value.toString());
 		}
 		else if (value instanceof Integer){
-			this.value = new Double((Integer)value);
+			this.value = (((Integer)value).intValue()==0?false:true);
+		}
+		else if (value instanceof Double){
+			this.value = (((Double)value).doubleValue()==0.0?false:true);
 		}
 		else if (value instanceof String){
-			this.value = Double.valueOf((String)value);
+			this.value = Boolean.valueOf((String)value);
 		}
-		else if (value instanceof Boolean){
-			this.value = (((Boolean)value).booleanValue()?1.0:0.0);
-		}
+
 	}
 
 
 	@Override
 	public int getInt() {
-		return value.intValue();
+		return (value.booleanValue()?1:0);
 	}
 
 	@Override
 	public double getDouble() {
-		return value.doubleValue();
+		return (value.booleanValue()?1.0:0.0);
 	}
 
 	@Override
@@ -138,10 +115,6 @@ public class DoubleConfigSetting implements ConfigSetting {
 		sb.append(getType().toString());
 		sb.append("\", \"value\":");
 		sb.append(getValue().toString());
-		sb.append(", \"min\":");
-		sb.append(getMin().toString());
-		sb.append(", \"max\":");
-		sb.append(getMax().toString());
 		sb.append("}");
 		return sb.toString();
 	}

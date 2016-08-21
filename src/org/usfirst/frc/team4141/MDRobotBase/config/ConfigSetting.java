@@ -18,6 +18,7 @@ public interface ConfigSetting {
 	double getDouble();
 	String getString();
 	public enum Type {
+		binary,
 		integer,
 		doubleNumber,
 		string

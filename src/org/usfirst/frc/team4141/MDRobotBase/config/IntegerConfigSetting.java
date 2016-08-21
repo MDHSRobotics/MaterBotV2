@@ -61,12 +61,30 @@ public class IntegerConfigSetting implements ConfigSetting {
 		if(min instanceof Integer){
 			this.min = (Integer)min;
 		}
+		else if (min instanceof Double){
+			this.min = new Integer((int)((Double)min).doubleValue());
+		}
+		else if (min instanceof String){
+			this.min = Integer.valueOf((String)min);
+		}
+		else if (min instanceof Boolean){
+			this.min = (((Boolean)min).booleanValue()?1:0);
+		}
 	}
 
 	@Override
 	public void setMax(Object max) {
 		if(max instanceof Integer){
 			this.max = (Integer)max;
+		}
+		else if (max instanceof Double){
+			this.max = new Integer((int)((Double)max).doubleValue());
+		}
+		else if (max instanceof String){
+			this.max = Integer.valueOf((String)max);
+		}
+		else if (max instanceof Boolean){
+			this.max = (((Boolean)max).booleanValue()?1:0);
 		}
 	}
 
@@ -75,6 +93,15 @@ public class IntegerConfigSetting implements ConfigSetting {
 		if(value instanceof Integer){
 			this.value = (Integer)value;
 			System.out.printf("setting %s to %d\n",name,value);
+		}
+		else if (value instanceof Double){
+			this.value = new Integer((int)((Double)value).doubleValue());
+		}
+		else if (value instanceof String){
+			this.value = Integer.valueOf((String)value);
+		}
+		else if (value instanceof Boolean){
+			this.value = (((Boolean)value).booleanValue()?1:0);
 		}
 	}
 

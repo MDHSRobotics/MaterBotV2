@@ -7,17 +7,16 @@ import org.usfirst.frc.team4141.MDRobotBase.MDDriveSubsystem.MotorPosition;
 import org.usfirst.frc.team4141.MDRobotBase.MDDriveSubsystem.Type;
 import org.usfirst.frc.team4141.MDRobotBase.MDPrintCommand;
 import org.usfirst.frc.team4141.MDRobotBase.sensors.MDAnalogInput;
-import org.usfirst.frc.team4141.MDRobotBase.sensors.MDDigitalInput;
 import org.usfirst.frc.team4141.MDRobotBase.sensors.MD_BuiltInAccelerometer;
 import org.usfirst.frc.team4141.MDRobotBase.sensors.RobotDiagnostics;
 import org.usfirst.frc.team4141.MDRobotBase.MDRobotBase;
 import org.usfirst.frc.team4141.MDRobotBase.config.DoubleConfigSetting;
+import org.usfirst.frc.team4141.MDRobotBase.config.StringConfigSetting;
 import org.usfirst.frc.team4141.robot.commands.ExampleCommand;
 import org.usfirst.frc.team4141.robot.subsystems.CoreSubsystem;
 import org.usfirst.frc.team4141.robot.subsystems.DiagnosticsSubsystem;
+import org.usfirst.frc.team4141.robot.subsystems.WebSocketSubsystem;
 
-
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Victor;
 
 /**
@@ -33,20 +32,12 @@ public class Robot extends MDRobotBase {
      * used for any initialization code.
      */
 
-	//TODO figure out why the rumbling was needed and refactor into OI
+//TODO figure out why the rumbling was needed and refactor into OI
 //	private boolean rumbling = false;
 //	private double rumblestart;
-
-	
-	public Robot(){
-		//Give your robot a name
-		super("Mr. Roboto");
-    }
 	
 	@Override
 	protected void configureRobot() {
-		//configure global settings
-		enableWebSockets();  //enables WebSockets
 		
 		//A robot is composed of subsystems
 		//A robot will typically have 1 drive system and several other fit to purpose subsystems
@@ -71,7 +62,13 @@ public class Robot extends MDRobotBase {
 		
 		//Subsystem to manage robot wide config settings
 		add( new CoreSubsystem(this, "core")
-				 .add("diagnosticsScanPeriod",new DoubleConfigSetting(0.02, 20.0, 0.1))
+				 .add("name",new StringConfigSetting("Mr. Roboto"))//go ahead name your robot
+				 .configure()
+		);
+		
+		//Subsystem to manage WebSocket Communications
+		add( new WebSocketSubsystem(this, "WebSockets")
+				 .add("enableWebSockets",new StringConfigSetting("Mr. Roboto"))
 				 .configure()
 		);
 		
