@@ -9,10 +9,10 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
 import org.usfirst.frc.team4141.MDRobotBase.Logger.Level;
 import org.usfirst.frc.team4141.MDRobotBase.eventmanager.Notification;
-import org.usfirst.frc.team4141.MDRobotBase.notifications.RobotStateNotification;
 import org.usfirst.frc.team4141.MDRobotBase.sensors.Sensor;
 import org.usfirst.frc.team4141.MDRobotBase.sensors.SensorReading;
 import org.usfirst.frc.team4141.robot.OI;
+import org.usfirst.frc.team4141.robot.subsystems.WebSocketSubsystem;
 
 
 /**
@@ -118,32 +118,22 @@ public abstract class MDRobotBase extends IterativeRobot{
     	this.subsystems=new Hashtable<String,MDSubsystem>();
     	this.commands=new Hashtable<String,MDCommand>();
     	oi = new OI(this);
-    	configureRobot();
-    	
-    	periodicFirst = false;
-    	post(new RobotStateNotification(RobotState.RobotInit,false));
+    	configureRobot();    	
     }
-    
-	boolean periodicFirst = false;   
-	
+
     /**
      * This function is called when the disabled button is hit.
      * You can use it to reset subsystems before shutting down.
      */
     @Override
 	public void disabledInit(){
-    	post(new RobotStateNotification(RobotState.DisabledInit,false));
-		periodicFirst = true;
     }
+    
     /**
      * This function is called periodically while the robot is in disabled state
      */    
     @Override
 	public void disabledPeriodic() {
-		if(periodicFirst){
-	    	post(new RobotStateNotification(RobotState.DisabledPeriodic,false));
-	    	periodicFirst = false;
-		}
 		Scheduler.getInstance().run();
 	}    
 	
@@ -153,8 +143,6 @@ public abstract class MDRobotBase extends IterativeRobot{
      */    
     @Override
 	public void autonomousInit() {
-		periodicFirst = true;
-    	post(new RobotStateNotification(RobotState.AutonomousInit,false));
         if (autonomousCommand != null) autonomousCommand.start();
     }
 
@@ -163,11 +151,6 @@ public abstract class MDRobotBase extends IterativeRobot{
      */
     @Override
    	public void autonomousPeriodic() {
-   		if(periodicFirst){
-   	    	post(new RobotStateNotification(RobotState.AutonomousPeriodic,false));
-   	    	periodicFirst = false;
-   		}
-
         Scheduler.getInstance().run();
     }  
 
@@ -177,36 +160,25 @@ public abstract class MDRobotBase extends IterativeRobot{
      */    
     @Override
 	public void teleopInit() {
-    	post(new RobotStateNotification(RobotState.TeleopInit,false));
-		periodicFirst = true;
-    	
 		// This makes sure that the autonomous stops running when
         // teleop starts running. If you want the autonomous to 
         // continue until interrupted by another command, remove
         // this line or comment it out.
         if (autonomousCommand != null) autonomousCommand.cancel();
     }
+
     /**
      * This function is called periodically during operator control
      */
     @Override
 	public void teleopPeriodic() {
-		if(periodicFirst){
-	    	post(new RobotStateNotification(RobotState.TeleopPeriodic,false));
-	    	periodicFirst = false;
-		}
         Scheduler.getInstance().run();
     }   
 
-
-
-    
     /**
      * This function is called once right before the robot goes into test mode.
      */  	@Override
 	public void testInit() {
-    	post(new RobotStateNotification(RobotState.TestInit,false));
-		periodicFirst = true;
 	}
     
     /**
@@ -214,10 +186,6 @@ public abstract class MDRobotBase extends IterativeRobot{
      */
     @Override
 	public void testPeriodic() {
-		if(periodicFirst){
-	    	post(new RobotStateNotification(RobotState.TestPeriodic,false));
-	    	periodicFirst = false;
-		}	
         LiveWindow.run();
     }
 
@@ -234,6 +202,8 @@ public abstract class MDRobotBase extends IterativeRobot{
 		}
 	}
 	public void post(Notification notification){
-		if(getSubsystems()!=null && getSubsystems().containsKey(""))
+		if(getSubsystems()!=null && getSubsystems().containsKey("WebSockets")){
+			((WebSocketSubsystem)(getSubsystems().get("WebSockets"))).post(notification);
+		}
 	}
 }

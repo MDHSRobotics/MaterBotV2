@@ -10,6 +10,7 @@ import org.usfirst.frc.team4141.MDRobotBase.sensors.MDAnalogInput;
 import org.usfirst.frc.team4141.MDRobotBase.sensors.MD_BuiltInAccelerometer;
 import org.usfirst.frc.team4141.MDRobotBase.sensors.RobotDiagnostics;
 import org.usfirst.frc.team4141.MDRobotBase.MDRobotBase;
+import org.usfirst.frc.team4141.MDRobotBase.config.BooleanConfigSetting;
 import org.usfirst.frc.team4141.MDRobotBase.config.DoubleConfigSetting;
 import org.usfirst.frc.team4141.MDRobotBase.config.StringConfigSetting;
 import org.usfirst.frc.team4141.robot.commands.ExampleCommand;
@@ -68,7 +69,7 @@ public class Robot extends MDRobotBase {
 		
 		//Subsystem to manage WebSocket Communications
 		add( new WebSocketSubsystem(this, "WebSockets")
-				 .add("enableWebSockets",new StringConfigSetting("Mr. Roboto"))
+				 .add("enableWebSockets",new BooleanConfigSetting(true))
 				 .configure()
 		);
 		
