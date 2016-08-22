@@ -3,17 +3,17 @@ package org.usfirst.frc.team4141.MDRobotBase.notifications;
 import org.usfirst.frc.team4141.MDRobotBase.NotImplementedException;
 import org.usfirst.frc.team4141.MDRobotBase.eventmanager.Notification;
 
-import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.hal.HALUtil;
 
 
 public abstract class RobotNotification extends Notification {
-	private double fpgaTime;
-	public double getFpgaTime() {
+	private long fpgaTime;
+	public long getFpgaTime() {
 		return fpgaTime;
 	}
 	public RobotNotification(String notificationType,boolean display, boolean record, boolean broadcast){
 		super(notificationType,display,record,broadcast);
-		this.fpgaTime = Timer.getFPGATimestamp();
+		this.fpgaTime = HALUtil.getFPGATime();
 	}
 	public RobotNotification(String notificationType, boolean record, boolean broadcast){
 		this(notificationType,false,record,broadcast);

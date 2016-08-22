@@ -54,9 +54,9 @@ public abstract class MDCommand extends Command {
 	protected void interrupted() {
     	end();
     }
-	public MDCommand add(MDSubsystem subsystem) {
-		// used to indicate a subsystem that the command requires
-		requires(subsystem);
-		return this;
+
+	public void add(MDSubsystem subsystem) {
+		requires(subsystem);		
 	}
+
 }

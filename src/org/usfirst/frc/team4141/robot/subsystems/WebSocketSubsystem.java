@@ -71,7 +71,7 @@ public class WebSocketSubsystem extends MDSubsystem implements EventManagerCallB
 	
 	@Override
 	public void onClose(Session session, int closeCode, String closeReason) {
-		System.out.printf("disconnected code[%d] reason:%s",closeCode,closeReason);
+		System.out.printf("disconnected code[%d] reason:%s\n",closeCode,closeReason);
 	}
 	@Override
 	public void onError(Session session, Throwable err) {

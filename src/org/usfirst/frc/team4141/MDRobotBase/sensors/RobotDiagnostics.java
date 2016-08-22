@@ -37,14 +37,13 @@ public class RobotDiagnostics implements Sensor {
 	private int getReadingsCount() {
 		//from ControllerPower  (14)
 		//from DriverStation (8)
-		//from HALUtil (4)
+		//from HALUtil (3)
 		//from PowerDistributionPanel ( 11 + kPDPModules*(kPDPChannels+5) )   //skipping these for now
-		//from RobotState (5)
+		//from RobotState (6)
 		//from RobotBase  (2)
-		//from Timer (2)
 		//from Utility class (2)
-//		return 14+8+4+5+2+2+2+11+(PowerDistributionPanel.kPDPModules*(PowerDistributionPanel.kPDPChannels+5));
-		return 14+8+4+5+2+2+2+11;
+//		return 14+8+3+6+2+2+11+(PowerDistributionPanel.kPDPModules*(PowerDistributionPanel.kPDPChannels+5));
+		return 14+8+3+6+11;
 	}
 	RobotDiagnostics(MDRobotBase robot, String name,boolean observe){
 		this.robot = robot;
@@ -53,61 +52,62 @@ public class RobotDiagnostics implements Sensor {
 		int i=0;
 		
 		//from ControllerPower  (14)
-		readings[i++]=new AnalogSensorReading("ControllerPower.Current3V3", ControllerPower.getCurrent3V3());
-		readings[i++]=new AnalogSensorReading("ControllerPower.Current5V", ControllerPower.getCurrent5V());
-		readings[i++]=new AnalogSensorReading("ControllerPower.Current6V", ControllerPower.getCurrent6V());
-		readings[i++]=new AnalogSensorReading("ControllerPower.InputCurrent", ControllerPower.getInputCurrent());
-		readings[i++]=new AnalogSensorReading("ControllerPower.InputVoltage", ControllerPower.getInputVoltage());
-		readings[i++]=new AnalogSensorReading("ControllerPower.Voltage3V3", ControllerPower.getVoltage3V3());
-		readings[i++]=new AnalogSensorReading("ControllerPower.Voltage5V", ControllerPower.getVoltage5V());
-		readings[i++]=new AnalogSensorReading("ControllerPower.Voltage6V", ControllerPower.getVoltage6V());
-		readings[i++]=new AnalogSensorReading("ControllerPower.FaultCount3V3", ControllerPower.getFaultCount3V3());
-		readings[i++]=new AnalogSensorReading("ControllerPower.FaultCount5V", ControllerPower.getFaultCount5V());
-		readings[i++]=new AnalogSensorReading("ControllerPower.FaultCount6V", ControllerPower.getFaultCount6V());
-		readings[i++]=new DigitalSensorReading("ControllerPower.Enabled3V3", ControllerPower.getEnabled3V3());
-		readings[i++]=new DigitalSensorReading("ControllerPower.Enabled5V", ControllerPower.getEnabled5V());
-		readings[i++]=new DigitalSensorReading("ControllerPower.Enabled6V", ControllerPower.getEnabled6V());
+		readings[i++]=new AnalogSensorReading("ControllerPower.Current3V3", ControllerPower.getCurrent3V3(),true);
+		readings[i++]=new AnalogSensorReading("ControllerPower.Current5V", ControllerPower.getCurrent5V(),true);
+		readings[i++]=new AnalogSensorReading("ControllerPower.Current6V", ControllerPower.getCurrent6V(),true);
+		readings[i++]=new AnalogSensorReading("ControllerPower.InputCurrent", ControllerPower.getInputCurrent(),true);
+		readings[i++]=new AnalogSensorReading("ControllerPower.InputVoltage", ControllerPower.getInputVoltage(),true);
+		readings[i++]=new AnalogSensorReading("ControllerPower.Voltage3V3", ControllerPower.getVoltage3V3(),true);
+		readings[i++]=new AnalogSensorReading("ControllerPower.Voltage5V", ControllerPower.getVoltage5V(),true);
+		readings[i++]=new AnalogSensorReading("ControllerPower.Voltage6V", ControllerPower.getVoltage6V(),true);
+		readings[i++]=new AnalogSensorReading("ControllerPower.FaultCount3V3", ControllerPower.getFaultCount3V3(),true);
+		readings[i++]=new AnalogSensorReading("ControllerPower.FaultCount5V", ControllerPower.getFaultCount5V(),true);
+		readings[i++]=new AnalogSensorReading("ControllerPower.FaultCount6V", ControllerPower.getFaultCount6V(),true);
+		readings[i++]=new DigitalSensorReading("ControllerPower.Enabled3V3", ControllerPower.getEnabled3V3(),true);
+		readings[i++]=new DigitalSensorReading("ControllerPower.Enabled5V", ControllerPower.getEnabled5V(),true);
+		readings[i++]=new DigitalSensorReading("ControllerPower.Enabled6V", ControllerPower.getEnabled6V(),true);
 		//from DriverStation (8)
 		readings[i++]=new AnalogSensorReading("DriverStation.BatteryVoltage", DriverStation.getInstance().getBatteryVoltage());
 		readings[i++]=new AnalogSensorReading("DriverStation.MatchTime", DriverStation.getInstance().getMatchTime());
-		readings[i++]=new AnalogSensorReading("DriverStation.Location", DriverStation.getInstance().getLocation());
-		readings[i++]=new AnalogSensorReading("DriverStation.Alliance", DriverStation.getInstance().getAlliance().ordinal());
+		readings[i++]=new AnalogSensorReading("DriverStation.Location", DriverStation.getInstance().getLocation(),false);
+		readings[i++]=new AnalogSensorReading("DriverStation.Alliance", DriverStation.getInstance().getAlliance().ordinal(),false);
 		readings[i++]=new DigitalSensorReading("DriverStation.isBrownedOut", DriverStation.getInstance().isBrownedOut());
-		readings[i++]=new DigitalSensorReading("DriverStation.isBrownedOut", DriverStation.getInstance().isDSAttached());
-		readings[i++]=new DigitalSensorReading("DriverStation.isBrownedOut", DriverStation.getInstance().isFMSAttached());
-		readings[i++]=new DigitalSensorReading("DriverStation.isBrownedOut", DriverStation.getInstance().isSysActive());
-		//from HALUtil (4)
-		readings[i++]=new AnalogSensorReading("HALUtil.FPGARevision", HALUtil.getFPGARevision());
+		readings[i++]=new DigitalSensorReading("DriverStation.isDSAttached", DriverStation.getInstance().isDSAttached());
+		readings[i++]=new DigitalSensorReading("DriverStation.isFMSAttached", DriverStation.getInstance().isFMSAttached());
+		readings[i++]=new DigitalSensorReading("DriverStation.isSysActive", DriverStation.getInstance().isSysActive());
+		//from HALUtil (3)
+		readings[i++]=new AnalogSensorReading("HALUtil.FPGARevision", HALUtil.getFPGARevision(),false);
 		readings[i++]=new DigitalSensorReading("HALUtil.FPGAButton", HALUtil.getFPGAButton());
-		readings[i++]=new AnalogSensorReading("HALUtil.FPGATime", HALUtil.getFPGATime());
-		readings[i++]=new AnalogSensorReading("HALUtil.FPGAVersion", HALUtil.getFPGAVersion());
-		//from RobotState (5)
-		readings[i++]=new DigitalSensorReading("RobotState.isAutonomous", RobotState.isAutonomous());
-		readings[i++]=new DigitalSensorReading("RobotState.isDisabled", RobotState.isDisabled());		
-		readings[i++]=new DigitalSensorReading("RobotState.isEnabled", RobotState.isEnabled());		
-		readings[i++]=new DigitalSensorReading("RobotState.isOperatorControl", RobotState.isOperatorControl());		
-		readings[i++]=new DigitalSensorReading("RobotState.isTest", RobotState.isTest());		
+//		readings[i++]=new AnalogSensorReading("HALUtil.FPGATime", HALUtil.getFPGATime());
+		readings[i++]=new AnalogSensorReading("HALUtil.FPGAVersion", HALUtil.getFPGAVersion(),false);
+		//from RobotState (6)
+		readings[i++]=new DigitalSensorReading("RobotState.isEnabled", RobotState.isEnabled(),true);		
+		readings[i++]=new DigitalSensorReading("RobotState.isAutonomous", RobotState.isAutonomous(),true);
+		readings[i++]=new DigitalSensorReading("RobotState.isDisabled", RobotState.isDisabled(),true);		
+		readings[i++]=new DigitalSensorReading("RobotState.isOperatorControl", RobotState.isOperatorControl(),true);		
+		readings[i++]=new DigitalSensorReading("RobotState.isTest", RobotState.isTest(),true);		
+		readings[i++]=new RobotStateReading("RobotState");		
 		//from RobotBase  (2)
-		readings[i++]=new DigitalSensorReading("RobotBase.isReal", RobotBase.isReal());
-		readings[i++]=new DigitalSensorReading("RobotBase.isSimulation", RobotBase.isSimulation());
+//		readings[i++]=new DigitalSensorReading("RobotBase.isReal", RobotBase.isReal(),false);
+//		readings[i++]=new DigitalSensorReading("RobotBase.isSimulation", RobotBase.isSimulation(),false);
 		//from Timer (2)
-		readings[i++]=new AnalogSensorReading("Timer.FPGATimestamp", Timer.getFPGATimestamp());
-		readings[i++]=new AnalogSensorReading("Timer.MatchTime", Timer.getMatchTime());
-		//from Utility class (2)
-		readings[i++]=new AnalogSensorReading("Utility.FPGATime", Utility.getFPGATime());
-		readings[i++]=new DigitalSensorReading("Utility.userButton", Utility.getUserButton());
+//		readings[i++]=new AnalogSensorReading("Timer.FPGATimestamp", Timer.getFPGATimestamp());
+//		readings[i++]=new AnalogSensorReading("Timer.MatchTime", Timer.getMatchTime());
+		//from Utility class (1)
+//		readings[i++]=new AnalogSensorReading("Utility.FPGATime", Utility.getFPGATime());
+//		readings[i++]=new DigitalSensorReading("Utility.userButton", Utility.getUserButton());
 		//from PowerDistributionPanel ( 11 + kPDPModules*(kPDPChannels+5) )
-		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.kAnalogInputChannels", PowerDistributionPanel.kAnalogInputChannels);
-		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.kAnalogOutputChannels", PowerDistributionPanel.kAnalogOutputChannels);
-		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.kDigitalChannels", PowerDistributionPanel.kDigitalChannels);
-		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.kPDPModules", PowerDistributionPanel.kPDPModules);
-		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.kPDPChannels", PowerDistributionPanel.kPDPChannels);
-		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.kPwmChannels", PowerDistributionPanel.kPwmChannels);
-		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.kRelayChannels", PowerDistributionPanel.kRelayChannels);
-		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.kSolenoidModules", PowerDistributionPanel.kSolenoidModules);
-		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.kSolenoidChannels", PowerDistributionPanel.kSolenoidChannels);
-		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.kSystemClockTicksPerMicrosecond", PowerDistributionPanel.kSystemClockTicksPerMicrosecond);
-		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.DefaultSolenoidModule", PowerDistributionPanel.getDefaultSolenoidModule());
+		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.kAnalogInputChannels", PowerDistributionPanel.kAnalogInputChannels,false);
+		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.kAnalogOutputChannels", PowerDistributionPanel.kAnalogOutputChannels,false);
+		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.kDigitalChannels", PowerDistributionPanel.kDigitalChannels,false);
+		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.kPDPModules", PowerDistributionPanel.kPDPModules,false);
+		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.kPDPChannels", PowerDistributionPanel.kPDPChannels,false);
+		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.kPwmChannels", PowerDistributionPanel.kPwmChannels,false);
+		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.kRelayChannels", PowerDistributionPanel.kRelayChannels,false);
+		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.kSolenoidModules", PowerDistributionPanel.kSolenoidModules,false);
+		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.kSolenoidChannels", PowerDistributionPanel.kSolenoidChannels,false);
+		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.kSystemClockTicksPerMicrosecond", PowerDistributionPanel.kSystemClockTicksPerMicrosecond,false);
+		readings[i++]=new AnalogSensorReading("PowerDistributionPanel.DefaultSolenoidModule", PowerDistributionPanel.getDefaultSolenoidModule(),false);
 		//( kPDPModules*(kPDPChannels+5) )
 /*		try{
 			for(int k=0;k<PowerDistributionPanel.kPDPModules;k++){
@@ -164,28 +164,29 @@ public class RobotDiagnostics implements Sensor {
 		((DigitalSensorReading)readings[i++]).setValue(DriverStation.getInstance().isDSAttached());
 		((DigitalSensorReading)readings[i++]).setValue(DriverStation.getInstance().isFMSAttached());
 		((DigitalSensorReading)readings[i++]).setValue(DriverStation.getInstance().isSysActive());
-		//from HALUtil (4)
+		//from HALUtil (3)
 		((AnalogSensorReading)readings[i++]).setValue(HALUtil.getFPGARevision());
 		((DigitalSensorReading)readings[i++]).setValue(HALUtil.getFPGAButton());
-		((AnalogSensorReading)readings[i++]).setValue(HALUtil.getFPGATime());
+//		((AnalogSensorReading)readings[i++]).setValue(HALUtil.getFPGATime());
 		((AnalogSensorReading)readings[i++]).setValue(HALUtil.getFPGAVersion());
 		
-		
-		//from RobotState (5)
+				
+		//from RobotState (6)
+		((DigitalSensorReading)readings[i++]).setValue(RobotState.isEnabled());		
 		((DigitalSensorReading)readings[i++]).setValue(RobotState.isAutonomous());
 		((DigitalSensorReading)readings[i++]).setValue(RobotState.isDisabled());		
-		((DigitalSensorReading)readings[i++]).setValue(RobotState.isEnabled());		
 		((DigitalSensorReading)readings[i++]).setValue(RobotState.isOperatorControl());		
 		((DigitalSensorReading)readings[i++]).setValue(RobotState.isTest());		
+		((RobotStateReading)readings[i++]).refresh();				
 		//from RobotBase  (2)
-		((DigitalSensorReading)readings[i++]).setValue(RobotBase.isReal());
-		((DigitalSensorReading)readings[i++]).setValue(RobotBase.isSimulation());
+//		((DigitalSensorReading)readings[i++]).setValue(RobotBase.isReal());
+//		((DigitalSensorReading)readings[i++]).setValue(RobotBase.isSimulation());
 		//from Timer (2)
-		((AnalogSensorReading)readings[i++]).setValue(Timer.getFPGATimestamp());
-		((AnalogSensorReading)readings[i++]).setValue(Timer.getMatchTime());
+//		((AnalogSensorReading)readings[i++]).setValue(Timer.getFPGATimestamp());
+//		((AnalogSensorReading)readings[i++]).setValue(Timer.getMatchTime());
 		//from Utility class (2)
-		((AnalogSensorReading)readings[i++]).setValue(Utility.getFPGATime());
-		((DigitalSensorReading)readings[i++]).setValue(Utility.getUserButton());
+//		((AnalogSensorReading)readings[i++]).setValue(Utility.getFPGATime());
+//		((DigitalSensorReading)readings[i++]).setValue(Utility.getUserButton());
 		
 		//from PowerDistributionPanel ( 11 + kPDPModules*(kPDPChannels+5) )
 		((AnalogSensorReading)readings[i++]).setValue(PowerDistributionPanel.kAnalogInputChannels);

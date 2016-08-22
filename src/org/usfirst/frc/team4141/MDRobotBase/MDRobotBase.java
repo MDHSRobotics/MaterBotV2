@@ -23,17 +23,7 @@ import org.usfirst.frc.team4141.robot.subsystems.WebSocketSubsystem;
  * directory.
  */
 public abstract class MDRobotBase extends IterativeRobot{
-	public enum RobotState{
-		RobotInit,
-		DisabledInit,
-		DisabledPeriodic,
-		AutonomousInit,
-		AutonomousPeriodic,
-		TeleopInit,
-		TeleopPeriodic,
-		TestInit,
-		TestPeriodic
-	}
+
 	private OI oi;
 	private Logger logger;
 	private Hashtable<String,MDSubsystem> subsystems;
@@ -54,6 +44,7 @@ public abstract class MDRobotBase extends IterativeRobot{
 	public MDRobotBase(String name) {
 		this.name = name;
 		sensorReadingsDictionary = new Hashtable<String,SensorReading>();
+		sensorsDictionary = new Hashtable<String,Sensor>();
 	}
 
 	public String getName(){return name;}
@@ -120,7 +111,8 @@ public abstract class MDRobotBase extends IterativeRobot{
     	this.subsystems=new Hashtable<String,MDSubsystem>();
     	this.commands=new Hashtable<String,MDCommand>();
     	oi = new OI(this);
-    	configureRobot();    	
+    	configureRobot();    
+    	System.out.println("RobotInit completed");
     }
 
     /**
@@ -129,6 +121,7 @@ public abstract class MDRobotBase extends IterativeRobot{
      */
     @Override
 	public void disabledInit(){
+    	System.out.println("disabledInit()");
     }
     
     /**
@@ -194,6 +187,7 @@ public abstract class MDRobotBase extends IterativeRobot{
 	public void add(SensorReading reading) {
 		if(sensorReadingsDictionary!=null){
 			sensorReadingsDictionary.put(reading.getName(), reading);
+//			System.out.println("registering sensor reading: "+reading.getName());
 		}
 	}
 	

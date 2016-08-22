@@ -38,6 +38,9 @@ public class Robot extends MDRobotBase {
 	
 	@Override
 	protected void configureRobot() {
+
+		//A robot will define several commands
+		add(new MDPrintCommand(this,"AutonomousCommand","AutonomousCommand message"));
 		
 		//A robot is composed of subsystems
 		//A robot will typically have 1 drive system and several other fit to purpose subsystems
@@ -57,7 +60,7 @@ public class Robot extends MDRobotBase {
 		add( new DiagnosticsSubsystem(this, "diagnosticsSubsystem")
 				 .add("diagnosticsSensor",new RobotDiagnostics())
 				 .add("diagnosticsScanPeriod",new DoubleConfigSetting(0.02, 20.0, 0.1))
-			     .configure()
+				 .configure()
 		);
 		
 		//Subsystem to manage robot wide config settings
@@ -71,11 +74,6 @@ public class Robot extends MDRobotBase {
 				 .add("enableWebSockets",new BooleanConfigSetting(true))
 				 .configure()
 		);
-		
-		//A robot will define several commands
-		add(new MDPrintCommand(this,"command1","command1 message")
-				.add(getSubsystems().get("diagnosticsSubsystem")));
-
 
 		autonomousCommand=getCommands().get("AutonomousCommand");
 

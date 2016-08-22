@@ -22,6 +22,7 @@ public abstract class MDSubsystem extends Subsystem {
 	private Hashtable<String,Sensor> sensors;
 	private Hashtable<String,ConfigSetting> configSettings;	
 	private boolean isConfigured = false;
+	private String defaultCommandName;
 		
 	public MDSubsystem add(String name,PWM motor){
 		if(isConfigured) return this;
@@ -95,9 +96,16 @@ public abstract class MDSubsystem extends Subsystem {
 				if(item.observe()){
 					robot.add(item);
 					for(SensorReading reading : item.getReadings()){
-						if(reading.observe()){
-							robot.add(reading);
+						if(reading == null){
+							System.out.println("reading unexpectedly null in sensor "+item.getName());
 						}
+						else{
+							System.out.println("registering reading "+reading.getName()+" from "+item.getName());	
+							if(reading.observe()){
+								robot.add(reading);
+							}
+						}
+						
 					}
 				}
 			}
@@ -129,16 +137,29 @@ public abstract class MDSubsystem extends Subsystem {
 	public boolean isConfigured(){ return isConfigured;}
 	
 	@Override
-	protected abstract void initDefaultCommand();
+	protected void initDefaultCommand() {
+		System.out.println("in initDefaultCommand()");
+		if(robot.getCommands()!=null && robot.getCommands().containsKey(defaultCommandName)){
+			MDCommand command = robot.getCommands().get(defaultCommandName);
+			if(!command.doesRequire(this))
+			{
+				command.add(this);
+			}
+			setDefaultCommand(command);
+		}
+	}
+
 	
-	
-	protected abstract void setUp();
-	
-	public MDSubsystem add(MDCommand command) {
-		//This add method is used to configure the default command for the subsystem
-		if(!command.doesRequire(this)){ command.add(this);}
-		setDefaultCommand(command);
+	public MDSubsystem setDefaultCommand(String commandName) {
+		this.defaultCommandName = commandName;
 		return this;
 	}
 	
+	protected abstract void setUp();
+	public ConfigSetting getSetting(String settingName) {
+		if(configSettings!=null && configSettings.containsKey(settingName)){
+			return configSettings.get(settingName);
+		}
+		return null;
+	}
 }

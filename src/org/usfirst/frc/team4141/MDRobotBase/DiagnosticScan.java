@@ -1,16 +1,19 @@
 package org.usfirst.frc.team4141.MDRobotBase;
 
+import org.usfirst.frc.team4141.MDRobotBase.notifications.HeartbeatNotification;
+
 public class DiagnosticScan implements Runnable {
 	
-	public DiagnosticScan() {
-		
+	
+	private MDRobotBase robot;
+	public DiagnosticScan(MDRobotBase robot) {
+		this.robot = robot;
 	}
 	
-	boolean state = true;
 	@Override
 	public void run() {
-		
-		state = !state;
+		System.out.println("heartbeat");
+		robot.post(new HeartbeatNotification(robot, true));
 	}
 
 }
