@@ -18,8 +18,8 @@ public class StringConfigSetting implements ConfigSetting {
 	
 	public StringConfigSetting(String value, String min, String max){
 		this.value = value;
-		this.min= value;
-		this.max = value;
+		this.min= min;
+		this.max = max;
 		this.type = Type.string;	
 	}
 	@Override
