@@ -12,8 +12,7 @@ public class DiagnosticScan implements Runnable {
 	
 	@Override
 	public void run() {
-		System.out.println("heartbeat");
-		robot.post(new HeartbeatNotification(robot, true));
+		robot.post(new HeartbeatNotification(robot));
 	}
 
 }

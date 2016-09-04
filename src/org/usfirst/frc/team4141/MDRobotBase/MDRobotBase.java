@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
 import org.usfirst.frc.team4141.MDRobotBase.Logger.Level;
-import org.usfirst.frc.team4141.MDRobotBase.eventmanager.Notification;
+import org.usfirst.frc.team4141.MDRobotBase.notifications.RobotNotification;
 import org.usfirst.frc.team4141.MDRobotBase.sensors.Sensor;
 import org.usfirst.frc.team4141.MDRobotBase.sensors.SensorReading;
 import org.usfirst.frc.team4141.robot.OI;
@@ -113,6 +113,7 @@ public abstract class MDRobotBase extends IterativeRobot{
     	oi = new OI(this);
     	configureRobot();    
     	System.out.println("RobotInit completed");
+    	
     }
 
     /**
@@ -126,9 +127,10 @@ public abstract class MDRobotBase extends IterativeRobot{
     
     /**
      * This function is called periodically while the robot is in disabled state
-     */    
+     */
     @Override
 	public void disabledPeriodic() {
+
 		Scheduler.getInstance().run();
 	}    
 	
@@ -197,7 +199,7 @@ public abstract class MDRobotBase extends IterativeRobot{
 				sensorsDictionary.put(sensor.getName(), sensor);
 		}
 	}
-	public void post(Notification notification){
+	public void post(RobotNotification notification){
 		if(getSubsystems()!=null && getSubsystems().containsKey("WebSockets")){
 			((WebSocketSubsystem)(getSubsystems().get("WebSockets"))).post(notification);
 		}

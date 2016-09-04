@@ -1,13 +1,17 @@
 package org.usfirst.frc.team4141.MDRobotBase.eventmanager;
 
 
-import java.io.IOException;
+
 import java.util.ArrayList;
+import java.util.concurrent.ArrayBlockingQueue;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.server.WebSocketHandler;
 import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
+import org.usfirst.frc.team4141.MDRobotBase.notifications.RobotConfigurationNotification;
+import org.usfirst.frc.team4141.MDRobotBase.notifications.RobotNotification;
+
 
 /**
  * @author RobotC
@@ -15,21 +19,21 @@ import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
  */
 public class EventManager {
 	private final EventManager self = this;
-	private EventManagerCallBack callback;
 	private long nextMessageID = 0;
+	private MessageHandler handler;
+	private ArrayBlockingQueue<RobotNotification>outbound= new ArrayBlockingQueue<RobotNotification>(100);
+	private ArrayBlockingQueue<RobotNotification>inbound= new ArrayBlockingQueue<RobotNotification>(100);
 
-	public EventManager(){
-		this(null);		
+	public EventManager(MessageHandler handler){
+		this(handler,false);
 	}
-	public EventManager(EventManagerCallBack callback){
-		enableWebSockets = false;
+	public EventManager(MessageHandler handler,boolean enableWebSockets){
+		this.enableWebSockets = enableWebSockets;
 		sessions = new ArrayList<Session>();
-		this.callback = callback;
+		this.handler = handler;
 	}
 	
-	public EventManagerCallBack getCallback() {
-		return callback;
-	}
+
 	public void start() throws Exception{
 		if(enableWebSockets){
 			int port = 5808;
@@ -46,43 +50,80 @@ public class EventManager {
 			server.insertHandler(wsHandler);
 			server.start();
 		}
+
 //		server.join();  //blocking all until server is stopped
 	}
-
-	public void post(Notification notification){
-		notification.setMessageId(nextMessageID++);
-		if(notification.isConsole()){
-			System.out.println(notification);
+	public void enableWebSockets(){
+		this.enableWebSockets = true;
+	}
+	
+	public void disableWebSockets(){
+		this.enableWebSockets = false;
+	}	
+	
+	public synchronized void post(RobotNotification notification){
+		try{
+			outbound.add(notification);
+//			System.out.printf("Message Added to outbound queue, now (%d)\n", outbound.size());
+//			System.out.println(notification.toJSON());
 		}
-		if(!enableWebSockets) return;
+		catch(IllegalStateException e)
+		{
+			System.out.println("queue is full");
+			System.out.println(e.getMessage());
+		}
+	}
 
-		if(notification.isDisplay()||notification.isRecord()){
-			try {
-				for(Session session : sessions){
-					if(session!=null && session.isOpen()){
-						session.getRemote().sendString(notification.toJSON());
-					}
-				}
-			} catch (IOException e) {
-				System.err.println("unable to post: "+notification.toJSON());
+	public synchronized  void post(){
+		RobotNotification notification;
+		while((notification = outbound.poll())!=null){
+//			System.out.println("outbound queue has a message to post");
+//			System.out.println(notification.toJSON());
+			
+			notification.setMessageId(nextMessageID++);
+			if(notification.showJavaConsole()){
+				System.out.println(notification);
 			}
-		}	
+			if(enableWebSockets){
+				if(notification.broadcast()){
+					try {
+						for(Session session : sessions){
+							if(session!=null && session.isOpen()){
+//								System.out.printf("sending session %s message: \n%s\n",session.getRemoteAddress().toString(),notification.toJSON());
+								session.getRemote().sendString(notification.toJSON());
+							}
+						}
+					} catch (Exception e) {
+						System.err.println("unable to post: "+notification.toJSON());
+					}
+				}	
+			}
+		}
 	}
 
 	private ArrayList<Session> sessions;
 	private boolean enableWebSockets = false;
-	public boolean addSession(Session session) {
+	public synchronized boolean addSession(Session session) {
+		System.out.println("session added");
 		return sessions.add(session);
-		
 	}
-	public void removeSession(Session session) {
+	public synchronized void removeSession(Session session) {
 		if(session !=null && sessions!=null && sessions.contains(session)) sessions.remove(session);
 	}
-	public void setEnableWebSockets(boolean isEnabled) {
-		this.enableWebSockets = isEnabled;
-	}
-	public boolean isWebSocketsEnabled() {
+
+	public synchronized boolean isWebSocketsEnabled() {
 		return this.enableWebSockets;
-	}	
+	}
+
+
+	public  synchronized MessageHandler getHandler() {
+		return this.handler;
+	}
+	public synchronized void connected() {
+		System.out.printf("connected! %d sessions\n",sessions.size());
+//		_post(new RobotConfigurationNotification(getHandler().geRobot(), true));
+		post(new RobotConfigurationNotification(getHandler().geRobot(), true));
+	}
+	
 
 }

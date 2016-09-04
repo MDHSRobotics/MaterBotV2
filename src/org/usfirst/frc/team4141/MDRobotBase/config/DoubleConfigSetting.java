@@ -15,7 +15,7 @@ public class DoubleConfigSetting implements ConfigSetting {
 		this.min = min;
 		this.max = max;
 		this.value = value;
-		this.type = Type.doubleNumber;	
+		this.type = Type.decimal;	
 	}	
 
 	@Override

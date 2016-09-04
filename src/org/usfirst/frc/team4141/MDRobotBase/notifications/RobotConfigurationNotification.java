@@ -18,11 +18,14 @@ public class RobotConfigurationNotification extends RobotNotification {
 	
 	
 	private MDRobotBase robot;
-	public RobotConfigurationNotification(MDRobotBase robot,boolean display) {
-		this(robot, display,true, false);
+	public RobotConfigurationNotification(MDRobotBase robot,boolean showMDConsole) {
+		this(robot, false, showMDConsole,true, true);
 	}
-	public RobotConfigurationNotification(MDRobotBase robot, boolean display,boolean record,boolean broadcast) {
-		super("RobotConfigurationNotification", display, record, broadcast);
+	public RobotConfigurationNotification(MDRobotBase robot,boolean showMDConsole, boolean record) {
+		this(robot, false, showMDConsole,true, record);
+	}
+	public RobotConfigurationNotification(MDRobotBase robot, boolean showJavaConsole, boolean showMDConsole, boolean broadcast, boolean record) {
+		super("RobotConfigurationNotification", showJavaConsole, showMDConsole, broadcast, record);
 		this.robot = robot;
 	}
 
@@ -55,18 +58,20 @@ public class RobotConfigurationNotification extends RobotNotification {
 			if(commandNames.length>0){
 				sb.append(", ");
 			}
-			sb.append("\"subsystems\":[");
+			sb.append("\"subsystems\":{");
 			boolean firstWritten = false;
 			for(int k=0;k<subsystemNames.length;k++){
 				String subsystemName = (String)subsystemNames[k];
 				MDSubsystem subsystem = robot.getSubsystems().get(subsystemName);
-				if(firstWritten) sb.append(',');
+				if(firstWritten) sb.append(", ");
 				else firstWritten = true;
 				Hashtable<String, ConfigSetting> settings = subsystem.getConfigSettings();
 				Hashtable<String, PWM> motors = subsystem.getMotors();
 				Hashtable<String, SolenoidBase> solenoids = subsystem.getSolenoids();
 				Hashtable<String, Sensor> sensors = subsystem.getSensors();
-			
+					sb.append("\"");
+					sb.append(subsystemName);
+					sb.append("\":");
 					sb.append("{\"subsystem\":\"");
 					sb.append(subsystemName);
 					sb.append("\"");
@@ -76,9 +81,9 @@ public class RobotConfigurationNotification extends RobotNotification {
 						sb.append("]");
 					}
 					if(sensors!=null && sensors.size()>0){
-						sb.append(", \"sensors\":[");
+						sb.append(", \"sensors\":{");
 						appendSensors(sensors);
-						sb.append("]");
+						sb.append("}");
 					}
 					if(motors!=null && motors.size()>0){
 						sb.append(", \"motors\":[");
@@ -92,7 +97,7 @@ public class RobotConfigurationNotification extends RobotNotification {
 					}
 					sb.append("}");
 			}
-			sb.append("]");
+			sb.append("}");
 		}
 	}
 	
@@ -128,7 +133,10 @@ public class RobotConfigurationNotification extends RobotNotification {
 		boolean first = true;
 		for(String sensorName : sensors.keySet()){
 			if(first) first = false;
-			else sb.append(',');
+			else sb.append(", ");
+			sb.append("\"");
+			sb.append(sensorName);
+			sb.append("\":");
 			append(sensors.get(sensorName));
 		}
 	}
@@ -138,14 +146,17 @@ public class RobotConfigurationNotification extends RobotNotification {
 		sb.append(sensor.getName());
 		sb.append("\"");
 		if(sensor.getReadings()!=null && sensor.getReadings().length>0){
-			sb.append(", \"readings\":[");
+			sb.append(", \"readings\":{");
 			boolean first = true;
 			for(SensorReading reading : sensor.getReadings()){
 				if(first) first = false;
 				else{ sb.append(", ");}
+				sb.append("\"");
+				sb.append(reading.getName());
+				sb.append("\":");
 				sb.append(reading.toJSON());
 			}
-			sb.append("]");
+			sb.append("}");
 		}
 		sb.append("}");
 	}

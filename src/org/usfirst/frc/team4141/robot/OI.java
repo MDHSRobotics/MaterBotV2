@@ -4,6 +4,7 @@ package org.usfirst.frc.team4141.robot;
 import org.usfirst.frc.team4141.MDRobotBase.MDJoystick;
 import org.usfirst.frc.team4141.MDRobotBase.MDRobotBase;
 import org.usfirst.frc.team4141.MDRobotBase.OIBase;
+import org.usfirst.frc.team4141.MDRobotBase.RioHID;
 
 
 /**
@@ -16,6 +17,7 @@ public class OI extends OIBase{
 		super(robot);
 	}
 
+
 	public void configureOI(){
 		//A robot should have 1 or more operator interfaces (OI)
 		//Typically, a robot will have at least 1 joystick and 1 console
@@ -23,7 +25,11 @@ public class OI extends OIBase{
 		//Configure the joystick(s) here
 		add(new MDJoystick(getRobot(), "joystick1", 0)
 			.whenPressed("A",3,"autonomousCommand")
-			.whileHeld("leftBumper",6,"exampleCommand")
+			.whileHeld("leftBumper",6,"ExampleCommand1")
+		);
+		//Configure the RioHID here
+		add(new RioHID(getRobot())
+			.whenPressed("ExampleCommand1")
 		);
 		
 		//Configure console here

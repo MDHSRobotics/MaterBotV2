@@ -32,6 +32,7 @@ public abstract class MDCommand extends Command {
 		if(!isInitialized){
 			log("initialize",getName());
 		}
+		isInitialized = true;
 	}
 
 	@Override

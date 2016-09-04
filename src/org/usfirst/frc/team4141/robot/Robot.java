@@ -5,7 +5,6 @@ package org.usfirst.frc.team4141.robot;
 import org.usfirst.frc.team4141.MDRobotBase.MDDriveSubsystem;
 import org.usfirst.frc.team4141.MDRobotBase.MDDriveSubsystem.MotorPosition;
 import org.usfirst.frc.team4141.MDRobotBase.MDDriveSubsystem.Type;
-import org.usfirst.frc.team4141.MDRobotBase.MDPrintCommand;
 import org.usfirst.frc.team4141.MDRobotBase.sensors.MDAnalogInput;
 import org.usfirst.frc.team4141.MDRobotBase.sensors.MD_BuiltInAccelerometer;
 import org.usfirst.frc.team4141.MDRobotBase.sensors.RobotDiagnostics;
@@ -13,6 +12,7 @@ import org.usfirst.frc.team4141.MDRobotBase.MDRobotBase;
 import org.usfirst.frc.team4141.MDRobotBase.config.BooleanConfigSetting;
 import org.usfirst.frc.team4141.MDRobotBase.config.DoubleConfigSetting;
 import org.usfirst.frc.team4141.MDRobotBase.config.StringConfigSetting;
+import org.usfirst.frc.team4141.robot.commands.MDPrintCommand;
 import org.usfirst.frc.team4141.robot.subsystems.CoreSubsystem;
 import org.usfirst.frc.team4141.robot.subsystems.DiagnosticsSubsystem;
 import org.usfirst.frc.team4141.robot.subsystems.WebSocketSubsystem;
@@ -41,6 +41,7 @@ public class Robot extends MDRobotBase {
 
 		//A robot will define several commands
 		add(new MDPrintCommand(this,"AutonomousCommand","AutonomousCommand message"));
+		add(new MDPrintCommand(this,"ExampleCommand1","ExampleCommand1 message"));
 		
 		//A robot is composed of subsystems
 		//A robot will typically have 1 drive system and several other fit to purpose subsystems
@@ -50,7 +51,6 @@ public class Robot extends MDRobotBase {
 		add(new MDDriveSubsystem(this, "driveSystem", Type.TankDrive)
 				.add(MotorPosition.left, new Victor(0))
 				.add(MotorPosition.right, new Victor(1))
-				.add("distanceSensor",new MDAnalogInput("distanceReading",0))
 				.add("accelerometer", new MD_BuiltInAccelerometer())
 				.configure()
 		);	
@@ -65,7 +65,7 @@ public class Robot extends MDRobotBase {
 		
 		//Subsystem to manage robot wide config settings
 		add( new CoreSubsystem(this, "core")
-				 .add("name",new StringConfigSetting("Mr. Roboto"))//go ahead name your robot
+				 .add("name",new StringConfigSetting("Mr. Roboto2"))//go ahead name your robot
 				 .configure()
 		);
 		

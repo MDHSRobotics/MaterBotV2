@@ -10,4 +10,5 @@ public interface SensorReading {
 	String getName();
 	String toJSON();
 	boolean observe();
+	boolean show();
 }

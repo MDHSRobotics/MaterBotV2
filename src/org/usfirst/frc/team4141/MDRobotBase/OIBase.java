@@ -24,4 +24,9 @@ public abstract class OIBase {
 	public Hashtable<String, MDJoystick> getJoysticks() {
 		return joysticks;
 	}
+	
+	protected void add(RioHID whileHeld) {
+		// TODO Auto-generated method stub
+		
+	}
 }

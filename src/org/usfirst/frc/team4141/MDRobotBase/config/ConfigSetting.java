@@ -20,7 +20,7 @@ public interface ConfigSetting {
 	public enum Type {
 		binary,
 		integer,
-		doubleNumber,
+		decimal,
 		string
 	}
 	String getPath();

@@ -1,95 +1,74 @@
-package org.usfirst.frc.team4141.robot.subsystems;
+	package org.usfirst.frc.team4141.robot.subsystems;
 
-import org.eclipse.jetty.websocket.api.Session;
 import org.usfirst.frc.team4141.MDRobotBase.MDRobotBase;
 import org.usfirst.frc.team4141.MDRobotBase.MDSubsystem;
-import org.usfirst.frc.team4141.MDRobotBase.NotImplementedException;
+import org.usfirst.frc.team4141.MDRobotBase.eventmanager.Dispatcher;
 import org.usfirst.frc.team4141.MDRobotBase.eventmanager.EventManager;
-import org.usfirst.frc.team4141.MDRobotBase.eventmanager.EventManagerCallBack;
-import org.usfirst.frc.team4141.MDRobotBase.eventmanager.Notification;
-import org.usfirst.frc.team4141.MDRobotBase.notifications.RobotConfigurationNotification;
+import org.usfirst.frc.team4141.MDRobotBase.eventmanager.MessageHandler;
+import org.usfirst.frc.team4141.MDRobotBase.notifications.RobotNotification;
 
-public class WebSocketSubsystem extends MDSubsystem implements EventManagerCallBack{
+import edu.wpi.first.wpilibj.Notifier;
+
+public class WebSocketSubsystem extends MDSubsystem implements MessageHandler{
 
 	private EventManager eventManager;
+	private Notifier dispatcher;
+	private double updatePeriod = 0.1;  //0.1 seconds
 
 	public WebSocketSubsystem(MDRobotBase robot, String name) {
 		super(robot, name);
-		this.eventManager = new EventManager(this);
 	}
 
 	@Override
 	protected void initDefaultCommand() {
-
+		System.out.println("WebSocketSubsystem.initDefaultCommand()");
+		dispatcher = new Notifier(new Dispatcher(eventManager));
+		dispatcher.startPeriodic(updatePeriod);
 	}
 
 	@Override
 	protected void setUp() {
 		if(getConfigSettings()!=null && getConfigSettings().containsKey("enableWebSockets")){
-			if(eventManager!=null){
-				eventManager.setEnableWebSockets((Boolean)(getConfigSettings().get("enableWebSockets").getValue()));
-			}
+			System.out.println("enableWebSockets config  = "+((Boolean)(getConfigSettings().get("enableWebSockets").getValue())).toString());
+			this.eventManager = new EventManager(this,(Boolean)(getConfigSettings().get("enableWebSockets").getValue()));
 		}
+		else
+		{
+			this.eventManager = new EventManager(this);
+		}
+		
 		if(eventManager.isWebSocketsEnabled()){
 			System.out.println("websockets enabled");
 		}
 		else{
-			System.out.println("websockets enabled");
+			System.out.println("websockets disabled");
 		}
 		System.out.println("starting event manager");
-		if(eventManager!=null)
-			try {
-				eventManager.start();
-			} catch (Exception e) {
-				System.out.println("error starting event manager");
-			}
+		try {
+			eventManager.start();
+		} catch (Exception e) {
+			System.out.println("unable to start web socket manager");
+			e.printStackTrace();
+		}
 	}
 	
-	
+
     //
     //EventManager helper methods
-	public void post(Notification notification){
+	public void post(RobotNotification notification){
 		if(eventManager.isWebSocketsEnabled()){
 			eventManager.post(notification);
 		}
 	}
-	//WebSocket handlers
-	@Override
-	public void onConnect(Session session) {
-		System.out.println("connected!");
-		//TODO refactor configuration communications to console
-		post(new RobotConfigurationNotification(getRobot(),true));
-	}
-	
-	//methods to configure WebSockets
-	public void enableWebSockets(){
-		if(this.eventManager!=null) eventManager.setEnableWebSockets(true);
-	}
-	public void disableWebSockets(){
-		if(this.eventManager!=null) eventManager.setEnableWebSockets(false);
-	}
-	
-	@Override
-	public void onClose(Session session, int closeCode, String closeReason) {
-		System.out.printf("disconnected code[%d] reason:%s\n",closeCode,closeReason);
-	}
-	@Override
-	public void onError(Session session, Throwable err) {
-		System.err.println("error: "+err.getMessage());
-	}
-	@Override
-	public void onBinary(Session session, byte[] bytes, int arg2, int arg3) {
-		throw new NotImplementedException("Event manager does not yet support binary messages");
-	}
 
-	@Override
-	public void onText(Session session, String event) {
+//	@Override
+//	public void onText(Session session, String event) {
 		//TODO Refactor UI sending to robot
 		//this should be built into the base
 		//initiate a command on demand
 		//set a configuration setting
 		//Code to process message
-		System.out.printf("message received from UI\n\t%s\n",event);
+//		System.out.printf("message received from UI\n\t%s\n",event);
 		
 //		boolean isCommand = false;
 //		boolean isSystem = false;
@@ -172,6 +151,18 @@ public class WebSocketSubsystem extends MDSubsystem implements EventManagerCallB
 //			}
 //		}
 
+//	}
+
+	@Override
+	public void process(String message) {
+		System.out.println("Robot received message: "+message);
+		
+	}
+
+	@Override
+	public MDRobotBase geRobot() {
+		
+		return getRobot();
 	}
 
 }

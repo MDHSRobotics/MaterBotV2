@@ -10,8 +10,8 @@ public class RobotStateReading extends StringSensorReading {
 		Teleop,
 		Test
 	}
-	public RobotStateReading(String name) {
-		super(name,null);	
+	public RobotStateReading(Sensor sensor,String name) {
+		super(sensor,name,null);	
 	}
 
 	public void refresh() {

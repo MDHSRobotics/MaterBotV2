@@ -20,34 +20,34 @@ public class EventManagerWebSocket{
 	@OnWebSocketConnect
 	public void onConnect(Session session){
         eventManager.addSession(session);
-        if(eventManager.getCallback()!=null) eventManager.getCallback().onConnect(session);
+        eventManager.connected();
 	}
 
 	@OnWebSocketClose
 	public void onClose(Session session, int closeCode, String closeReason){
         eventManager.removeSession(session);
-        if(eventManager.getCallback()!=null) eventManager.getCallback().onClose(session, closeCode, closeReason);
+        System.out.println("session closed");
 	}
 	
     @OnWebSocketMessage
     public void onText(Session session, String message) {
-//    	System.out.printf("message: %s\n",message);
+    	System.out.printf("message received: %s\n",message);
 //        if (session.isOpen()) {
 //        	String response = "{\"eventType\": \"RobotStateNotification\", \"messageId\":25, \"timestamp\": 1458450677922, \"state\":\"AutonomousPeriodic\"}";
 //            System.out.printf("response: %s\n", response);
 //            session.getRemote().sendString(response, null);
 //            
 //        }
-        if(eventManager.getCallback()!=null) eventManager.getCallback().onText(session, message);
+        
     }
 
     @OnWebSocketMessage
     public void onBinary(Session session, byte[] buffer, int offset, int length) {
-        if(eventManager.getCallback()!=null) eventManager.getCallback().onBinary(session, buffer, offset, length);
+    	System.out.printf("binary message received\n");
     }
     
     @OnWebSocketError
     public void onError(Session session,Throwable err){
-    	if(eventManager.getCallback()!=null) eventManager.getCallback().onError(session, err);
+    	System.out.printf("socket error: %s\n",err.getMessage());
     }
 }

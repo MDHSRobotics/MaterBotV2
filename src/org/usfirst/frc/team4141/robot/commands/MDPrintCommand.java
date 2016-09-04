@@ -1,5 +1,7 @@
-package org.usfirst.frc.team4141.MDRobotBase;
+package org.usfirst.frc.team4141.robot.commands;
 
+import org.usfirst.frc.team4141.MDRobotBase.MDCommand;
+import org.usfirst.frc.team4141.MDRobotBase.MDRobotBase;
 
 public class MDPrintCommand extends MDCommand {
 	

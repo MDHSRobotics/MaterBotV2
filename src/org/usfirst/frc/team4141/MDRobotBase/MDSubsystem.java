@@ -45,6 +45,7 @@ public abstract class MDSubsystem extends Subsystem {
 		if(isConfigured) return this;
 		sensors.put(name, sensor);
 		sensor.setName(name);
+		sensor.setSubsystem(this);
 		return this;
 	}
 	public Hashtable<String,Sensor> getSensors() {
@@ -54,6 +55,7 @@ public abstract class MDSubsystem extends Subsystem {
 		if(isConfigured) return this;
 		setting.setName(name);
 		setting.setSubsystem(this);
+		System.out.printf("%s set to %s\n",name,setting.getValue().toString());
 		configSettings.put(name, setting);
 		return this;
 	}

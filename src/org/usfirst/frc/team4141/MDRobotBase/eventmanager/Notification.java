@@ -5,27 +5,17 @@ import java.util.Date;
 public abstract class Notification {
 	
 	private long messageId = -1;
-	private long messageTimeStamp = -1;
-	private boolean console = false;
-	private boolean record = false;
-	private boolean display = false;
+	private boolean showJavaConsole = false;
 	private String notificationType;
 
 	public String getNotificationType() {
 		return notificationType;
 	}
-	public long getMessageTimeStamp() {
-		return messageTimeStamp;
+
+	public boolean showJavaConsole() {
+		return showJavaConsole;
 	}
-	public boolean isConsole() {
-		return console;
-	}
-	public boolean isRecord() {
-		return record;
-	}
-	public boolean isDisplay() {
-		return display;
-	}
+
 	public long getMessageId() {
 		return messageId;
 	}
@@ -33,22 +23,13 @@ public abstract class Notification {
 		this.messageId =  messageId;
 	}
 		
-	public Notification(String notificationType,boolean display, boolean record, boolean console){
+	public Notification(String notificationType,boolean showJavaConsole){
 		this.notificationType = notificationType;
-		this.display = display;
-		this.record = record;
-		this.console = console;
-		messageTimeStamp = new Date().getTime();
+		this.showJavaConsole = showJavaConsole;
 		sb = new StringBuilder();
 	}
-	public Notification(String notificationType,boolean display,boolean record){
-		this(notificationType,display,record,false);
-	}
-	public Notification(String notificationType,boolean display){
-		this(notificationType,display,false,false);
-	}
 	public Notification(String notificationType){
-		this(notificationType,false,false,false);
+		this(notificationType,false);
 	}
 	
 	protected abstract void addJSONPayload();
@@ -58,15 +39,11 @@ public abstract class Notification {
 		sb = new StringBuilder();
 		sb.append('{');
 		if(getMessageId()>-1){
-			sb.append(String.format("\"messageId\":%1$d",getMessageId()));
+			sb.append(String.format("\"messageId\":%1$d, ",getMessageId()));
 		}
-		sb.append(", \"eventType\":\"");
+		sb.append("\"eventType\":\"");
 		sb.append(getNotificationType());
-		sb.append("\",\"isDisplay\":");
-		sb.append(this.display);
-		sb.append(",\"isRecord\":");
-		sb.append(this.record);
-
+		sb.append("\"");
 		addJSONPayload();
 		sb.append('}');
 		return sb.toString();

@@ -20,14 +20,17 @@ public class RobotLogNotification extends RobotNotification {
 		return level;
 	}
 	
-	public RobotLogNotification(Level level,String logOrigin, String message,boolean display,boolean record,boolean console) {
-		super("RobotLogNotification",display,record,console);
+	public RobotLogNotification(Level level,String logOrigin, String message,boolean showJavaConsole, boolean showMDConsole, boolean broadcast, boolean record) {
+		super("RobotLogNotification",showJavaConsole,showMDConsole,broadcast, record);
 		this.level = level;
 		this.source = logOrigin;
 		this.message = message;
 	}
-	public RobotLogNotification(Level level,String logOrigin, String message,boolean display) {
-		this(level,logOrigin,message,display,false,true);
+	public RobotLogNotification(Level level,String logOrigin, String message,boolean showMDConsole) {
+		this(level,logOrigin,message,false,showMDConsole,true,true);
+	}
+	public RobotLogNotification(Level level,String logOrigin, String message,boolean showMDConsole,boolean record) {
+		this(level,logOrigin,message,false,showMDConsole,true,record);
 	}
 	
 	@Override

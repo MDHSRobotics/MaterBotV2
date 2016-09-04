@@ -1,51 +1,59 @@
 package org.usfirst.frc.team4141.MDRobotBase.sensors;
 
-public class StringSensorReading implements SensorReading {
 
-	private String name;
+public class StringSensorReading extends ReadingBase {
+
 	private String value;
-	private Type type;
-	private boolean observe;
 
-	public StringSensorReading(String name, String value, boolean observe){
-		this.name = name;
+
+	public StringSensorReading(Sensor sensor,String name, String value, boolean observe,boolean show){
+		super(sensor,name,Type.string,observe,show);
 		this.value = value;
-		this.type = Type.analog;
-		this.observe = observe;
 	}
 	
-	public StringSensorReading(String name, String value){
-		this(name,value,true);
+	public StringSensorReading(Sensor sensor, String name, String value){
+		this(sensor,name,value,true,true);
 	}
 
-	@Override
-	public Type getType() {
-		return type;
-	}
-
-	@Override
-	public String getName() {
-		return name;
-	}
 
 	@Override
 	public String toJSON() {
 		StringBuilder sb = new StringBuilder();
+		boolean isFirst = true;
 		sb.append("{");
-		sb.append("\"type\":\"");
-		sb.append(type.toString());
-		sb.append("\", \"name\":\"");
-		sb.append(name);
-		sb.append("\", \"value\":\"");
+		if(getSubsystem()!=null && getSubsystem().getName()!=null){
+			sb.append("\"subsystem\":\"");
+			sb.append(getSubsystem().getName());
+			sb.append("\"");
+			isFirst= false;
+		}
+		if(getSensor()!=null && getSensor().getName()!=null){
+			if(!isFirst){
+				sb.append(", ");
+			}
+			sb.append("\"sensor\":\"");
+			sb.append(getSensor().getName());
+			sb.append("\"");
+			isFirst= false;
+		}
+		if(!isFirst){
+			sb.append(", ");
+		}
+		sb.append("\"name\":\"");
+		sb.append(getName());
+		sb.append("\", \"type\":\"");
+		sb.append(getType().toString());
+		sb.append("\", \"observe\":");
+		sb.append(Boolean.toString(observe()).toString());
+		sb.append(", \"show\":");
+		sb.append(Boolean.toString(show()).toString());
+		sb.append(", \"value\":\"");
 		sb.append(value);
 		sb.append("\"}");
 		return sb.toString();
 	}
 
-	@Override
-	public boolean observe() {
-		return observe;
-	}
+
 	public String getValue() {
 		return value;
 	}

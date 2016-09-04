@@ -8,11 +8,17 @@ public class HeartbeatNotification extends RobotNotification {
 	
 	private MDRobotBase robot;
 
-	public HeartbeatNotification(MDRobotBase robot, boolean display) {
-		this(robot,display,true, false);
+	public HeartbeatNotification(MDRobotBase robot) {
+		this(robot,false,false,true,true);
 	}
-	public HeartbeatNotification(MDRobotBase robot, boolean display,boolean record,boolean broadcast) {
-		super("Heartbeat", display,record, broadcast);
+	public HeartbeatNotification(MDRobotBase robot, boolean record) {
+		this(robot,false,false,true,record);		
+	}
+	public HeartbeatNotification(MDRobotBase robot, boolean showJavaConsole, boolean showMDConsole ) {
+		this(robot,showJavaConsole,showMDConsole,true,true);
+	}
+	public HeartbeatNotification(MDRobotBase robot, boolean showJavaConsole, boolean showMDConsole, boolean broadcast, boolean record ) {
+		super("Heartbeat", showJavaConsole, showMDConsole, broadcast, record);
 		this.robot = robot;
 		for(Sensor sensor : robot.getSensorsDictionary().values()){
 			sensor.refresh();
