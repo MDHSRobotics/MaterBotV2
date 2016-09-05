@@ -57,7 +57,7 @@ public abstract class RobotNotification extends Notification {
 		}
 		sb.append("\"eventType\":\"");
 		sb.append(getNotificationType());
-		sb.append("\",\"dislay\":");
+		sb.append("\",\"display\":");
 		sb.append(this.showMDConsole);
 		sb.append(",\"record\":");
 		sb.append(this.record);

@@ -157,7 +157,8 @@ public class RobotDiagnostics implements Sensor {
 		((AnalogSensorReading)readings[i++]).setValue(DriverStation.getInstance().getAlliance().ordinal());
 		((DigitalSensorReading)readings[i++]).setValue(DriverStation.getInstance().isBrownedOut());
 		((DigitalSensorReading)readings[i++]).setValue(DriverStation.getInstance().isDSAttached());
-		((DigitalSensorReading)readings[i++]).setValue(DriverStation.getInstance().isFMSAttached());
+//		((DigitalSensorReading)readings[i++]).setValue(DriverStation.getInstance().isFMSAttached());
+		((DigitalSensorReading)readings[i++]).setValue(HALUtil.getFPGAButton());
 //		((DigitalSensorReading)readings[i++]).setValue(DriverStation.getInstance().isSysActive());
 
 		//from HALUtil (3)

@@ -33,12 +33,15 @@ public class HeartbeatNotification extends RobotNotification {
 		}
 		sb.append("\"fpgaTime\":");
 		sb.append(getFpgaTime());
-		sb.append(", \"sensors\":[");
+		sb.append(", \"sensors\":{");
 		boolean isFirst = true;
 		for(SensorReading reading : robot.getSensorReadingsDictionary().values()){
 			if(isFirst) isFirst = false;
-			else sb.append(",");
+			else sb.append(", ");
+			sb.append("\"");
+			sb.append(reading.getName());
+			sb.append("\":");
 			sb.append(reading.toJSON());
 		}
-		sb.append("]");	}
+		sb.append("}");	}
 }

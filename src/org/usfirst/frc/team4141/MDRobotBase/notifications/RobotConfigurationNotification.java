@@ -18,6 +18,9 @@ public class RobotConfigurationNotification extends RobotNotification {
 	
 	
 	private MDRobotBase robot;
+	public RobotConfigurationNotification(MDRobotBase robot) {
+		this(robot, false, false, true, true);
+	}
 	public RobotConfigurationNotification(MDRobotBase robot,boolean showMDConsole) {
 		this(robot, false, showMDConsole,true, true);
 	}

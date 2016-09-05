@@ -15,6 +15,7 @@ public class OI extends OIBase{
 	
 	public OI(MDRobotBase robot) {
 		super(robot);
+		System.out.println("OI created");
 	}
 
 
@@ -23,13 +24,13 @@ public class OI extends OIBase{
 		//Typically, a robot will have at least 1 joystick and 1 console
 		
 		//Configure the joystick(s) here
-		add(new MDJoystick(getRobot(), "joystick1", 0)
-			.whenPressed("A",3,"autonomousCommand")
-			.whileHeld("leftBumper",6,"ExampleCommand1")
-		);
+//		add(new MDJoystick(getRobot(), "joystick1", 0)
+//			.whenPressed("A",3,"autonomousCommand")
+//			.whileHeld("leftBumper",6,"ExampleCommand1")
+//		);
 		//Configure the RioHID here
 		add(new RioHID(getRobot())
-			.whenPressed("ExampleCommand1")
+			.whileHeld("ExampleCommand1")
 		);
 		
 		//Configure console here

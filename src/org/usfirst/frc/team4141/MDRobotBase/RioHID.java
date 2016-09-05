@@ -1,7 +1,7 @@
 package org.usfirst.frc.team4141.MDRobotBase;
 
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.buttons.Button;
+import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.buttons.InternalButton;
 import edu.wpi.first.wpilibj.hal.HALUtil;
 
@@ -11,7 +11,8 @@ public class RioHID extends GenericHID {
 	//This button is mapped to the trigger and to raw button index 0
 	private String name;
 	private MDRobotBase robot;
-	private Button userButton;
+	private InternalButton userButton;
+	private Notifier agent;
 
 	public RioHID(MDRobotBase robot) {
 		this(robot,"RioHID");
@@ -20,6 +21,9 @@ public class RioHID extends GenericHID {
 		this.robot = robot;
 		this.name=name;
 		this.userButton = new InternalButton();
+		this.agent = new Notifier(new UserButtonAgent(userButton));
+		agent.startPeriodic(0.2);
+		System.out.println("RioHID created");
 	}
 	public String getName(){
 		return name;
@@ -91,28 +95,30 @@ public class RioHID extends GenericHID {
 
 	public RioHID toggleWhenPressed(String commandName){
 		if(robot.getCommands().containsKey(commandName)){
-			userButton.cancelWhenPressed(robot.getCommands().get(commandName));
+			userButton.toggleWhenPressed(robot.getCommands().get(commandName));
 		}
 		return this;
 	}
 	
 	public RioHID whenPressed(String commandName){
+		System.out.println("configuring when pressed to fire command "+commandName);
 		if(robot.getCommands().containsKey(commandName)){
-			userButton.cancelWhenPressed(robot.getCommands().get(commandName));
+			System.out.println("found "+commandName);
+			userButton.whenPressed(robot.getCommands().get(commandName));
 		}
 		return this;
 	}
 
 	public RioHID whenReleased(String commandName){
 		if(robot.getCommands().containsKey(commandName)){
-			userButton.cancelWhenPressed(robot.getCommands().get(commandName));
+			userButton.whenReleased(robot.getCommands().get(commandName));
 		}
 		return this;
 	}
 
 	public RioHID whileHeld(String commandName){
 		if(robot.getCommands().containsKey(commandName)){
-			userButton.cancelWhenPressed(robot.getCommands().get(commandName));
+			userButton.whileHeld(robot.getCommands().get(commandName));
 		}
 		return this;
 	}

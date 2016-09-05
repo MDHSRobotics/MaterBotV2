@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public abstract class MDCommand extends Command {
 	private MDRobotBase robot;
+	private boolean isFinished = false;
 
 	public MDCommand(MDRobotBase robot,String name) {
 		super(name);
@@ -26,27 +27,24 @@ public abstract class MDCommand extends Command {
 		return robot;
 	}
 
-	private boolean isInitialized = false;
 	@Override
 	protected void initialize() {
-		if(!isInitialized){
-			log("initialize",getName());
-		}
-		isInitialized = true;
+		isFinished = false;
 	}
 
 	@Override
 	protected void execute() {
+		end();
 	}
 
 	@Override
 	protected boolean isFinished() {
-		return true;
+		return isFinished;
 	}
 
 	@Override
 	protected void end() {
-		isInitialized =false;
+		isFinished = true;
 	}
 
     // Called when another command which requires one or more of the same

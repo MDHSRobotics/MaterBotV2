@@ -24,7 +24,7 @@ public class MDPrintCommand extends MDCommand {
 	@Override
 	protected void execute() {
 		super.execute();
-		System.out.println(message);
+		log("execute", message);
 	}
 
 }

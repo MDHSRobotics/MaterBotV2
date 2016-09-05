@@ -122,7 +122,7 @@ public class EventManager {
 	public synchronized void connected() {
 		System.out.printf("connected! %d sessions\n",sessions.size());
 //		_post(new RobotConfigurationNotification(getHandler().geRobot(), true));
-		post(new RobotConfigurationNotification(getHandler().geRobot(), true));
+		post(new RobotConfigurationNotification(getHandler().geRobot()));
 	}
 	
 

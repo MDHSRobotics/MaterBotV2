@@ -111,7 +111,8 @@ public abstract class MDRobotBase extends IterativeRobot{
     	this.subsystems=new Hashtable<String,MDSubsystem>();
     	this.commands=new Hashtable<String,MDCommand>();
     	oi = new OI(this);
-    	configureRobot();    
+    	configureRobot();  
+    	oi.configureOI();
     	System.out.println("RobotInit completed");
     	
     }
