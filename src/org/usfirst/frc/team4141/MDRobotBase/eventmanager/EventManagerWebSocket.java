@@ -31,7 +31,8 @@ public class EventManagerWebSocket{
 	
     @OnWebSocketMessage
     public void onText(Session session, String message) {
-    	System.out.printf("message received: %s\n",message);
+//    	System.out.printf("message received: %s\n",message);
+    	eventManager.process(message);
 //        if (session.isOpen()) {
 //        	String response = "{\"eventType\": \"RobotStateNotification\", \"messageId\":25, \"timestamp\": 1458450677922, \"state\":\"AutonomousPeriodic\"}";
 //            System.out.printf("response: %s\n", response);

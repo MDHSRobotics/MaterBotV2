@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 public class MDJoystick extends Joystick {
 	private String name;
 	private MDRobotBase robot;
+	private boolean isConfigured;
 
 	public MDJoystick(MDRobotBase robot, String name,int port){
 		super(port);
@@ -59,4 +60,11 @@ public class MDJoystick extends Joystick {
 		}
 		return this;
 	}
+
+	public MDJoystick configure() {
+		isConfigured = true;
+		return this;
+	}
+	
+	public boolean isCOnfigured(){ return isConfigured;}
 }

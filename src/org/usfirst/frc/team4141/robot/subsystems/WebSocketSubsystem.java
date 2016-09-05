@@ -1,12 +1,17 @@
 	package org.usfirst.frc.team4141.robot.subsystems;
 
+import java.util.Map;
+
+import org.usfirst.frc.team4141.MDRobotBase.MDConsoleButton;
 import org.usfirst.frc.team4141.MDRobotBase.MDRobotBase;
 import org.usfirst.frc.team4141.MDRobotBase.MDSubsystem;
 import org.usfirst.frc.team4141.MDRobotBase.eventmanager.Dispatcher;
 import org.usfirst.frc.team4141.MDRobotBase.eventmanager.EventManager;
+import org.usfirst.frc.team4141.MDRobotBase.eventmanager.JSON;
 import org.usfirst.frc.team4141.MDRobotBase.eventmanager.MessageHandler;
 import org.usfirst.frc.team4141.MDRobotBase.notifications.RobotNotification;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Notifier;
 
 public class WebSocketSubsystem extends MDSubsystem implements MessageHandler{
@@ -153,10 +158,39 @@ public class WebSocketSubsystem extends MDSubsystem implements MessageHandler{
 
 //	}
 
+	@SuppressWarnings({"rawtypes" })
 	@Override
-	public void process(String message) {
-		System.out.println("Robot received message: "+message);
-		
+	public void process(String messageText) {
+//		System.out.println("Robot received message: "+messageText);
+		Map message = JSON.parse(messageText);
+		if(message.containsKey("type")){
+			String type = message.get("type").toString();
+			if(type.equals("consoleButtonUpdate")){
+				updateConsoleOIButton(message);
+			}
+		}
+		message.keySet();
+	}
+
+	private void updateConsoleOIButton(Map message) {
+		//format: {"type":"consoleButtonUpdate", "buttonName":"ExampleCommand1", "buttonIndex":0, "pressed":true}
+		//we already know that it's a consoleButtonUpdate
+		//get buttonName, index and pressed
+		if(message.containsKey("buttonName") && message.containsKey("buttonIndex") && message.containsKey("pressed")){
+			String name = message.get("buttonName").toString();
+			Integer index = (int)(Double.parseDouble(message.get("buttonIndex").toString()));
+			Boolean pressed = Boolean.valueOf(message.get("pressed").toString());
+			if(getRobot().getOi().getConsole().getButtons().containsKey(index)){
+				MDConsoleButton button = getRobot().getOi().getConsole().getButtons().get(index);
+				if(button.getName().equals(name)){
+					button.setPressed(pressed);
+					if(name.equals("ExampleCommand1") && pressed){
+						System.out.println("need to rumble");
+						getRobot().getOi().getConsole().setRumble(Joystick.RumbleType.kLeftRumble,0.5);
+					}
+				}
+			}
+		}
 	}
 
 	@Override

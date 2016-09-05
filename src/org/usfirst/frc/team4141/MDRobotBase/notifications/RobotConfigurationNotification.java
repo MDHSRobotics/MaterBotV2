@@ -2,6 +2,7 @@ package org.usfirst.frc.team4141.MDRobotBase.notifications;
 
 import java.util.Hashtable;
 
+import org.usfirst.frc.team4141.MDRobotBase.MDConsoleButton;
 import org.usfirst.frc.team4141.MDRobotBase.MDRobotBase;
 import org.usfirst.frc.team4141.MDRobotBase.MDSubsystem;
 import org.usfirst.frc.team4141.MDRobotBase.config.ConfigSetting;
@@ -100,8 +101,41 @@ public class RobotConfigurationNotification extends RobotNotification {
 					}
 					sb.append("}");
 			}
+
 			sb.append("}");
 		}
+		if(robot.getOi().getConsole()!=null){
+			System.out.println("MDConsoleOI to configure");
+			if(commandNames.length>0 || subsystemNames.length>0){
+				sb.append(", ");
+			}
+			sb.append("\"consoleOI\":{");
+			sb.append("\"buttons\":[");
+			boolean first = true;
+			for(Integer buttonIndex : robot.getOi().getConsole().getButtons().keySet()){
+				System.out.println("buttonIndex: "+buttonIndex);
+				if(first){first = false;}
+				else{
+					sb.append(", ");
+				}
+				append(robot.getOi().getConsole().getButtons().get(buttonIndex));
+			}
+			sb.append("]");
+			sb.append("}");
+		}		
+	}
+	
+	private void append(MDConsoleButton mdConsoleButton) {
+		sb.append("{\"name\":\"");
+		sb.append(mdConsoleButton.getName());
+		sb.append("\", \"index\":");
+		sb.append(mdConsoleButton.getButtonNumber());
+		if(mdConsoleButton.getCommand()!=null){
+			sb.append(", \"command\":\"");
+			sb.append(mdConsoleButton.getCommand().getName());
+			sb.append("\"");
+		}
+		sb.append("}");
 	}
 	
 	private void appendSolenoids(Hashtable<String, SolenoidBase> solenoids) {

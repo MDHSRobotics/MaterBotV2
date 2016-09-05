@@ -14,6 +14,7 @@ public class Dispatcher implements Runnable {
 	public void run() {
 //		System.out.println("dispatching");
 		eventManager.post();
+		eventManager.process();
 //		robot.post(new HeartbeatNotification(robot, true));
 	}
 

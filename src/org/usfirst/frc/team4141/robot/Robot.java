@@ -5,7 +5,6 @@ package org.usfirst.frc.team4141.robot;
 import org.usfirst.frc.team4141.MDRobotBase.MDDriveSubsystem;
 import org.usfirst.frc.team4141.MDRobotBase.MDDriveSubsystem.MotorPosition;
 import org.usfirst.frc.team4141.MDRobotBase.MDDriveSubsystem.Type;
-import org.usfirst.frc.team4141.MDRobotBase.sensors.MDAnalogInput;
 import org.usfirst.frc.team4141.MDRobotBase.sensors.MD_BuiltInAccelerometer;
 import org.usfirst.frc.team4141.MDRobotBase.sensors.RobotDiagnostics;
 import org.usfirst.frc.team4141.MDRobotBase.MDRobotBase;

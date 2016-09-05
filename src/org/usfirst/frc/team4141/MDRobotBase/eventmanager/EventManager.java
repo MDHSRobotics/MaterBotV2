@@ -22,7 +22,7 @@ public class EventManager {
 	private long nextMessageID = 0;
 	private MessageHandler handler;
 	private ArrayBlockingQueue<RobotNotification>outbound= new ArrayBlockingQueue<RobotNotification>(100);
-	private ArrayBlockingQueue<RobotNotification>inbound= new ArrayBlockingQueue<RobotNotification>(100);
+	private ArrayBlockingQueue<String>inbound= new ArrayBlockingQueue<String>(100);
 
 	public EventManager(MessageHandler handler){
 		this(handler,false);
@@ -73,7 +73,15 @@ public class EventManager {
 			System.out.println(e.getMessage());
 		}
 	}
-
+	public synchronized  void process(){
+		String message;
+		while((message = inbound.poll())!=null){
+//			System.out.println("received message "+message);
+			if(handler!=null){
+				handler.process(message);
+			}
+		}
+	}
 	public synchronized  void post(){
 		RobotNotification notification;
 		while((notification = outbound.poll())!=null){
@@ -121,8 +129,15 @@ public class EventManager {
 	}
 	public synchronized void connected() {
 		System.out.printf("connected! %d sessions\n",sessions.size());
-//		_post(new RobotConfigurationNotification(getHandler().geRobot(), true));
-		post(new RobotConfigurationNotification(getHandler().geRobot()));
+		post(new RobotConfigurationNotification(getHandler().geRobot(),true));
+	}
+	public  void process(String message) {
+		try {
+			inbound.put(message);
+		} catch (InterruptedException e) {
+			System.err.println("unable to receive: "+message);
+		}
+		
 	}
 	
 

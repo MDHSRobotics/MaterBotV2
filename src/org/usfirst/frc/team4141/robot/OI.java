@@ -1,6 +1,7 @@
 package org.usfirst.frc.team4141.robot;
 
 
+import org.usfirst.frc.team4141.MDRobotBase.ConsoleOI;
 import org.usfirst.frc.team4141.MDRobotBase.MDJoystick;
 import org.usfirst.frc.team4141.MDRobotBase.MDRobotBase;
 import org.usfirst.frc.team4141.MDRobotBase.OIBase;
@@ -25,17 +26,23 @@ public class OI extends OIBase{
 		
 		//Configure the joystick(s) here
 //		add(new MDJoystick(getRobot(), "joystick1", 0)
-//			.whenPressed("A",3,"autonomousCommand")
+//			.whenPressed("A",3,"AutonomousCommand")
 //			.whileHeld("leftBumper",6,"ExampleCommand1")
+//			.configure()
 //		);
 		//Configure the RioHID here
 		add(new RioHID(getRobot())
 			.whileHeld("ExampleCommand1")
+			.configure()
 		);
-		
+		//Configure the MDConsole OI here		
+		add(new ConsoleOI(getRobot())
+				.whileHeld("ExampleCommand1",0,"ExampleCommand1")
+				.whenPressed("AutonomousCommand",1,"AutonomousCommand")
+				.configure()
+			);		
 		//Configure console here
 	}
-
 
 }  
 
