@@ -120,16 +120,13 @@ public class IntegerConfigSetting implements ConfigSetting {
 	public String getString() {
 		return value.toString();
 	}
-	@Override
-	public String getPath() {
-		return subsystem.getName()+"."+getName();
-	}
+
 
 	@Override
 	public String toJSON() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("{\"path\":\"");
-		sb.append(getPath());
+		sb.append("{\"subsystem\":\"");
+		sb.append(getSubsystem().getName());
 		sb.append("\", \"name\":\"");
 		sb.append(getName());
 		sb.append("\", \"type\":\"");
@@ -142,5 +139,15 @@ public class IntegerConfigSetting implements ConfigSetting {
 		sb.append(getMax().toString());
 		sb.append("}");
 		return sb.toString();
+	}
+
+	@Override
+	public String getPath() {
+		return getSubsystem().getName()+'.'+getName();
+	}
+	@Override
+	public boolean getBoolean() {
+		if (value == 0) return false;
+		return true;
 	}
 }

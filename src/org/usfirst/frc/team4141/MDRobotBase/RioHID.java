@@ -38,40 +38,28 @@ public class RioHID extends MDGenericHID {
 	}
 
 
-	public RioHID cancelWhenPressed(String commandName){
-		if(getRobot().getCommands().containsKey(commandName)){
-			userButton.cancelWhenPressed(getRobot().getCommands().get(commandName));
-		}
+	public RioHID cancelWhenPressed(MDCommand command){
+			userButton.cancelWhenPressed(command);
 		return this;
 	}
 
-	public RioHID toggleWhenPressed(String commandName){
-		if(getRobot().getCommands().containsKey(commandName)){
-			userButton.toggleWhenPressed(getRobot().getCommands().get(commandName));
-		}
+	public RioHID toggleWhenPressed(MDCommand command){
+			userButton.toggleWhenPressed(command);
 		return this;
 	}
 	
-	public RioHID whenPressed(String commandName){
-		System.out.println("configuring when pressed to fire command "+commandName);
-		if(getRobot().getCommands().containsKey(commandName)){
-			System.out.println("found "+commandName);
-			userButton.whenPressed(getRobot().getCommands().get(commandName));
-		}
+	public RioHID whenPressed(MDCommand command){
+			userButton.whenPressed(command);
 		return this;
 	}
 
-	public RioHID whenReleased(String commandName){
-		if(getRobot().getCommands().containsKey(commandName)){
-			userButton.whenReleased(getRobot().getCommands().get(commandName));
-		}
+	public RioHID whenReleased(MDCommand command){
+			userButton.whenReleased(command);
 		return this;
 	}
 
-	public RioHID whileHeld(String commandName){
-		if(getRobot().getCommands().containsKey(commandName)){
-			userButton.whileHeld(getRobot().getCommands().get(commandName));
-		}
+	public RioHID whileHeld(MDCommand command){
+			userButton.whileHeld(command);
 		return this;
 	}
 	public RioHID configure() {

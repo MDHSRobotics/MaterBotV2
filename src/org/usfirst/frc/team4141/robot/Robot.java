@@ -2,9 +2,7 @@
 package org.usfirst.frc.team4141.robot;
 
 
-import org.usfirst.frc.team4141.MDRobotBase.MDDriveSubsystem;
-import org.usfirst.frc.team4141.MDRobotBase.MDDriveSubsystem.MotorPosition;
-import org.usfirst.frc.team4141.MDRobotBase.MDDriveSubsystem.Type;
+import org.usfirst.frc.team4141.MDRobotBase.MDCommand;
 import org.usfirst.frc.team4141.MDRobotBase.sensors.MD_BuiltInAccelerometer;
 import org.usfirst.frc.team4141.MDRobotBase.sensors.RobotDiagnostics;
 import org.usfirst.frc.team4141.MDRobotBase.MDRobotBase;
@@ -14,7 +12,10 @@ import org.usfirst.frc.team4141.MDRobotBase.config.StringConfigSetting;
 import org.usfirst.frc.team4141.robot.commands.MDPrintCommand;
 import org.usfirst.frc.team4141.robot.subsystems.CoreSubsystem;
 import org.usfirst.frc.team4141.robot.subsystems.DiagnosticsSubsystem;
+import org.usfirst.frc.team4141.robot.subsystems.MDDriveSubsystem;
 import org.usfirst.frc.team4141.robot.subsystems.WebSocketSubsystem;
+import org.usfirst.frc.team4141.robot.subsystems.MDDriveSubsystem.MotorPosition;
+import org.usfirst.frc.team4141.robot.subsystems.MDDriveSubsystem.Type;
 
 import edu.wpi.first.wpilibj.Victor;
 
@@ -32,20 +33,25 @@ public class Robot extends MDRobotBase {
      */
 
 //TODO figure out why the rumbling was needed and refactor into OI
-//	private boolean rumbling = false;
-//	private double rumblestart;
-	
+
 	@Override
 	protected void configureRobot() {
 
-		//A robot will define several commands
-		add(new MDPrintCommand(this,"AutonomousCommand","AutonomousCommand message"));
-		add(new MDPrintCommand(this,"ExampleCommand1","ExampleCommand1 message"));
+		//A commands needs to be configured for the autonomous mode.
+		//In some cases it is desirable to have more than 1 auto command and make a decision at game time which command to use
+		setAutonomousCommand(new MDCommand[]{
+				new MDPrintCommand(this,"AutonomousCommand1","AutonomousCommand1 message"),
+				new MDPrintCommand(this,"AutonomousCommand2","AutonomousCommand2 message"),
+				new MDPrintCommand(this,"AutonomousCommand3","AutonomousCommand3 message"),
+				new MDPrintCommand(this,"AutonomousCommand4","AutonomousCommand4 message")
+			}
+			, "AutonomousCommand4"  //specify the default
+		);
+
+		
 		
 		//A robot is composed of subsystems
-		//A robot will typically have 1 drive system and several other fit to purpose subsystems
-		
-		
+		//A robot will typically have 1 drive system and several other fit to purpose subsystems		
 		//The Drive system is a special subsystem in that it has specific logic handle the speed controllers
 		add(new MDDriveSubsystem(this, "driveSystem", Type.TankDrive)
 				.add(MotorPosition.left, new Victor(0))
@@ -64,7 +70,8 @@ public class Robot extends MDRobotBase {
 		
 		//Subsystem to manage robot wide config settings
 		add( new CoreSubsystem(this, "core")
-				 .add("name",new StringConfigSetting("Mr. Roboto2"))//go ahead name your robot
+				 .add("name",new StringConfigSetting("Mr. Roboto2"))					//go ahead name your robot
+				 .add("autoCommand",new StringConfigSetting("AutonomousCommand1"))		//name of autoCommand you wish to start with
 				 .configure()
 		);
 		
@@ -74,9 +81,11 @@ public class Robot extends MDRobotBase {
 				 .configure()
 		);
 
-		autonomousCommand=getCommands().get("AutonomousCommand");
+
 
 	}
+
+
 
 	
 	//Override lifecycle methods, as needed

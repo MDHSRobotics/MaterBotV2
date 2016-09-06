@@ -2,10 +2,10 @@ package org.usfirst.frc.team4141.robot;
 
 
 import org.usfirst.frc.team4141.MDRobotBase.ConsoleOI;
-import org.usfirst.frc.team4141.MDRobotBase.MDJoystick;
 import org.usfirst.frc.team4141.MDRobotBase.MDRobotBase;
 import org.usfirst.frc.team4141.MDRobotBase.OIBase;
 import org.usfirst.frc.team4141.MDRobotBase.RioHID;
+import org.usfirst.frc.team4141.robot.commands.MDPrintCommand;
 
 
 /**
@@ -32,13 +32,13 @@ public class OI extends OIBase{
 //		);
 		//Configure the RioHID here
 		add(new RioHID(getRobot())
-			.whileHeld("ExampleCommand1")
+			.whileHeld(new MDPrintCommand(getRobot(),"ExampleCommand1","ExampleCommand1 message"))
 			.configure()
 		);
 		//Configure the MDConsole OI here		
 		add(new ConsoleOI(getRobot())
-				.whileHeld("ExampleCommand1",0,"ExampleCommand1")
-				.whenPressed("AutonomousCommand",1,"AutonomousCommand")
+				.whileHeld("ExampleCommand1",0,new MDPrintCommand(getRobot(),"ExampleCommand1","ExampleCommand1 message"))
+				.whenPressed("ExampleCommand2",1,new MDPrintCommand(getRobot(),"ExampleCommand2","ExampleCommand2 message"))
 				.configure()
 			);		
 		//Configure console here

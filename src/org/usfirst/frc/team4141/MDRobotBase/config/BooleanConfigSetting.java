@@ -100,15 +100,10 @@ public class BooleanConfigSetting implements ConfigSetting {
 	}
 
 	@Override
-	public String getPath() {
-		return subsystem.getName()+"."+getName();
-	}
-
-	@Override
 	public String toJSON() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("{\"path\":\"");
-		sb.append(getPath());
+		sb.append("{\"subsystem\":\"");
+		sb.append(getSubsystem().getName());
 		sb.append("\", \"name\":\"");
 		sb.append(getName());
 		sb.append("\", \"type\":\"");
@@ -117,5 +112,15 @@ public class BooleanConfigSetting implements ConfigSetting {
 		sb.append(getValue().toString());
 		sb.append("}");
 		return sb.toString();
+	}
+
+	@Override
+	public String getPath() {
+		return getSubsystem().getName()+'.'+getName();
+	}
+
+	@Override
+	public boolean getBoolean() {
+		return value;
 	}
 }

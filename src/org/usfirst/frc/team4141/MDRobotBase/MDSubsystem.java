@@ -4,6 +4,7 @@ import java.util.Hashtable;
 import java.util.Set;
 
 import org.usfirst.frc.team4141.MDRobotBase.Logger.Level;
+import org.usfirst.frc.team4141.MDRobotBase.config.ConfigPreferenceManager;
 import org.usfirst.frc.team4141.MDRobotBase.config.ConfigSetting;
 import org.usfirst.frc.team4141.MDRobotBase.sensors.Sensor;
 import org.usfirst.frc.team4141.MDRobotBase.sensors.SensorReading;
@@ -22,8 +23,11 @@ public abstract class MDSubsystem extends Subsystem {
 	private Hashtable<String,Sensor> sensors;
 	private Hashtable<String,ConfigSetting> configSettings;	
 	private boolean isConfigured = false;
-	private String defaultCommandName;
-		
+	private boolean isCore = false;
+	
+	public boolean isCore(){ return isCore;}
+	public void setCore(boolean isCore){this.isCore = isCore;}
+	
 	public MDSubsystem add(String name,PWM motor){
 		if(isConfigured) return this;
 		motors.put(name, motor);
@@ -55,7 +59,7 @@ public abstract class MDSubsystem extends Subsystem {
 		if(isConfigured) return this;
 		setting.setName(name);
 		setting.setSubsystem(this);
-		System.out.printf("%s set to %s\n",name,setting.getValue().toString());
+//		System.out.printf("%s set to %s\n",name,setting.getValue().toString());
 		configSettings.put(name, setting);
 		return this;
 	}
@@ -112,11 +116,12 @@ public abstract class MDSubsystem extends Subsystem {
 				}
 			}
 		}
-
-//      LiveWindow.addActuator("Shoot System", "Shoot Left Motor", (Talon) shootLeftMotor);
-//      LiveWindow.addActuator("Shoot System", "Pivot Motor", (Talon) pivotmotor); 
-//      LiveWindow.addSensor("Pivot Switches", "Pivot Load Switch", pivotloadswitch);
-//      LiveWindow.addSensor("Pivot Switches", "Pivot Shoot Switch", pivotshootswitch);
+		
+		if(configSettings!=null && configSettings.size()>0){
+			for(String settingName : configSettings.keySet()){
+				ConfigPreferenceManager.register(configSettings.get(settingName));
+			}
+		}
 		
 		isConfigured = true;
 		setUp();
@@ -138,30 +143,20 @@ public abstract class MDSubsystem extends Subsystem {
 	
 	public boolean isConfigured(){ return isConfigured;}
 	
-	@Override
-	protected void initDefaultCommand() {
-		System.out.println("in initDefaultCommand()");
-		if(robot.getCommands()!=null && robot.getCommands().containsKey(defaultCommandName)){
-			MDCommand command = robot.getCommands().get(defaultCommandName);
-			if(!command.doesRequire(this))
-			{
-				command.add(this);
-			}
-			setDefaultCommand(command);
-		}
-	}
-
-	
-	public MDSubsystem setDefaultCommand(String commandName) {
-		this.defaultCommandName = commandName;
-		return this;
-	}
 	
 	protected abstract void setUp();
+	public abstract void settingChangeListener(ConfigSetting setting);
+	
 	public ConfigSetting getSetting(String settingName) {
 		if(configSettings!=null && configSettings.containsKey(settingName)){
 			return configSettings.get(settingName);
 		}
 		return null;
+	}
+	public boolean hasSetting(String settingName) {
+		if(configSettings!=null && configSettings.containsKey(settingName)){
+			return true;
+		}
+		return false;
 	}
 }

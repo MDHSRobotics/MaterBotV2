@@ -10,6 +10,12 @@ public class ConfigPreferenceManager {
 	//Helper class to manage the persistence and retrieval of config settings to disk 
 	// using the Preferences feature of the RoboRio
 
+	public static void clearPreferences(){
+		for(Object key: Preferences.getInstance().getKeys()){
+			Preferences.getInstance().remove((String)key);
+		}
+	}
+	
 	public static void register(ConfigSetting setting){
 		//when the robot is initialized, the default config setting are read from the code
 		//however, config settings may have been changed during robot execution
@@ -27,12 +33,16 @@ public class ConfigPreferenceManager {
 			//not in Preferences - add it
 			//TODO: refactor so that settings are persisted only when they are changed by the console
 			//move this to a command received by the event manager
+			System.out.println("saving setting "+setting.toJSON()+" to Preferences");
+
 			Preferences.getInstance().putString(setting.getPath(), setting.toJSON());
+			
 		}
 	}
 
 	private static void updateSetting(ConfigSetting robotSetting, String JSONsetting) {
-		System.out.println("updating setting "+robotSetting.getPath()+" from Preferences");
+		JSONsetting = JSONsetting.replace('\\', '"');
+		System.out.println("updating setting "+robotSetting.getPath()+" from Preferences with "+JSONsetting);
 	   if(JSONsetting == null) return;
 	   @SuppressWarnings("rawtypes")
 	   Map parsedSetting = JSON.parse(JSONsetting);
@@ -48,5 +58,9 @@ public class ConfigPreferenceManager {
 	   if(parsedSetting.containsKey(key)){
 		   robotSetting.setMax(parsedSetting.get(key));
 	   }	   
+	}
+
+	public static void save(ConfigSetting setting) {
+		Preferences.getInstance().putString(setting.getPath(), setting.toJSON());
 	}
 }

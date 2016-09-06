@@ -1,5 +1,9 @@
-package org.usfirst.frc.team4141.MDRobotBase;
+package org.usfirst.frc.team4141.robot.subsystems;
 
+import org.usfirst.frc.team4141.MDRobotBase.MDRobotBase;
+import org.usfirst.frc.team4141.MDRobotBase.MDSubsystem;
+import org.usfirst.frc.team4141.MDRobotBase.NotImplementedException;
+import org.usfirst.frc.team4141.MDRobotBase.config.ConfigSetting;
 import org.usfirst.frc.team4141.MDRobotBase.sensors.Sensor;
 
 import edu.wpi.first.wpilibj.PWM;
@@ -96,5 +100,10 @@ public class MDDriveSubsystem extends MDSubsystem {
 	protected void setUp() {
 		//called after configuration is completed
 		
+	}
+	@Override
+	public void settingChangeListener(ConfigSetting changedSetting) {
+		
+		//method to listen to setting changes
 	}
 }

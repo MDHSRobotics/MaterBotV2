@@ -41,28 +41,10 @@ public class RobotConfigurationNotification extends RobotNotification {
 		}
 		sb.append("\"fpgaTime\":");
 		sb.append(getFpgaTime());
-		Object[] commandNames = robot.getCommands().keySet().toArray();
 		Object[] subsystemNames = robot.getSubsystems().keySet().toArray();
 		
-		if(commandNames.length>0){
-			sb.append(", \"commands\":[");
-			boolean firstWritten = false;
-			for(int k=0;k<commandNames.length;k++){
-				String commandName = (String)commandNames[k];
-				if(firstWritten) sb.append(',');
-				else firstWritten = true;
-				sb.append("{\"command\":\"");
-				sb.append(commandName);
-				sb.append("\"");
-				sb.append("}");			
-			}
-			sb.append("]");
-		}
 		if(subsystemNames.length>0){
-			if(commandNames.length>0){
-				sb.append(", ");
-			}
-			sb.append("\"subsystems\":{");
+			sb.append(", \"subsystems\":{");
 			boolean firstWritten = false;
 			for(int k=0;k<subsystemNames.length;k++){
 				String subsystemName = (String)subsystemNames[k];
@@ -79,6 +61,12 @@ public class RobotConfigurationNotification extends RobotNotification {
 					sb.append("{\"subsystem\":\"");
 					sb.append(subsystemName);
 					sb.append("\"");
+					if(subsystem.isCore()){
+						sb.append(", \"isCore\":true");
+					}
+					else{
+						sb.append(", \"isCore\":false");
+					}
 					if(settings!=null && settings.size()>0){
 						sb.append(", \"settings\":[");
 						appendSettings(settings);
@@ -106,10 +94,8 @@ public class RobotConfigurationNotification extends RobotNotification {
 		}
 		if(robot.getOi().getConsole()!=null){
 			System.out.println("MDConsoleOI to configure");
-			if(commandNames.length>0 || subsystemNames.length>0){
-				sb.append(", ");
-			}
-			sb.append("\"consoleOI\":{");
+
+			sb.append(", \"consoleOI\":{");
 			sb.append("\"buttons\":[");
 			boolean first = true;
 			for(Integer buttonIndex : robot.getOi().getConsole().getButtons().keySet()){

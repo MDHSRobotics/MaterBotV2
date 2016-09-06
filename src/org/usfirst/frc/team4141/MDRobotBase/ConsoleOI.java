@@ -3,7 +3,6 @@ package org.usfirst.frc.team4141.MDRobotBase;
 import java.util.Hashtable;
 
 import org.usfirst.frc.team4141.MDRobotBase.notifications.ConsoleRumbleNotification;
-import org.usfirst.frc.team4141.MDRobotBase.notifications.HeartbeatNotification;
 
 import edu.wpi.first.wpilibj.Joystick;
 
@@ -40,48 +39,38 @@ public class ConsoleOI extends MDGenericHID {
 	}
 
 
-	public ConsoleOI cancelWhenPressed(String buttonName,int buttonNumber,String commandName){
-		if(getRobot().getCommands().containsKey(commandName)){
+	public ConsoleOI cancelWhenPressed(String buttonName,int buttonNumber,MDCommand command){
 			MDConsoleButton button = new MDConsoleButton(this, buttonName, buttonNumber);
-			button.cancelWhenPressed(getRobot().getCommands().get(commandName));
+			button.cancelWhenPressed(command);
 			buttons.put(new Integer(buttonNumber), button);
-		}
 		return this;
 	}
 
-	public ConsoleOI toggleWhenPressed(String buttonName,int buttonNumber,String commandName){
-		if(getRobot().getCommands().containsKey(commandName)){
+	public ConsoleOI toggleWhenPressed(String buttonName,int buttonNumber,MDCommand command){
 			MDConsoleButton button = new MDConsoleButton(this, buttonName, buttonNumber);
-			button.toggleWhenPressed(getRobot().getCommands().get(commandName));
+			button.toggleWhenPressed(command);
 			buttons.put(new Integer(buttonNumber), button);
-		}
 		return this;
 	}
 	
-	public ConsoleOI whenPressed(String buttonName,int buttonNumber,String commandName){
-		if(getRobot().getCommands().containsKey(commandName)){
+	public ConsoleOI whenPressed(String buttonName,int buttonNumber,MDCommand command){
 			MDConsoleButton button = new MDConsoleButton(this, buttonName, buttonNumber);
-			button.whenPressed(getRobot().getCommands().get(commandName));
+			button.whenPressed(command);
 			buttons.put(new Integer(buttonNumber), button);
-		}
 		return this;
 	}
 
-	public ConsoleOI whenReleased(String buttonName,int buttonNumber,String commandName){
-		if(getRobot().getCommands().containsKey(commandName)){
+	public ConsoleOI whenReleased(String buttonName,int buttonNumber,MDCommand command){
 			MDConsoleButton button = new MDConsoleButton(this, buttonName, buttonNumber);
-			button.whenReleased(getRobot().getCommands().get(commandName));
+			button.whenReleased(command);
 			buttons.put(new Integer(buttonNumber), button);
-		}
 		return this;
 	}
 
-	public ConsoleOI whileHeld(String buttonName,int buttonNumber,String commandName){
-		if(getRobot().getCommands().containsKey(commandName)){
+	public ConsoleOI whileHeld(String buttonName,int buttonNumber,MDCommand command){
 			MDConsoleButton button = new MDConsoleButton(this, buttonName, buttonNumber);
-			button.whileHeld(getRobot().getCommands().get(commandName));
+			button.whileHeld(command);
 			buttons.put(new Integer(buttonNumber), button);
-		}
 		return this;
 	}
 	

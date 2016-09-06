@@ -5,6 +5,9 @@ import java.util.Map;
 import org.usfirst.frc.team4141.MDRobotBase.MDConsoleButton;
 import org.usfirst.frc.team4141.MDRobotBase.MDRobotBase;
 import org.usfirst.frc.team4141.MDRobotBase.MDSubsystem;
+import org.usfirst.frc.team4141.MDRobotBase.config.ConfigPreferenceManager;
+import org.usfirst.frc.team4141.MDRobotBase.config.ConfigSetting;
+import org.usfirst.frc.team4141.MDRobotBase.config.ConfigSetting.Type;
 import org.usfirst.frc.team4141.MDRobotBase.eventmanager.Dispatcher;
 import org.usfirst.frc.team4141.MDRobotBase.eventmanager.EventManager;
 import org.usfirst.frc.team4141.MDRobotBase.eventmanager.JSON;
@@ -22,6 +25,7 @@ public class WebSocketSubsystem extends MDSubsystem implements MessageHandler{
 
 	public WebSocketSubsystem(MDRobotBase robot, String name) {
 		super(robot, name);
+		setCore(true);
 	}
 
 	@Override
@@ -66,98 +70,6 @@ public class WebSocketSubsystem extends MDSubsystem implements MessageHandler{
 		}
 	}
 
-//	@Override
-//	public void onText(Session session, String event) {
-		//TODO Refactor UI sending to robot
-		//this should be built into the base
-		//initiate a command on demand
-		//set a configuration setting
-		//Code to process message
-//		System.out.printf("message received from UI\n\t%s\n",event);
-		
-//		boolean isCommand = false;
-//		boolean isSystem = false;
-//		
-//		Map map= decode(event);
-//		if(map==null) return;
-//
-//		String eventType=null;
-//		
-//		
-//		String key = "eventType";
-//		if(map.containsKey(key)){		
-//			eventType = (String) map.get(key);
-//			
-//		}
-//		if(eventType!=null){
-//			if(eventType.equals("configItemNotification")){
-//				String commandName=null;
-//				String systemName=null;
-//				String itemName=null;
-//				String value=null;
-//				key = "name";
-//				if(map.containsKey(key)){
-//					itemName = (String) map.get(key);
-//					
-//				}
-//				key = "systemName";
-//				if(map.containsKey(key)){
-//					systemName=(String) map.get(key);
-//					
-//					isSystem = true;
-//				}
-//				key = "commandName";
-//				if(map.containsKey(key)){
-//					commandName=(String) map.get(key);
-//					
-//					isCommand = true;
-//				}
-//				key = "value";
-//				if(map.containsKey(key)){
-//					value = (String) map.get(key);
-//					
-//				}
-//				if(itemName!=null && value!=null){
-//					ConfigItem item = null;
-//					if(isCommand && commandName!=null){
-//						item = ConfigManager.getItem(getCommands().get(commandName), itemName);
-//					}
-//					if(isSystem && systemName!=null){
-//						item = ConfigManager.getItem(getSubsystems().get(systemName), itemName);
-//					} 
-//					if(item!=null){
-//						switch(item.getType()){
-//						case doubleNumber:
-//							try{
-//								Double d = Double.valueOf(value);
-//								if(d!=null){
-//									item.setValue(d);
-//								}
-//							}
-//							catch(NumberFormatException nfe){							
-//							}						
-//							break;
-//						case integer:
-//							try{
-//								Integer i = Integer.valueOf(value);
-//								if(i!=null){
-//									item.setValue(i);
-//								}
-//							}
-//							catch(NumberFormatException nfe){							
-//							}	
-//							break;
-//						case string:
-//							item.setValue(value);
-//							break;
-//						}
-//					}
-//				}				
-//			}
-//		}
-
-//	}
-
 	@SuppressWarnings({"rawtypes" })
 	@Override
 	public void process(String messageText) {
@@ -168,10 +80,50 @@ public class WebSocketSubsystem extends MDSubsystem implements MessageHandler{
 			if(type.equals("consoleButtonUpdate")){
 				updateConsoleOIButton(message);
 			}
+			if(type.equals("settingUpdate")){
+				updateSetting(message);
+			}
 		}
 		message.keySet();
 	}
 
+	@SuppressWarnings("rawtypes")
+	private void updateSetting(Map message) {
+		//format: {"type":"settingUpdate", "subsystem":"core", "settingName":"autoCommand", "value":"AutonomousCommand2"}
+		//we already know that it's a settingUpdate
+		//do 2 things:
+		//1. get setting from core and update it.
+		//2. update preferences
+		if(message.containsKey("subsystem") && message.containsKey("settingName")){
+			String subsystemName = (String)(message.get("subsystem"));
+			String settingName = (String)(message.get("settingName"));
+			if(geRobot().getSubsystems().containsKey(subsystemName)){
+				MDSubsystem subsystem = getRobot().getSubsystems().get(subsystemName);
+				System.out.println("changing setting for subsystem "+subsystem.getName());
+				if(subsystem.hasSetting(settingName)){
+					ConfigSetting setting = subsystem.getSetting(settingName);
+					System.out.println("updating setting "+setting.getName());
+					if(message.containsKey("value")){
+						setting.setValue(message.get("value"));
+						System.out.println("value now set to "+setting.getValue().toString());
+					}
+					if(message.containsKey("min")){
+						setting.setMin(message.get("min"));
+						System.out.println("min now set to "+setting.getMin().toString());
+					}
+					if(message.containsKey("max")){
+						setting.setMax(message.get("max"));
+						System.out.println("max now set to "+setting.getMax().toString());
+					}
+					subsystem.settingChangeListener(setting);
+					ConfigPreferenceManager.save(setting);
+				}
+			}
+		}
+		
+	}
+
+	@SuppressWarnings("rawtypes")
 	private void updateConsoleOIButton(Map message) {
 		//format: {"type":"consoleButtonUpdate", "buttonName":"ExampleCommand1", "buttonIndex":0, "pressed":true}
 		//we already know that it's a consoleButtonUpdate
@@ -198,5 +150,19 @@ public class WebSocketSubsystem extends MDSubsystem implements MessageHandler{
 		
 		return getRobot();
 	}
-
+	@Override
+	public void settingChangeListener(ConfigSetting changedSetting) {
+		System.out.println(changedSetting.getPath()+ " was changed to "+ changedSetting.getValue().toString());
+		if(changedSetting.getName().equals("enableWebSockets") && changedSetting.getType().equals(Type.binary)){
+			//we know that enableWe
+			if(changedSetting.getBoolean()){
+				System.out.println("enabling websockets");
+				eventManager.enableWebSockets();
+			}
+			else{
+				System.out.println("disabling websockets");
+				eventManager.disableWebSockets();
+			}
+		}
+	}
 }

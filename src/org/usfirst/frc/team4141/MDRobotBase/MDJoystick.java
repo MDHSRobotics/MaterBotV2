@@ -21,43 +21,33 @@ public class MDJoystick extends Joystick {
 		return robot;
 	}
 
-	public MDJoystick cancelWhenPressed(String buttonName,int buttonNumber,String commandName){
-		if(robot.getCommands().containsKey(commandName)){
+	public MDJoystick cancelWhenPressed(String buttonName,int buttonNumber,MDCommand command){
 			JoystickButton button = new JoystickButton(this, buttonNumber);
-			button.cancelWhenPressed(robot.getCommands().get(commandName));
-		}
+			button.cancelWhenPressed(command);
 		return this;
 	}
 
-	public MDJoystick toggleWhenPressed(String buttonName,int buttonNumber,String commandName){
-		if(robot.getCommands().containsKey(commandName)){
+	public MDJoystick toggleWhenPressed(String buttonName,int buttonNumber,MDCommand command){
 			JoystickButton button = new JoystickButton(this, buttonNumber);
-			button.toggleWhenPressed(robot.getCommands().get(commandName));
-		}
+			button.toggleWhenPressed(command);
 		return this;
 	}
 	
-	public MDJoystick whenPressed(String buttonName,int buttonNumber,String commandName){
-		if(robot.getCommands().containsKey(commandName)){
+	public MDJoystick whenPressed(String buttonName,int buttonNumber,MDCommand command){
 			JoystickButton button = new JoystickButton(this, buttonNumber);
-			button.whenPressed(robot.getCommands().get(commandName));
-		}
+			button.whenPressed(command);
 		return this;
 	}
 
-	public MDJoystick whenReleased(String buttonName,int buttonNumber,String commandName){
-		if(robot.getCommands().containsKey(commandName)){
+	public MDJoystick whenReleased(String buttonName,int buttonNumber,MDCommand command){
 			JoystickButton button = new JoystickButton(this, buttonNumber);
-			button.whenReleased(robot.getCommands().get(commandName));
-		}
+			button.whenReleased(command);
 		return this;
 	}
 
-	public MDJoystick whileHeld(String buttonName,int buttonNumber,String commandName){
-		if(robot.getCommands().containsKey(commandName)){
+	public MDJoystick whileHeld(String buttonName,int buttonNumber,MDCommand command){
 			JoystickButton button = new JoystickButton(this, buttonNumber);
-			button.whileHeld(robot.getCommands().get(commandName));
-		}
+			button.whileHeld(command);
 		return this;
 	}
 

@@ -17,12 +17,13 @@ public interface ConfigSetting {
 	int getInt();
 	double getDouble();
 	String getString();
+	boolean getBoolean();
 	public enum Type {
 		binary,
 		integer,
 		decimal,
 		string
 	}
-	String getPath();
 	String toJSON();
+	String getPath();
 }

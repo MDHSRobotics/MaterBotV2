@@ -4,6 +4,7 @@ package org.usfirst.frc.team4141.robot.subsystems;
 import org.usfirst.frc.team4141.MDRobotBase.DiagnosticScan;
 import org.usfirst.frc.team4141.MDRobotBase.MDRobotBase;
 import org.usfirst.frc.team4141.MDRobotBase.MDSubsystem;
+import org.usfirst.frc.team4141.MDRobotBase.config.ConfigSetting;
 
 import edu.wpi.first.wpilibj.Notifier;
 
@@ -24,16 +25,15 @@ public class DiagnosticsSubsystem extends MDSubsystem {
 
     public DiagnosticsSubsystem(MDRobotBase robot, String name) {
 		super(robot, name);
+		setCore(true);
 	} 
 
 
 	@Override
 	protected void setUp() {
-		//see if the scan period has been configured
 		if(getConfigSettings()!=null && getConfigSettings().containsKey("diagnosticsScanPeriod")){
 			scanPeriod = getConfigSettings().get("diagnosticsScanPeriod").getDouble();
-		}
-		
+		}	
 	}
 	
 	@Override
@@ -41,5 +41,17 @@ public class DiagnosticsSubsystem extends MDSubsystem {
 		System.out.println("initDefaultCommand()");
 		scan = new Notifier(new DiagnosticScan(getRobot()));
 		scan.startPeriodic(scanPeriod);
+	}
+	@Override
+	public void settingChangeListener(ConfigSetting changedSetting) {
+		
+		if(this.scan!=null && changedSetting.getName().equals("diagnosticsScanPeriod")){
+			scanPeriod = getConfigSettings().get("diagnosticsScanPeriod").getDouble();
+			System.out.println("changing scan period to "+scanPeriod);
+			scan.startPeriodic(scanPeriod);
+//			scan.stop();
+//			scan = new Notifier(new DiagnosticScan(getRobot()));
+//			scan.startPeriodic(scanPeriod);
+		}
 	}
 }

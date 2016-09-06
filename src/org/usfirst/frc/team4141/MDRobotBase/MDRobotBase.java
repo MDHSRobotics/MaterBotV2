@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
 import org.usfirst.frc.team4141.MDRobotBase.Logger.Level;
+import org.usfirst.frc.team4141.MDRobotBase.config.ConfigPreferenceManager;
 import org.usfirst.frc.team4141.MDRobotBase.notifications.RobotNotification;
 import org.usfirst.frc.team4141.MDRobotBase.sensors.Sensor;
 import org.usfirst.frc.team4141.MDRobotBase.sensors.SensorReading;
@@ -27,7 +28,7 @@ public abstract class MDRobotBase extends IterativeRobot{
 	private OI oi;
 	private Logger logger;
 	private Hashtable<String,MDSubsystem> subsystems;
-	private Hashtable<String,MDCommand> commands;
+	private Hashtable<String,MDCommand> commandChooser;
 
 	private String name;
 	
@@ -69,13 +70,8 @@ public abstract class MDRobotBase extends IterativeRobot{
 		return sensorsDictionary;
 	}	
     
-	//register commands
-    public void add(MDCommand command){
-    	System.out.println("adding command "+command.getName());
-    	this.commands.put(command.getName(),command);
-    }
-    public Hashtable<String, MDCommand> getCommands() {
-		return commands;
+    public Hashtable<String, MDCommand> getCommandChooser() {
+		return commandChooser;
 	}
 	
 	
@@ -109,8 +105,9 @@ public abstract class MDRobotBase extends IterativeRobot{
     	
     	this.logger=new Logger(this);
     	this.subsystems=new Hashtable<String,MDSubsystem>();
-    	this.commands=new Hashtable<String,MDCommand>();
+    	this.commandChooser=new Hashtable<String,MDCommand>();
     	oi = new OI(this);
+//    	ConfigPreferenceManager.clearPreferences();
     	configureRobot();  
     	oi.configureOI();
     	System.out.println("RobotInit completed");
@@ -141,7 +138,10 @@ public abstract class MDRobotBase extends IterativeRobot{
      */    
     @Override
 	public void autonomousInit() {
-        if (autonomousCommand != null) autonomousCommand.start();
+    	if (autonomousCommand != null) autonomousCommand.start();
+    	else{
+    		System.out.println("autonomousCommand is unexpectedly null");
+    	}
     }
 
     /**
@@ -203,6 +203,36 @@ public abstract class MDRobotBase extends IterativeRobot{
 	public void post(RobotNotification notification){
 		if(getSubsystems()!=null && getSubsystems().containsKey("WebSockets")){
 			((WebSocketSubsystem)(getSubsystems().get("WebSockets"))).post(notification);
+		}
+	}
+	
+	protected void setAutonomousCommand(MDCommand[] commands) {
+		for(MDCommand command : commands){
+			commandChooser.put(command.getName(), command);
+			if(autonomousCommand==null){
+				System.out.println("defaulting autoCommand to "+command.getName());
+				autonomousCommand = command;
+			}
+		}
+	}
+
+	protected void setAutonomousCommand(MDCommand[] commands, String defaultCommandName) {
+		for(MDCommand command : commands){
+			commandChooser.put(command.getName(), command);
+			if(defaultCommandName!=null && defaultCommandName.equals(command.getName())){
+				System.out.println("defaulting autoCommand to "+command.getName());
+				autonomousCommand = command;
+			}
+		}
+	}
+	
+	protected void setAutonomousCommand(MDCommand command) {
+		setAutonomousCommand(new MDCommand[]{command});
+	}
+	
+	public void setAutoCommand(String commandName) {
+		if(commandChooser.containsKey(commandName)){
+			autonomousCommand = commandChooser.get(commandName);
 		}
 	}
 }

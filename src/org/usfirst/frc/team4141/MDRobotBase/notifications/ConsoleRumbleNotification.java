@@ -1,8 +1,6 @@
 package org.usfirst.frc.team4141.MDRobotBase.notifications;
 
 import org.usfirst.frc.team4141.MDRobotBase.MDRobotBase;
-import org.usfirst.frc.team4141.MDRobotBase.sensors.Sensor;
-import org.usfirst.frc.team4141.MDRobotBase.sensors.SensorReading;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Joystick.RumbleType;
@@ -42,4 +40,6 @@ public class ConsoleRumbleNotification extends RobotNotification {
 		sb.append("\", \"value\":");
 		sb.append(value);
 	}
+	
+	public MDRobotBase getRobot(){return robot;}
 }
