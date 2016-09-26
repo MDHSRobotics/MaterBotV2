@@ -12,14 +12,16 @@ Typically, the Robot class is derived from the IterativeRobot class.  MDRobotBas
 
 ![MDRobotBase Class Hierarchy](https://www.gliffy.com/go/publish/image/11017397/L.png)
 
+
 ###Features
-* Support for the ADIS16448_IMU gyro
-* improved logging / debugging
-* improved configuration
-* configurable drive options
-* improved tunable drive system
-* ability to stream events to database for analytics
-* HTML5 UI console support
+* Improved Configuration
+* MDConsole Support
+* Improved Logging
+* Core Subsystem
+* WebSockets Subsystem
+* Diagnostics Subsystem
+* Drive Sybsystem
+* ADIS16448_IMU Gyro Implementation
 
 ###Typical Use
 Typically, this project would be forked for each season.
