@@ -64,13 +64,13 @@ public class Robot extends MDRobotBase {
 		//Special Subsystem used for RobotDiagnostics
 		add( new DiagnosticsSubsystem(this, "diagnosticsSubsystem")
 				 .add("diagnosticsSensor",new RobotDiagnostics())
-				 .add("diagnosticsScanPeriod",new DoubleConfigSetting(0.02, 20.0, 0.1))
+				 .add("diagnosticsScanPeriod",new DoubleConfigSetting(0.05, 1.0, 0.1))
 				 .configure()
 		);
 		
 		//Subsystem to manage robot wide config settings
 		add( new CoreSubsystem(this, "core")
-				 .add("name",new StringConfigSetting("Mr. Roboto2"))					//go ahead name your robot
+				 .add("name",new StringConfigSetting("MaterBot"))					//go ahead name your robot
 				 .add("autoCommand",new StringConfigSetting("AutonomousCommand1"))		//name of autoCommand you wish to start with
 				 .configure()
 		);

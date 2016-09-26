@@ -96,6 +96,10 @@ public class RobotConfigurationNotification extends RobotNotification {
 			System.out.println("MDConsoleOI to configure");
 
 			sb.append(", \"consoleOI\":{");
+			sb.append("\"rumbles\":{");
+			sb.append("\"left\":0,");
+			sb.append("\"right\":0");
+			sb.append("},");
 			sb.append("\"buttons\":[");
 			boolean first = true;
 			for(Integer buttonIndex : robot.getOi().getConsole().getButtons().keySet()){

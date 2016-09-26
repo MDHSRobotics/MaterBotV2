@@ -15,14 +15,13 @@ public abstract class MDCommand extends Command {
 	}
 
 	public void log(String methodName, String message) {
-		getRobot().log(this.getClass().getName()+"."+methodName+"()", message);
+		getRobot().log(this.getClass().getSimpleName()+"."+methodName+"()", message);
 		
 	}
 	public void log(Level level, String methodName, String message) {
-		getRobot().log(level,this.getClass().getName()+"."+methodName+"()", message);
-		
+		getRobot().log(level,this.getClass().getSimpleName()+"."+methodName+"()", message);
 	}
-		
+
 	public MDRobotBase getRobot() {
 		return robot;
 	}

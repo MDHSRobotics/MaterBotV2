@@ -107,11 +107,10 @@ public abstract class MDRobotBase extends IterativeRobot{
     	this.subsystems=new Hashtable<String,MDSubsystem>();
     	this.commandChooser=new Hashtable<String,MDCommand>();
     	oi = new OI(this);
-    	ConfigPreferenceManager.clearPreferences();
+//    	ConfigPreferenceManager.clearPreferences();
     	configureRobot();  
     	oi.configureOI();
     	System.out.println("RobotInit completed");
-    	
     }
 
     /**
