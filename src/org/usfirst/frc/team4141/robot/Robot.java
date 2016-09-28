@@ -5,16 +5,12 @@ package org.usfirst.frc.team4141.robot;
 import org.usfirst.frc.team4141.MDRobotBase.MDCommand;
 import org.usfirst.frc.team4141.MDRobotBase.sensors.MD_BuiltInAccelerometer;
 import org.usfirst.frc.team4141.MDRobotBase.sensors.MD_IMU;
-import org.usfirst.frc.team4141.MDRobotBase.sensors.RobotDiagnostics;
 import org.usfirst.frc.team4141.MDRobotBase.MDRobotBase;
-import org.usfirst.frc.team4141.MDRobotBase.config.BooleanConfigSetting;
 import org.usfirst.frc.team4141.MDRobotBase.config.DoubleConfigSetting;
 import org.usfirst.frc.team4141.MDRobotBase.config.StringConfigSetting;
 import org.usfirst.frc.team4141.robot.commands.MDPrintCommand;
 import org.usfirst.frc.team4141.robot.subsystems.CoreSubsystem;
-import org.usfirst.frc.team4141.robot.subsystems.DiagnosticsSubsystem;
 import org.usfirst.frc.team4141.robot.subsystems.MDDriveSubsystem;
-import org.usfirst.frc.team4141.robot.subsystems.WebSocketSubsystem;
 import org.usfirst.frc.team4141.robot.subsystems.MDDriveSubsystem.MotorPosition;
 import org.usfirst.frc.team4141.robot.subsystems.MDDriveSubsystem.Type;
 
@@ -58,6 +54,9 @@ public class Robot extends MDRobotBase {
 				.add(MotorPosition.right, new Victor(1))
 				.add("accelerometer", new MD_BuiltInAccelerometer())
 				.add("IMU", new MD_IMU())
+				.add("a", new DoubleConfigSetting(0.0, 1.0, 0.25))
+				.add("b", new DoubleConfigSetting(0.0, 1.0, 0.4))
+				.add("c", new DoubleConfigSetting(0.0, 1.0, 1.0))
 				.configure()
 		);	
 

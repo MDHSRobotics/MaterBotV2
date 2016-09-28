@@ -5,7 +5,6 @@ import org.usfirst.frc.team4141.MDRobotBase.ConsoleOI;
 import org.usfirst.frc.team4141.MDRobotBase.MDJoystick;
 import org.usfirst.frc.team4141.MDRobotBase.MDRobotBase;
 import org.usfirst.frc.team4141.MDRobotBase.OIBase;
-import org.usfirst.frc.team4141.MDRobotBase.RioHID;
 import org.usfirst.frc.team4141.robot.commands.MDPrintCommand;
 
 
@@ -26,7 +25,7 @@ public class OI extends OIBase{
 		//Typically, a robot will have at least 1 joystick and 1 console
 		
 		//Configure the joystick(s) here
-		add(new MDJoystick(getRobot(), "joystick1", 0)
+		add(new MDJoystick(getRobot(), "joystick", 0)
 			.whenPressed("A",3,new MDPrintCommand(getRobot(),"A Command","A Command message"))
 			.whileHeld("leftBumper",6,new MDPrintCommand(getRobot(),"Left Bumper Command","Left Bumper Command message"))
 			.configure()
