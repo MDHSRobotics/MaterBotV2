@@ -2,6 +2,7 @@ package org.usfirst.frc.team4141.robot;
 
 
 import org.usfirst.frc.team4141.MDRobotBase.ConsoleOI;
+import org.usfirst.frc.team4141.MDRobotBase.MDJoystick;
 import org.usfirst.frc.team4141.MDRobotBase.MDRobotBase;
 import org.usfirst.frc.team4141.MDRobotBase.OIBase;
 import org.usfirst.frc.team4141.MDRobotBase.RioHID;
@@ -25,23 +26,26 @@ public class OI extends OIBase{
 		//Typically, a robot will have at least 1 joystick and 1 console
 		
 		//Configure the joystick(s) here
-//		add(new MDJoystick(getRobot(), "joystick1", 0)
-//			.whenPressed("A",3,"AutonomousCommand")
-//			.whileHeld("leftBumper",6,"ExampleCommand1")
-//			.configure()
-//		);
-		//Configure the RioHID here
-		add(new RioHID(getRobot())
-			.whileHeld(new MDPrintCommand(getRobot(),"ExampleCommand1","ExampleCommand1 message"))
+		add(new MDJoystick(getRobot(), "joystick1", 0)
+			.whenPressed("A",3,new MDPrintCommand(getRobot(),"A Command","A Command message"))
+			.whileHeld("leftBumper",6,new MDPrintCommand(getRobot(),"Left Bumper Command","Left Bumper Command message"))
 			.configure()
 		);
+
+		//Configure the RioHID here
+		// Uncomment the following to attach a command to the user button on the RoboRio
+//		add(new RioHID(getRobot())
+//			.whileHeld(new MDPrintCommand(getRobot(),"ExampleCommand1","ExampleCommand1 message"))
+//			.configure()
+//		);
+		
+		
 		//Configure the MDConsole OI here		
 		add(new ConsoleOI(getRobot())
-				.whileHeld("ExampleCommand1",0,new MDPrintCommand(getRobot(),"ExampleCommand1","ExampleCommand1 message"))
-				.whenPressed("ExampleCommand2",1,new MDPrintCommand(getRobot(),"ExampleCommand2","ExampleCommand2 message"))
+				.whenPressed("Command1",0,new MDPrintCommand(getRobot(),"Command1","Command1 message"))
 				.configure()
 			);		
-		//Configure console here
+		
 	}
 
 }  

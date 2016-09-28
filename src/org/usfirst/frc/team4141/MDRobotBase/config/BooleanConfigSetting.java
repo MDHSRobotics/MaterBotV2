@@ -69,7 +69,7 @@ public class BooleanConfigSetting implements ConfigSetting {
 	public void setValue(Object value) {
 		if(value instanceof Boolean){
 			this.value = (Boolean)value;
-			System.out.printf("setting %s to %s\n",name,value.toString());
+//			System.out.printf("setting %s to %s\n",name,value.toString());
 		}
 		else if (value instanceof Integer){
 			this.value = (((Integer)value).intValue()==0?false:true);

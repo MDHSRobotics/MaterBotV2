@@ -93,7 +93,7 @@ public class DoubleConfigSetting implements ConfigSetting {
 	public void setValue(Object value) {
 		if(value instanceof Double){
 			this.value = (Double)value;
-			System.out.printf("setting %s to %f\n",name,value);
+//			System.out.printf("setting %s to %f\n",name,value);
 		}
 		else if (value instanceof Integer){
 			this.value = new Double((Integer)value);

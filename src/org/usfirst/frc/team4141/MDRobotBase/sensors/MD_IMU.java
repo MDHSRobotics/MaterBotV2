@@ -41,6 +41,9 @@ public class MD_IMU extends ADIS16448_IMU implements Sensor{
 		readings[i++]=new AnalogSensorReading(this,"BarometricPressure", getBarometricPressure());
 		readings[i++]=new AnalogSensorReading(this,"LastSampleTime", getLastSampleTime());
 	}
+	public MD_IMU() {
+		this(null);
+	}
 
 	@Override
 	public void refresh() {

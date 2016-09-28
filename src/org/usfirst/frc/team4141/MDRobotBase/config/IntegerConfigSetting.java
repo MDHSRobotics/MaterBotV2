@@ -92,7 +92,7 @@ public class IntegerConfigSetting implements ConfigSetting {
 	public void setValue(Object value) {
 		if(value instanceof Integer){
 			this.value = (Integer)value;
-			System.out.printf("setting %s to %d\n",name,value);
+//			System.out.printf("setting %s to %d\n",name,value);
 		}
 		else if (value instanceof Double){
 			this.value = new Integer((int)((Double)value).doubleValue());

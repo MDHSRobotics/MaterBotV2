@@ -17,14 +17,14 @@ public class CoreSubsystem extends MDSubsystem {
 
 	@Override
 	protected void setUp() {
-		System.out.println("command chooser keys:");
-		for(String key : getRobot().getCommandChooser().keySet()){
-			System.out.println(key);
-		}
-		System.out.println("config keys:");
-		for(String key : getConfigSettings().keySet()){
-			System.out.println(key);
-		}
+//		System.out.println("command chooser keys:");
+//		for(String key : getRobot().getCommandChooser().keySet()){
+//			System.out.println(key);
+//		}
+//		System.out.println("config keys:");
+//		for(String key : getConfigSettings().keySet()){
+//			System.out.println(key);
+//		}
 		if(getConfigSettings().containsKey("name")){
 			getRobot().setName(getConfigSettings().get("name").getString());
 		}

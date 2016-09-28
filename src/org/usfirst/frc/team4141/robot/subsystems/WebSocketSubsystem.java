@@ -30,7 +30,7 @@ public class WebSocketSubsystem extends MDSubsystem implements MessageHandler{
 
 	@Override
 	protected void initDefaultCommand() {
-		System.out.println("WebSocketSubsystem.initDefaultCommand()");
+//		System.out.println("WebSocketSubsystem.initDefaultCommand()");
 		dispatcher = new Notifier(new Dispatcher(eventManager));
 		dispatcher.startPeriodic(updatePeriod);
 	}
@@ -38,7 +38,7 @@ public class WebSocketSubsystem extends MDSubsystem implements MessageHandler{
 	@Override
 	protected void setUp() {
 		if(getConfigSettings()!=null && getConfigSettings().containsKey("enableWebSockets")){
-			System.out.println("enableWebSockets config  = "+((Boolean)(getConfigSettings().get("enableWebSockets").getValue())).toString());
+//			System.out.println("enableWebSockets config  = "+((Boolean)(getConfigSettings().get("enableWebSockets").getValue())).toString());
 			this.eventManager = new EventManager(this,(Boolean)(getConfigSettings().get("enableWebSockets").getValue()));
 		}
 		else
@@ -46,12 +46,12 @@ public class WebSocketSubsystem extends MDSubsystem implements MessageHandler{
 			this.eventManager = new EventManager(this);
 		}
 		
-		if(eventManager.isWebSocketsEnabled()){
-			System.out.println("websockets enabled");
-		}
-		else{
-			System.out.println("websockets disabled");
-		}
+//		if(eventManager.isWebSocketsEnabled()){
+//			System.out.println("websockets enabled");
+//		}
+//		else{
+//			System.out.println("websockets disabled");
+//		}
 		System.out.println("starting event manager");
 		try {
 			eventManager.start();

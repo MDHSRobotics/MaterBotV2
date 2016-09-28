@@ -8,11 +8,17 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
 import org.usfirst.frc.team4141.MDRobotBase.Logger.Level;
+import org.usfirst.frc.team4141.MDRobotBase.config.BooleanConfigSetting;
 import org.usfirst.frc.team4141.MDRobotBase.config.ConfigPreferenceManager;
+import org.usfirst.frc.team4141.MDRobotBase.config.DoubleConfigSetting;
+import org.usfirst.frc.team4141.MDRobotBase.config.StringConfigSetting;
 import org.usfirst.frc.team4141.MDRobotBase.notifications.RobotNotification;
+import org.usfirst.frc.team4141.MDRobotBase.sensors.RobotDiagnostics;
 import org.usfirst.frc.team4141.MDRobotBase.sensors.Sensor;
 import org.usfirst.frc.team4141.MDRobotBase.sensors.SensorReading;
 import org.usfirst.frc.team4141.robot.OI;
+import org.usfirst.frc.team4141.robot.subsystems.CoreSubsystem;
+import org.usfirst.frc.team4141.robot.subsystems.DiagnosticsSubsystem;
 import org.usfirst.frc.team4141.robot.subsystems.WebSocketSubsystem;
 
 
@@ -108,6 +114,28 @@ public abstract class MDRobotBase extends IterativeRobot{
     	this.commandChooser=new Hashtable<String,MDCommand>();
     	oi = new OI(this);
 //    	ConfigPreferenceManager.clearPreferences();
+
+    	// *** pre configured subsystems
+		
+		//Special Subsystem used for RobotDiagnostics
+		add( new DiagnosticsSubsystem(this, "diagnosticsSubsystem")
+				 .add("diagnosticsSensor",new RobotDiagnostics())
+				 .add("diagnosticsScanPeriod",new DoubleConfigSetting(0.05, 1.0, 0.1))
+				 .configure()
+		);
+		
+		//Subsystem to manage robot wide config settings
+		add( new CoreSubsystem(this, "core")
+				 .add("name",new StringConfigSetting("MaterBot"))					//go ahead name your robot
+				 .add("autoCommand",new StringConfigSetting("AutonomousCommand1"))		//name of autoCommand you wish to start with
+				 .configure()
+		);
+		
+		//Subsystem to manage WebSocket Communications
+		add( new WebSocketSubsystem(this, "WebSockets")
+				 .add("enableWebSockets",new BooleanConfigSetting(true))
+				 .configure()
+		);    	
     	configureRobot();  
     	oi.configureOI();
     	System.out.println("RobotInit completed");
@@ -119,7 +147,7 @@ public abstract class MDRobotBase extends IterativeRobot{
      */
     @Override
 	public void disabledInit(){
-    	System.out.println("disabledInit()");
+//    	System.out.println("disabledInit()");
     }
     
     /**
