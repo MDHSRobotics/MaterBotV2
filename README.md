@@ -17,9 +17,7 @@ This project is intended to be the base project from which each season's Java Ro
 see [Understanding MaterBot](https://github.com/MDHSRobotics/TeamWiki/wiki/Understanding%20MaterBot) for more information
 
 ###Typical Use
-Typically, this project would be forked for each season.
-
-See the [How to Git](https://github.com/MDHSRobotics/TeamWiki/wiki/How%20to%20Git) tutorial for more information on how to fork this project.  
+Typically, this project would be duplicated for each season. see the [Duplicating a Repository](https://help.github.com/articles/duplicating-a-repository/) guide from GitHub
 
 
 ###Backlog
