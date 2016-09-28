@@ -5,7 +5,6 @@ import org.usfirst.frc.team4141.MDRobotBase.MDSubsystem;
 
 import edu.wpi.first.wpilibj.ControllerPower;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.hal.HALUtil;

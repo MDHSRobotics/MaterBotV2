@@ -5,6 +5,7 @@ import java.util.Hashtable;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.hal.HALUtil;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
 import org.usfirst.frc.team4141.MDRobotBase.Logger.Level;
@@ -113,21 +114,16 @@ public abstract class MDRobotBase extends IterativeRobot{
     	this.subsystems=new Hashtable<String,MDSubsystem>();
     	this.commandChooser=new Hashtable<String,MDCommand>();
     	oi = new OI(this);
-//    	ConfigPreferenceManager.clearPreferences();
-
+    	if(HALUtil.getFPGAButton()){
+    		System.out.println("resetting preferences");
+        	ConfigPreferenceManager.clearPreferences();
+    	}
     	// *** pre configured subsystems
 		
 		//Special Subsystem used for RobotDiagnostics
 		add( new DiagnosticsSubsystem(this, "diagnosticsSubsystem")
 				 .add("diagnosticsSensor",new RobotDiagnostics())
 				 .add("diagnosticsScanPeriod",new DoubleConfigSetting(0.05, 1.0, 0.1))
-				 .configure()
-		);
-		
-		//Subsystem to manage robot wide config settings
-		add( new CoreSubsystem(this, "core")
-				 .add("name",new StringConfigSetting("MaterBot"))					//go ahead name your robot
-				 .add("autoCommand",new StringConfigSetting("AutonomousCommand1"))		//name of autoCommand you wish to start with
 				 .configure()
 		);
 		
