@@ -13,6 +13,8 @@ import org.usfirst.frc.team4141.MDRobotBase.notifications.RobotConfigurationNoti
 import org.usfirst.frc.team4141.MDRobotBase.notifications.RobotNotification;
 
 
+//TODO:  clean up dependencies.  Dependencies should be to Notification class, not RobotNotification class, see MSee
+//TODO:  Refactor to remove session and manage dictionary of sockets instead, see MSee
 /**
  * @author RobotC
  *
@@ -128,6 +130,7 @@ public class EventManager {
 		return this.handler;
 	}
 	public synchronized void connected() {
+		//TODO:  refactor so that the code below is handled in the Message Handler's connect method, see MSee.
 		System.out.printf("connected! %d sessions\n",sessions.size());
 		post(new RobotConfigurationNotification(getHandler().geRobot(),true));
 	}

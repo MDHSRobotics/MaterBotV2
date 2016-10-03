@@ -10,7 +10,7 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
 @WebSocket
 public class EventManagerWebSocket{
-	
+	//TODO:  manage session here and pass socket into event manager
 	private EventManager eventManager;
 
 	public EventManagerWebSocket(EventManager eventManager) {
