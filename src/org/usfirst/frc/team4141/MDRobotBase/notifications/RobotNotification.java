@@ -9,9 +9,6 @@ import edu.wpi.first.wpilibj.Timer;
 
 public abstract class RobotNotification extends Notification {
 	private double fpgaTime;
-	private boolean showMDConsole = false;
-	private boolean broadcast = false;
-	private boolean record = false;
 	public double getFpgaTime() {
 		return fpgaTime;
 	}
@@ -21,23 +18,11 @@ public abstract class RobotNotification extends Notification {
 	public RobotNotification(String notificationType,boolean showJavaConsole){
 		this(notificationType,showJavaConsole,false,false,false);
 	}
-	public RobotNotification(String notificationType,boolean showJavaConsole,boolean showMDConsole,boolean broadcast,boolean record){
-		super(notificationType,showJavaConsole);
+	public RobotNotification(String notificationType,boolean showJavaConsole,boolean display,boolean broadcast,boolean record){
+		super(notificationType,showJavaConsole,broadcast,record,display);
 		this.fpgaTime = Timer.getFPGATimestamp();
-		this.broadcast = broadcast;
-		this.showMDConsole = showMDConsole;
-		this.record = record;
 	}
 
-	public boolean showMDConsole(){
-		return showMDConsole;
-	}
-	public boolean record(){
-		return record;
-	}
-	public boolean broadcast(){
-		return broadcast;
-	}
 
 /*
 {"eventType": "targetAcquiredNotification", "messageId":7, "timestamp": 1456619634747, "targetAcquired":true}
@@ -58,9 +43,9 @@ public abstract class RobotNotification extends Notification {
 		sb.append("\"eventType\":\"");
 		sb.append(getNotificationType());
 		sb.append("\",\"display\":");
-		sb.append(this.showMDConsole);
+		sb.append(this.dislay());
 		sb.append(",\"record\":");
-		sb.append(this.record);
+		sb.append(this.record());
 		addJSONPayload();
 		sb.append('}');
 		return sb.toString();

@@ -33,6 +33,12 @@ public class RobotLogNotification extends RobotNotification {
 		this(level,logOrigin,message,false,showMDConsole,true,record);
 	}
 	
+	public RobotLogNotification(String source, String message) {
+		this(Level.INFO,source,message);
+	}
+	public RobotLogNotification(Level level, String source, String message) {
+		this(level,source,message,true,true);
+	}
 	@Override
 	protected void addJSONPayload() {
 		if(sb.length()>0){

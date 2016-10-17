@@ -1,6 +1,11 @@
 	package org.usfirst.frc.team4141.robot.subsystems;
 
+import java.io.IOException;
+import java.net.InetAddress;
 import java.util.Map;
+
+import javax.jmdns.JmDNS;
+import javax.jmdns.ServiceInfo;
 
 import org.usfirst.frc.team4141.MDRobotBase.MDConsoleButton;
 import org.usfirst.frc.team4141.MDRobotBase.MDRobotBase;
@@ -10,8 +15,11 @@ import org.usfirst.frc.team4141.MDRobotBase.config.ConfigSetting;
 import org.usfirst.frc.team4141.MDRobotBase.config.ConfigSetting.Type;
 import org.usfirst.frc.team4141.MDRobotBase.eventmanager.Dispatcher;
 import org.usfirst.frc.team4141.MDRobotBase.eventmanager.EventManager;
+import org.usfirst.frc.team4141.MDRobotBase.eventmanager.EventManagerWebSocket;
 import org.usfirst.frc.team4141.MDRobotBase.eventmanager.JSON;
 import org.usfirst.frc.team4141.MDRobotBase.eventmanager.MessageHandler;
+import org.usfirst.frc.team4141.MDRobotBase.notifications.RobotConfigurationNotification;
+import org.usfirst.frc.team4141.MDRobotBase.notifications.RobotLogNotification;
 import org.usfirst.frc.team4141.MDRobotBase.notifications.RobotNotification;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -27,6 +35,8 @@ public class WebSocketSubsystem extends MDSubsystem implements MessageHandler{
 		super(robot, name);
 		setCore(true);
 	}
+	
+	
 
 	@Override
 	protected void initDefaultCommand() {
@@ -37,6 +47,7 @@ public class WebSocketSubsystem extends MDSubsystem implements MessageHandler{
 
 	@Override
 	protected void setUp() {
+		announce();
 		if(getConfigSettings()!=null && getConfigSettings().containsKey("enableWebSockets")){
 //			System.out.println("enableWebSockets config  = "+((Boolean)(getConfigSettings().get("enableWebSockets").getValue())).toString());
 			this.eventManager = new EventManager(this,(Boolean)(getConfigSettings().get("enableWebSockets").getValue()));
@@ -60,9 +71,26 @@ public class WebSocketSubsystem extends MDSubsystem implements MessageHandler{
 			e.printStackTrace();
 		}
 	}
-	
+	private JmDNS jmdns;
 
-    //
+    private void announce() {
+    	 try {
+             // Create a JmDNS instance
+             jmdns = JmDNS.create(InetAddress.getLocalHost());
+
+             // Register a service
+             ServiceInfo serviceInfo = ServiceInfo.create("_ws._tcp.local.", "Team4141Robot", eventManager.getPort(), "");
+             jmdns.registerService(serviceInfo);
+
+         } catch (IOException e) {
+             System.out.println(e.getMessage());
+         }		
+		
+	}
+    
+    
+
+	//
     //EventManager helper methods
 	public void post(RobotNotification notification){
 		if(eventManager.isWebSocketsEnabled()){
@@ -83,9 +111,20 @@ public class WebSocketSubsystem extends MDSubsystem implements MessageHandler{
 			if(type.equals("settingUpdate")){
 				updateSetting(message);
 			}
+			if(type.equals("remoteIdentification")){
+				addRemote(message);
+			}
 		}
 		message.keySet();
 	}
+
+	private void addRemote(Map message) {
+		if(message.containsKey("id")){
+			System.out.printf("%s connected!\n",message.get("id"));
+		}
+	}
+
+
 
 	@SuppressWarnings("rawtypes")
 	private void updateSetting(Map message) {
@@ -145,11 +184,11 @@ public class WebSocketSubsystem extends MDSubsystem implements MessageHandler{
 		}
 	}
 
-	@Override
 	public MDRobotBase geRobot() {
 		
 		return getRobot();
 	}
+	
 	@Override
 	public void settingChangeListener(ConfigSetting changedSetting) {
 		System.out.println(changedSetting.getPath()+ " was changed to "+ changedSetting.getValue().toString());
@@ -165,4 +204,13 @@ public class WebSocketSubsystem extends MDSubsystem implements MessageHandler{
 			}
 		}
 	}
+
+	@Override
+	public void connect(EventManagerWebSocket socket) {
+		eventManager.post(new RobotLogNotification(this.getClass().getName()+".connect()","Connection"));
+		eventManager.post(new RobotConfigurationNotification(getRobot()));
+
+		
+	}
+
 }

@@ -12,13 +12,11 @@ import org.usfirst.frc.team4141.MDRobotBase.Logger.Level;
 import org.usfirst.frc.team4141.MDRobotBase.config.BooleanConfigSetting;
 import org.usfirst.frc.team4141.MDRobotBase.config.ConfigPreferenceManager;
 import org.usfirst.frc.team4141.MDRobotBase.config.DoubleConfigSetting;
-import org.usfirst.frc.team4141.MDRobotBase.config.StringConfigSetting;
 import org.usfirst.frc.team4141.MDRobotBase.notifications.RobotNotification;
 import org.usfirst.frc.team4141.MDRobotBase.sensors.RobotDiagnostics;
 import org.usfirst.frc.team4141.MDRobotBase.sensors.Sensor;
 import org.usfirst.frc.team4141.MDRobotBase.sensors.SensorReading;
 import org.usfirst.frc.team4141.robot.OI;
-import org.usfirst.frc.team4141.robot.subsystems.CoreSubsystem;
 import org.usfirst.frc.team4141.robot.subsystems.DiagnosticsSubsystem;
 import org.usfirst.frc.team4141.robot.subsystems.WebSocketSubsystem;
 
@@ -114,6 +112,9 @@ public abstract class MDRobotBase extends IterativeRobot{
     	this.subsystems=new Hashtable<String,MDSubsystem>();
     	this.commandChooser=new Hashtable<String,MDCommand>();
     	oi = new OI(this);
+    	
+    	ConfigPreferenceManager.clearPreferences();
+    	
     	if(HALUtil.getFPGAButton()){
     		System.out.println("resetting preferences");
         	ConfigPreferenceManager.clearPreferences();
@@ -123,7 +124,7 @@ public abstract class MDRobotBase extends IterativeRobot{
 		//Special Subsystem used for RobotDiagnostics
 		add( new DiagnosticsSubsystem(this, "diagnosticsSubsystem")
 				 .add("diagnosticsSensor",new RobotDiagnostics())
-				 .add("diagnosticsScanPeriod",new DoubleConfigSetting(0.05, 1.0, 0.1))
+				 .add("diagnosticsScanPeriod",new DoubleConfigSetting(0.05, 1.0, 0.05))
 				 .configure()
 		);
 		
@@ -151,11 +152,9 @@ public abstract class MDRobotBase extends IterativeRobot{
      */
     @Override
 	public void disabledPeriodic() {
-
 		Scheduler.getInstance().run();
 	}    
 	
-
     /**
      * This function is called once right before the robot goes into autonomous mode.
      */    

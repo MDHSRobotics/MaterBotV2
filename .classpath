@@ -10,6 +10,8 @@
 	<classpathentry kind="lib" path="tools/jetty-server-9.3.7.v20160115.jar"/>
 	<classpathentry kind="lib" path="tools/jetty-util-9.3.7.v20160115.jar"/>
 	<classpathentry kind="lib" path="tools/servlet-api-3.1.jar"/>
+	<classpathentry kind="lib" path="tools/slf4j-api-1.7.21.jar"/>
+	<classpathentry kind="lib" path="tools/slf4j-simple-1.7.21.jar"/>
 	<classpathentry kind="lib" path="tools/websocket-api-9.3.7.v20160115.jar"/>
 	<classpathentry kind="lib" path="tools/websocket-common-9.3.7.v20160115.jar"/>
 	<classpathentry kind="lib" path="tools/websocket-server-9.3.7.v20160115.jar"/>

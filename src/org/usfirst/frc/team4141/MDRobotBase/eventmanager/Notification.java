@@ -1,10 +1,11 @@
 package org.usfirst.frc.team4141.MDRobotBase.eventmanager;
 
-import java.util.Date;
-
 public abstract class Notification {
 	
 	private long messageId = -1;
+	private boolean display = false;
+	private boolean record = false;
+	private boolean broadcast = false;
 	private boolean showJavaConsole = false;
 	private String notificationType;
 
@@ -15,7 +16,16 @@ public abstract class Notification {
 	public boolean showJavaConsole() {
 		return showJavaConsole;
 	}
-
+	public boolean dislay() {
+		return display;
+	}
+	public boolean record() {
+		return record;
+	}
+	public boolean broadcast(){
+		return broadcast;
+	}
+	
 	public long getMessageId() {
 		return messageId;
 	}
@@ -23,13 +33,16 @@ public abstract class Notification {
 		this.messageId =  messageId;
 	}
 		
-	public Notification(String notificationType,boolean showJavaConsole){
+	public Notification(String notificationType,boolean showJavaConsole,boolean broadcast,boolean record,boolean display){
 		this.notificationType = notificationType;
 		this.showJavaConsole = showJavaConsole;
+		this.broadcast = broadcast;
+		this.display = display;
+		this.record = record;
 		sb = new StringBuilder();
 	}
 	public Notification(String notificationType){
-		this(notificationType,false);
+		this(notificationType,false,true,false,true);
 	}
 	
 	protected abstract void addJSONPayload();
@@ -44,6 +57,10 @@ public abstract class Notification {
 		sb.append("\"eventType\":\"");
 		sb.append(getNotificationType());
 		sb.append("\"");
+		sb.append(", \"display\":");
+		sb.append(dislay());
+		sb.append(", \"record\":");
+		sb.append(record());
 		addJSONPayload();
 		sb.append('}');
 		return sb.toString();

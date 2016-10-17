@@ -1,20 +1,12 @@
 package org.usfirst.frc.team4141.MDRobotBase.eventmanager;
 
-
-
-import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.concurrent.ArrayBlockingQueue;
 
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.server.WebSocketHandler;
 import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
-import org.usfirst.frc.team4141.MDRobotBase.notifications.RobotConfigurationNotification;
-import org.usfirst.frc.team4141.MDRobotBase.notifications.RobotNotification;
 
-
-//TODO:  clean up dependencies.  Dependencies should be to Notification class, not RobotNotification class, see MSee
-//TODO:  Refactor to remove session and manage dictionary of sockets instead, see MSee
 /**
  * @author RobotC
  *
@@ -23,22 +15,24 @@ public class EventManager {
 	private final EventManager self = this;
 	private long nextMessageID = 0;
 	private MessageHandler handler;
-	private ArrayBlockingQueue<RobotNotification>outbound= new ArrayBlockingQueue<RobotNotification>(100);
+	private ArrayBlockingQueue<Notification>outbound= new ArrayBlockingQueue<Notification>(100);
 	private ArrayBlockingQueue<String>inbound= new ArrayBlockingQueue<String>(100);
-
+	private Hashtable<String,EventManagerWebSocket> remotes;
+	private int port = 5808;
+	
 	public EventManager(MessageHandler handler){
 		this(handler,false);
 	}
 	public EventManager(MessageHandler handler,boolean enableWebSockets){
 		this.enableWebSockets = enableWebSockets;
-		sessions = new ArrayList<Session>();
+		remotes = new Hashtable<String,EventManagerWebSocket>();
 		this.handler = handler;
 	}
 	
 
 	public void start() throws Exception{
 		if(enableWebSockets){
-			int port = 5808;
+			
 			System.out.println("Initializing socket server at port "+port);
 			Server server = new Server(port);
 			WebSocketHandler wsHandler = new WebSocketHandler()
@@ -63,7 +57,7 @@ public class EventManager {
 		this.enableWebSockets = false;
 	}	
 	
-	public synchronized void post(RobotNotification notification){
+	public synchronized void post(Notification notification){
 		try{
 			outbound.add(notification);
 //			System.out.printf("Message Added to outbound queue, now (%d)\n", outbound.size());
@@ -75,17 +69,19 @@ public class EventManager {
 			System.out.println(e.getMessage());
 		}
 	}
+	
 	public synchronized  void process(){
 		String message;
 		while((message = inbound.poll())!=null){
-//			System.out.println("received message "+message);
 			if(handler!=null){
 				handler.process(message);
 			}
 		}
 	}
+	
 	public synchronized  void post(){
-		RobotNotification notification;
+		Notification notification;
+//		System.out.printf("checking outbound queue for messages (%d)\n",outbound.size());
 		while((notification = outbound.poll())!=null){
 //			System.out.println("outbound queue has a message to post");
 //			System.out.println(notification.toJSON());
@@ -97,10 +93,9 @@ public class EventManager {
 			if(enableWebSockets){
 				if(notification.broadcast()){
 					try {
-						for(Session session : sessions){
-							if(session!=null && session.isOpen()){
-//								System.out.printf("sending session %s message: \n%s\n",session.getRemoteAddress().toString(),notification.toJSON());
-								session.getRemote().sendString(notification.toJSON());
+						for(EventManagerWebSocket socket : remotes.values()){
+							if(socket!=null && socket.getSession() !=null && socket.getSession().isOpen()){
+								socket.getSession().getRemote().sendString(notification.toJSON());
 							}
 						}
 					} catch (Exception e) {
@@ -111,14 +106,10 @@ public class EventManager {
 		}
 	}
 
-	private ArrayList<Session> sessions;
 	private boolean enableWebSockets = false;
-	public synchronized boolean addSession(Session session) {
-		System.out.println("session added");
-		return sessions.add(session);
-	}
-	public synchronized void removeSession(Session session) {
-		if(session !=null && sessions!=null && sessions.contains(session)) sessions.remove(session);
+
+	public synchronized void removeSocket(EventManagerWebSocket socket) {
+		if(socket!=null && remotes.containsKey(socket.toString())){remotes.remove(socket.toString());}
 	}
 
 	public synchronized boolean isWebSocketsEnabled() {
@@ -129,19 +120,21 @@ public class EventManager {
 	public  synchronized MessageHandler getHandler() {
 		return this.handler;
 	}
-	public synchronized void connected() {
-		//TODO:  refactor so that the code below is handled in the Message Handler's connect method, see MSee.
-		System.out.printf("connected! %d sessions\n",sessions.size());
-		post(new RobotConfigurationNotification(getHandler().geRobot(),true));
+
+	public synchronized void connected(EventManagerWebSocket socket) {
+		System.out.printf("connected socket local address: %s\n",socket.getSession().getLocalAddress().getHostString());
+		System.out.printf("connected socket remote address: %s\n",socket.getSession().getRemoteAddress().getHostString());
+		remotes.put(socket.toString(),socket);
+		System.out.printf("connected! %d remotes\n",remotes.size());
+		handler.connect(socket);
 	}
+	
 	public  void process(String message) {
 		try {
 			inbound.put(message);
 		} catch (InterruptedException e) {
 			System.err.println("unable to receive: "+message);
-		}
-		
+		}	
 	}
-	
-
+	public int getPort(){return port;}
 }

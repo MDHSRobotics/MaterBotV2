@@ -109,7 +109,7 @@ public class MDDriveSubsystem extends MDSubsystem {
   	  double rotate = joystick.getRawAxis(0);
   	  double[] speeds = interpolator.calculate(forward, rotate);
 	
-	  robotDrive.tankDrive(speeds[0], speeds[1]);
+	  robotDrive.tankDrive(-speeds[0], speeds[1]);
 	}
 	
 	public void stop(){

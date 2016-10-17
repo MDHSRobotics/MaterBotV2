@@ -34,11 +34,11 @@ public class LogNotification extends Notification {
 	 */
 
 	public LogNotification(Level level, String source,String message) {
-		this(level,source,message,false);
+		this(level,source,message,true,true,false,true);
 	}
 
-	public LogNotification(Level level, String source,String message,boolean showJavaConsole) {
-		super("LogNotification",showJavaConsole);
+	public LogNotification(Level level, String source,String message,boolean showJavaConsole,boolean broadcast, boolean record, boolean display) {
+		super("LogNotification",showJavaConsole, broadcast,record,display);
 		this.message = message;
 		this.source = source;
 		this.level = level;

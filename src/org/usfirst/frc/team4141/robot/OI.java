@@ -5,6 +5,7 @@ import org.usfirst.frc.team4141.MDRobotBase.ConsoleOI;
 import org.usfirst.frc.team4141.MDRobotBase.MDJoystick;
 import org.usfirst.frc.team4141.MDRobotBase.MDRobotBase;
 import org.usfirst.frc.team4141.MDRobotBase.OIBase;
+import org.usfirst.frc.team4141.MDRobotBase.RioHID;
 import org.usfirst.frc.team4141.robot.commands.MDPrintCommand;
 
 
@@ -33,10 +34,10 @@ public class OI extends OIBase{
 
 		//Configure the RioHID here
 		// Uncomment the following to attach a command to the user button on the RoboRio
-//		add(new RioHID(getRobot())
-//			.whileHeld(new MDPrintCommand(getRobot(),"ExampleCommand1","ExampleCommand1 message"))
-//			.configure()
-//		);
+		add(new RioHID(getRobot())
+			.whileHeld(new MDPrintCommand(getRobot(),"ExampleCommand1","ExampleCommand1 message"))
+			.configure()
+		);
 		
 		
 		//Configure the MDConsole OI here		

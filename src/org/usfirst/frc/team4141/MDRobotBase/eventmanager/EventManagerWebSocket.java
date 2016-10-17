@@ -7,25 +7,28 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
-
+	
 @WebSocket
 public class EventManagerWebSocket{
-	//TODO:  manage session here and pass socket into event manager
+	
 	private EventManager eventManager;
+	private Session session;
 
 	public EventManagerWebSocket(EventManager eventManager) {
 		this.eventManager = eventManager;
 	}
 
+	public Session getSession(){ return session;}
+	
 	@OnWebSocketConnect
 	public void onConnect(Session session){
-        eventManager.addSession(session);
-        eventManager.connected();
+		this.session = session;
+        eventManager.connected(this);
 	}
 
 	@OnWebSocketClose
 	public void onClose(Session session, int closeCode, String closeReason){
-        eventManager.removeSession(session);
+        eventManager.removeSocket(this);
         System.out.println("session closed");
 	}
 	
