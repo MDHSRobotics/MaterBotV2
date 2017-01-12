@@ -1,5 +1,7 @@
 package org.usfirst.frc.team4141.robot.subsystems;
 
+import javax.print.attribute.standard.Media;
+
 import org.usfirst.frc.team4141.MDRobotBase.MDRobotBase;
 import org.usfirst.frc.team4141.MDRobotBase.MDSubsystem;
 import org.usfirst.frc.team4141.MDRobotBase.MultiSpeedController;
@@ -176,5 +178,49 @@ public class MDDriveSubsystem extends MDSubsystem {
 		if(changedSetting.getName().equals("a")) interpolator.setA(changedSetting.getDouble());
 		if(changedSetting.getName().equals("b")) interpolator.setB(changedSetting.getDouble());
 		//method to listen to setting changes
+	}
+
+	public void right(double speed) {
+		double direction = Math.PI/2;
+		switch(type){
+		case MecanumDrive:
+			robotDrive.mecanumDrive_Polar(speed, direction, 0);
+			break;
+		default:
+			robotDrive.tankDrive(speed, speed/10);
+		}
+	}
+
+	public void left(double speed) {
+		double direction = -Math.PI/2;
+		switch(type){
+		case MecanumDrive:
+			robotDrive.mecanumDrive_Polar(speed, direction, 0);
+			break;
+		default:
+			robotDrive.tankDrive(speed/10, speed);
+		}
+	}
+
+	public void reverse(double speed) {
+		double direction = Math.PI;
+		switch(type){
+		case MecanumDrive:
+			robotDrive.mecanumDrive_Polar(speed, direction, 0);
+			break;
+		default:
+			robotDrive.tankDrive(-speed, -speed);
+		}
+	}
+
+	public void forward(double speed) {
+		double direction = 0;
+		switch(type){
+		case MecanumDrive:
+			robotDrive.mecanumDrive_Polar(speed, direction, 0);
+			break;
+		default:
+			robotDrive.tankDrive(speed, speed);
+		}
 	}
 }
