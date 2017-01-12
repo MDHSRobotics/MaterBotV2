@@ -1,4 +1,4 @@
-	package org.usfirst.frc.team4141.robot.subsystems;
+package org.usfirst.frc.team4141.robot.subsystems;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -47,7 +47,6 @@ public class WebSocketSubsystem extends MDSubsystem implements MessageHandler{
 
 	@Override
 	protected void setUp() {
-		announce();
 		if(getConfigSettings()!=null && getConfigSettings().containsKey("enableWebSockets")){
 //			System.out.println("enableWebSockets config  = "+((Boolean)(getConfigSettings().get("enableWebSockets").getValue())).toString());
 			this.eventManager = new EventManager(this,(Boolean)(getConfigSettings().get("enableWebSockets").getValue()));
@@ -66,6 +65,7 @@ public class WebSocketSubsystem extends MDSubsystem implements MessageHandler{
 		System.out.println("starting event manager");
 		try {
 			eventManager.start();
+			announce();
 		} catch (Exception e) {
 			System.out.println("unable to start web socket manager");
 			e.printStackTrace();
