@@ -18,7 +18,6 @@ import edu.wpi.first.wpilibj.SpeedController;
 public class MDDriveSubsystem extends MDSubsystem {
 	public enum Type{
 		TankDrive,
-		ToteDrive,
 		MecanumDrive
 	}
 	public enum MotorPosition{
@@ -66,20 +65,23 @@ public class MDDriveSubsystem extends MDSubsystem {
 		super.configure();
 		switch(type){
 		case TankDrive:
-			if(getMotors()==null || !getMotors().containsKey(MotorPosition.left.toString()) || !getMotors().containsKey(MotorPosition.right.toString())){
+			if(getMotors()==null){
 				throw new IllegalArgumentException("Invalid motor configuration for TankDrive system.");
 			}				
-			robotDrive = new RobotDrive(get(MotorPosition.left), get(MotorPosition.right));
-			break;
-		case ToteDrive:
-			if(getMotors()==null || !getMotors().containsKey(MotorPosition.rearLeft.toString()) || !getMotors().containsKey(MotorPosition.frontLeft.toString())
-									  || !getMotors().containsKey(MotorPosition.rearRight.toString()) || !getMotors().containsKey(MotorPosition.frontRight.toString())){
-				throw new IllegalArgumentException("Invalid motor configuration for Tote system.");
-			}		
-
-			robotDrive = new RobotDrive(new MultiSpeedController(new SpeedController[]{get(MotorPosition.rearLeft), get(MotorPosition.frontLeft)}),
-					new MultiSpeedController(new SpeedController[]{get(MotorPosition.rearRight), get(MotorPosition.frontRight)}));
-
+			if(getMotors().size()==2){
+				if()!getMotors().containsKey(MotorPosition.left.toString()) || !getMotors().containsKey(MotorPosition.right.toString())){
+					throw new IllegalArgumentException("Invalid motor configuration for TankDrive system with 2 motors.");
+				}
+				robotDrive = new RobotDrive(get(MotorPosition.left), get(MotorPosition.right));
+			}
+			else if(getMotors().size()==4){
+				if(!getMotors().containsKey(MotorPosition.rearLeft.toString()) || !getMotors().containsKey(MotorPosition.frontLeft.toString())
+						  || !getMotors().containsKey(MotorPosition.rearRight.toString()) || !getMotors().containsKey(MotorPosition.frontRight.toString())){
+					throw new IllegalArgumentException("Invalid motor configuration for TankDrive system with 4 motors.");
+				}
+				robotDrive = new RobotDrive(new MultiSpeedController(new SpeedController[]{get(MotorPosition.rearLeft), get(MotorPosition.frontLeft)}),
+						new MultiSpeedController(new SpeedController[]{get(MotorPosition.rearRight), get(MotorPosition.frontRight)}));
+			}
 			break;
 		case MecanumDrive:
 			if(getMotors()==null || !getMotors().containsKey(MotorPosition.rearLeft.toString()) || !getMotors().containsKey(MotorPosition.frontLeft.toString())
@@ -102,14 +104,57 @@ public class MDDriveSubsystem extends MDSubsystem {
 		//set up default command, as needed
 		setDefaultCommand(new ArcadeDriveCommand(getRobot()));
 	}
-	public void arcadeDrive(Joystick joystick) {
-	  double rightTriggerValue = joystick.getRawAxis(3);
-	  double leftTriggerValue = -joystick.getRawAxis(2);
-	  double forward = (rightTriggerValue+leftTriggerValue)*(1.0-(1.0-c));
-  	  double rotate = joystick.getRawAxis(0);
-  	  double[] speeds = interpolator.calculate(forward, rotate);
 	
-	  robotDrive.tankDrive(-speeds[0], speeds[1]);
+	private double calculateMagnitude(double x,double y){
+		//joystick will give x & y in a range of -1 <= 0 <= 1
+		// the magnitude indicates how fast the robot shoudl be driving
+		// use the distance formula:  s = sqrt(x^2 = y^2)
+		return Math.sqrt(Math.pow(x, 2)+Math.pow(y, 2));
+	}
+	
+	private double calculateDirection(double x, double y){
+		private double calculateMagnitude(double x,double y){
+			//joystick will give x & y in a range of -1 <= 0 <= 1
+			// the direction indicates in what angle the robot should move. this is not rotation.
+			// 0 degrees means go straight
+			// 180 degrees means back up
+			// 90 degrees means go to the right
+			// use trigonometry.  Tangent (angle) = opposite (in our case x) / adjacent (in our case y)
+			// we have x & y, solve for angle by taking the inverse tangent
+			// angle = tangent^-1(x/y)
+			// since this includes a division we need logic to handle things when x & y are 0
+			double angle = 0;
+			if(y==0){
+				if(x>0) angle = Math.PI/2;
+				if (x<0) angle = -Math.PI/2;
+			}
+			else if (x==0){
+				if(y<0) angle = -Math.PI;
+			}
+			else{
+				angle = Math.atan2(x, y);
+			}
+			return angle;  //range is -pi to +pi
+			//TODO: Do we need to convert to degrees?
+		}
+	}
+	
+	public void arcadeDrive(Joystick joystick) {
+		switch(type){
+		case MecanumDrive:
+			double magnitude= calculateMagnitude(joystick.getRawAxis(0),joystick.getRawAxis(1));
+			double direction = calculateDirection(joystick.getRawAxis(0),joystick.getRawAxis(1));
+			double rotation = joystick.getRawAxis(5);
+			robotDrive.mecanumDrive_Polar(magnitude, direction, rotation);
+			break;
+		default:
+			  double rightTriggerValue = joystick.getRawAxis(3);
+			  double leftTriggerValue = -joystick.getRawAxis(2);
+			  double forward = (rightTriggerValue+leftTriggerValue)*(1.0-(1.0-c));
+		  	  double rotate = joystick.getRawAxis(0);
+		  	  double[] speeds = interpolator.calculate(forward, rotate);
+			  robotDrive.tankDrive(-speeds[0], speeds[1]);
+		}
 	}
 	
 	public void stop(){
