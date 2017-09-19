@@ -3,27 +3,24 @@ package org.usfirst.frc.team4141.MDRobotBase.eventmanager;
 public abstract class Notification {
 	
 	private long messageId = -1;
-	private boolean display = false;
 	private boolean record = false;
-	private boolean broadcast = false;
-	private boolean showJavaConsole = false;
+	private String target;
+	private boolean showInConsole = false;
 	private String notificationType;
 
 	public String getNotificationType() {
 		return notificationType;
 	}
 
-	public boolean showJavaConsole() {
-		return showJavaConsole;
+	public boolean showInConsole() {
+		return showInConsole;
 	}
-	public boolean dislay() {
-		return display;
-	}
+
 	public boolean record() {
 		return record;
 	}
-	public boolean broadcast(){
-		return broadcast;
+	public String getTarget(){
+		return target;
 	}
 	
 	public long getMessageId() {
@@ -33,16 +30,15 @@ public abstract class Notification {
 		this.messageId =  messageId;
 	}
 		
-	public Notification(String notificationType,boolean showJavaConsole,boolean broadcast,boolean record,boolean display){
+	public Notification(String notificationType,boolean showInConsole,String target,boolean record){
 		this.notificationType = notificationType;
-		this.showJavaConsole = showJavaConsole;
-		this.broadcast = broadcast;
-		this.display = display;
+		this.showInConsole = showInConsole;
+		this.target = target;
 		this.record = record;
 		sb = new StringBuilder();
 	}
 	public Notification(String notificationType){
-		this(notificationType,false,true,false,true);
+		this(notificationType,false,null,false);
 	}
 	
 	protected abstract void addJSONPayload();
@@ -57,8 +53,11 @@ public abstract class Notification {
 		sb.append("\"eventType\":\"");
 		sb.append(getNotificationType());
 		sb.append("\"");
-		sb.append(", \"display\":");
-		sb.append(dislay());
+		if(getTarget()!=null){
+			sb.append(", \"target\":\"");
+			sb.append(getTarget());
+			sb.append("\"");
+		}
 		sb.append(", \"record\":");
 		sb.append(record());
 		addJSONPayload();

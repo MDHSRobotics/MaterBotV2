@@ -5,6 +5,8 @@ import java.util.Hashtable;
 import org.usfirst.frc.team4141.MDRobotBase.notifications.ConsoleRumbleNotification;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.GenericHID.HIDType;
+import edu.wpi.first.wpilibj.command.Command;
 
 
 public class ConsoleOI extends MDGenericHID {
@@ -20,12 +22,13 @@ public class ConsoleOI extends MDGenericHID {
 	}
 	
 	public ConsoleOI(MDRobotBase robot, String name) {
-		super(robot,name);
-		this.buttons = new Hashtable<Integer,MDConsoleButton>();
-		
-		System.out.println("ConsoleOI created");
+		super(robot,name,-1,HIDType.kXInputUnknown);
+		this.buttons = new Hashtable<Integer,MDConsoleButton>();		
+		debug("ConsoleOI created");
 	}
 	
+
+
 	public Hashtable<Integer,MDConsoleButton> getButtons() { return buttons;}
 
 
@@ -53,7 +56,7 @@ public class ConsoleOI extends MDGenericHID {
 		return this;
 	}
 	
-	public ConsoleOI whenPressed(String buttonName,int buttonNumber,MDCommand command){
+	public ConsoleOI whenPressed(String buttonName,int buttonNumber,Command command){
 			MDConsoleButton button = new MDConsoleButton(this, buttonName, buttonNumber);
 			button.whenPressed(command);
 			buttons.put(new Integer(buttonNumber), button);
@@ -81,6 +84,6 @@ public class ConsoleOI extends MDGenericHID {
 	public boolean isConfigured(){ return isConfigured;}
 
 	public void setRumble(Joystick.RumbleType hand,double value) {
-		getRobot().post(new ConsoleRumbleNotification(getRobot(),hand,value,true,true));
+		getRobot().post(new ConsoleRumbleNotification(getRobot(),hand,value));
 	}
 }

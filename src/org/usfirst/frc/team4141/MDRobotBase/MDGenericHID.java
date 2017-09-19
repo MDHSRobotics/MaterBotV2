@@ -2,14 +2,18 @@ package org.usfirst.frc.team4141.MDRobotBase;
 
 import edu.wpi.first.wpilibj.GenericHID;
 
+//TODO Fixed a error by copping some code
 public class MDGenericHID extends GenericHID {
 	private MDRobotBase robot;
 	private String name;
+	private HIDType type;
 	public String getName() {return name;}
 	public MDRobotBase getRobot() {return robot;}
-	public MDGenericHID(MDRobotBase robot, String name){
+	public MDGenericHID(MDRobotBase robot, String name, int port, HIDType type){
+		super(port);
 		this.robot = robot;
 		this.name = name;
+		this.type = type;
 	}
 	@Override
 	public double getX(Hand hand) {
@@ -20,39 +24,39 @@ public class MDGenericHID extends GenericHID {
 		return super.getY();
 	}
 	@Override
-	public double getZ(Hand hand) {
-		return super.getZ();
-	}
-	@Override
-	public double getTwist() {
-		return 0;
-	}
-	@Override
-	public double getThrottle() {
-		return 0;
-	}
-	@Override
 	public double getRawAxis(int which) {
 		return 0;
-	}
-	@Override
-	public boolean getTrigger(Hand hand) {
-		return super.getTrigger();
-	}
-	@Override
-	public boolean getTop(Hand hand) {
-		return super.getTop();
-	}
-	@Override
-	public boolean getBumper(Hand hand) {
-		return super.getBumper();
 	}
 	@Override
 	public boolean getRawButton(int button) {
 		return false;
 	}
+	
+	public void debug(String message) {
+		getRobot().debug(message);		
+	}
+
+	@Override
+	public HIDType getType() {
+		return type;
+	}
+	@Override
+	public void setOutput(int outputNumber, boolean value) {
+	}
+
+	@Override
+	public void setOutputs(int value) {
+	}
+
+	@Override
+	public void setRumble(RumbleType type, double value) {
+	}
+	@Override
+	public int getPOVCount() {
+		return 0;
+	}
 	@Override
 	public int getPOV(int pov) {
 		return super.getPOV();
-	}	
+	}
 }

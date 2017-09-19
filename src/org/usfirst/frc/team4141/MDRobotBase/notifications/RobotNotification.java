@@ -12,14 +12,9 @@ public abstract class RobotNotification extends Notification {
 	public double getFpgaTime() {
 		return fpgaTime;
 	}
-	public RobotNotification(String notificationType){
-		this(notificationType,false);
-	}
-	public RobotNotification(String notificationType,boolean showJavaConsole){
-		this(notificationType,showJavaConsole,false,false,false);
-	}
-	public RobotNotification(String notificationType,boolean showJavaConsole,boolean display,boolean broadcast,boolean record){
-		super(notificationType,showJavaConsole,broadcast,record,display);
+
+	public RobotNotification(String notificationType,boolean showInConsole,String target,boolean record){
+		super(notificationType,showInConsole,target,record);
 		this.fpgaTime = Timer.getFPGATimestamp();
 	}
 
@@ -42,8 +37,12 @@ public abstract class RobotNotification extends Notification {
 		}
 		sb.append("\"eventType\":\"");
 		sb.append(getNotificationType());
-		sb.append("\",\"display\":");
-		sb.append(this.dislay());
+		sb.append("\"");
+		if(getTarget()!=null){
+			sb.append(", \"target\":\"");
+			sb.append(getTarget());
+			sb.append("\"");
+		}
 		sb.append(",\"record\":");
 		sb.append(this.record());
 		addJSONPayload();

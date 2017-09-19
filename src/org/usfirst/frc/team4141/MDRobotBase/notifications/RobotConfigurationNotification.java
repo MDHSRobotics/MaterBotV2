@@ -8,28 +8,31 @@ import org.usfirst.frc.team4141.MDRobotBase.MDSubsystem;
 import org.usfirst.frc.team4141.MDRobotBase.config.ConfigSetting;
 import org.usfirst.frc.team4141.MDRobotBase.sensors.Sensor;
 import org.usfirst.frc.team4141.MDRobotBase.sensors.SensorReading;
+import org.usfirst.frc.team4141.robot.subsystems.WebSocketSubsystem;
+
+import com.ctre.CANTalon;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.SolenoidBase;
+import edu.wpi.first.wpilibj.SpeedController;
 
 public class RobotConfigurationNotification extends RobotNotification {
 	
 	
 	private MDRobotBase robot;
 	public RobotConfigurationNotification(MDRobotBase robot) {
-		this(robot, false, false, true, true);
+		this(robot, false, WebSocketSubsystem.Remote.console.toString(), true);
 	}
-	public RobotConfigurationNotification(MDRobotBase robot,boolean showMDConsole) {
-		this(robot, false, showMDConsole,true, true);
+
+	public RobotConfigurationNotification(MDRobotBase robot, boolean record) {
+		this(robot, true, WebSocketSubsystem.Remote.console.toString(), record);
 	}
-	public RobotConfigurationNotification(MDRobotBase robot,boolean showMDConsole, boolean record) {
-		this(robot, false, showMDConsole,true, record);
-	}
-	public RobotConfigurationNotification(MDRobotBase robot, boolean showJavaConsole, boolean showMDConsole, boolean broadcast, boolean record) {
-		super("RobotConfigurationNotification", showJavaConsole, showMDConsole, broadcast, record);
+	
+	public RobotConfigurationNotification(MDRobotBase robot, boolean showInConsole, String target, boolean record) {
+		super("RobotConfigurationNotification", showInConsole, target, record);
 		this.robot = robot;
 	}
 
@@ -52,7 +55,7 @@ public class RobotConfigurationNotification extends RobotNotification {
 				if(firstWritten) sb.append(", ");
 				else firstWritten = true;
 				Hashtable<String, ConfigSetting> settings = subsystem.getConfigSettings();
-				Hashtable<String, PWM> motors = subsystem.getMotors();
+				Hashtable<String, SpeedController> motors = subsystem.getMotors();
 				Hashtable<String, SolenoidBase> solenoids = subsystem.getSolenoids();
 				Hashtable<String, Sensor> sensors = subsystem.getSensors();
 					sb.append("\"");
@@ -93,8 +96,7 @@ public class RobotConfigurationNotification extends RobotNotification {
 			sb.append("}");
 		}
 		if(robot.getOi().getConsole()!=null){
-			System.out.println("MDConsoleOI to configure");
-
+			
 			sb.append(", \"consoleOI\":{");
 			sb.append("\"rumbles\":{");
 			sb.append("\"left\":0,");
@@ -103,7 +105,6 @@ public class RobotConfigurationNotification extends RobotNotification {
 			sb.append("\"buttons\":[");
 			boolean first = true;
 			for(Integer buttonIndex : robot.getOi().getConsole().getButtons().keySet()){
-				System.out.println("buttonIndex: "+buttonIndex);
 				if(first){first = false;}
 				else{
 					sb.append(", ");
@@ -188,7 +189,7 @@ public class RobotConfigurationNotification extends RobotNotification {
 		sb.append("}");
 	}
 
-	private void appendMotors(Hashtable<String, PWM> motors) {
+	private void appendMotors(Hashtable<String, SpeedController> motors) {
 		boolean first = true;
 		for(String motorName : motors.keySet()){
 			if(first) first = false;
@@ -197,22 +198,27 @@ public class RobotConfigurationNotification extends RobotNotification {
 		}
 	}
 	
-	private void append(String motorName,PWM motor) {
+	private void append(String motorName,SpeedController motor) {
 		sb.append("{\"name\":\"");
 		sb.append(motorName);
-		sb.append("\", \"channel\":\"");
-		sb.append(motor.getChannel());
-		sb.append("\", \"isServo\":");
+		sb.append("\"");
+		if(motor instanceof PWM){
+			sb.append(", \"channel\":");
+			sb.append(((PWM)motor).getChannel());
+			sb.append("");
+		}
+		if(motor instanceof CANTalon){
+			sb.append(", \"channel\":");
+			sb.append(((CANTalon)motor).getDeviceID());
+			sb.append("");
+		}
+		sb.append(", \"isServo\":");
 		if(motor instanceof Servo){
 			sb.append(true);
 		}
 		else{
 			sb.append(false);
 		}
-		sb.append(", \"position\":");
-		sb.append(motor.getPosition());
-		sb.append(", \"speed\":");
-		sb.append(motor.getSpeed());
 		sb.append(", \"class\":\"");
 		sb.append(motor.getClass().getName());
 		sb.append("\"");

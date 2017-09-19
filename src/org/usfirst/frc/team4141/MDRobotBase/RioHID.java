@@ -3,6 +3,7 @@ package org.usfirst.frc.team4141.MDRobotBase;
 
 
 import edu.wpi.first.wpilibj.Notifier;
+import edu.wpi.first.wpilibj.GenericHID.HIDType;
 import edu.wpi.first.wpilibj.buttons.InternalButton;
 
 public class RioHID extends MDGenericHID {
@@ -17,24 +18,22 @@ public class RioHID extends MDGenericHID {
 		this(robot,"RioHID");
 	}
 	public RioHID(MDRobotBase robot, String name) {
-		super(robot,name);
+		super(robot,name,-2,HIDType.kXInputUnknown);
 		this.userButton = new InternalButton();
 		this.agent = new Notifier(new UserButtonAgent(userButton));
 		agent.startPeriodic(0.2);
-		System.out.println("RioHID created");
+		debug("RioHID created");
 	}
 
-
 	@Override
-	public boolean getTrigger(Hand hand) {
-		return userButton.get();
+	public int getPOV() {
+		return (userButton.get()?1:0);
 	}
 
 
 	@Override
 	public boolean getRawButton(int button) {
-		if(button==0) return userButton.get();
-		return false;
+		return userButton.get();
 	}
 
 

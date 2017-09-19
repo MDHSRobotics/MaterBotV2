@@ -2,10 +2,11 @@ package org.usfirst.frc.team4141.robot.commands;
 
 import java.util.Date;
 
-import org.usfirst.frc.team4141.MDRobotBase.Logger.Level;
 import org.usfirst.frc.team4141.MDRobotBase.MDCommand;
 import org.usfirst.frc.team4141.MDRobotBase.MDRobotBase;
 import org.usfirst.frc.team4141.MDRobotBase.MDSubsystem;
+import org.usfirst.frc.team4141.MDRobotBase.eventmanager.LogNotification.Level;
+import org.usfirst.frc.team4141.robot.commands.MDMoveCommand.Direction;
 import org.usfirst.frc.team4141.robot.subsystems.MDDriveSubsystem;
 
 public class MDMoveCommand extends MDCommand {
@@ -14,8 +15,10 @@ public class MDMoveCommand extends MDCommand {
 	// the duration is defaulted to 3 seconds
 	// speed is defaulted to 0.5
 	private double duration = 3000; //3 seconds in milliseconds
-	private double speed = 0.5;
-	
+	private double speed = 0.6;
+	private Direction direction;
+	private long start;
+	private MDDriveSubsystem driveSystem;
 	public enum Direction{
 		left,
 		reverse,
@@ -23,16 +26,15 @@ public class MDMoveCommand extends MDCommand {
 		forward
 	}
 
-	private Direction direction;
-	private long start;
-	private MDDriveSubsystem driveSystem;
-	
+	// ------------------------------------------------ //
 
 	public MDMoveCommand(MDRobotBase robot, String name, Direction direction) {
 		super(robot,name);
 		this.direction = direction;
 	}
 
+	// ------------------------------------------------ //
+	
 	public Direction getDirection() {
 		return direction;
 	}
@@ -40,6 +42,8 @@ public class MDMoveCommand extends MDCommand {
 	public void setDirection(Direction direction) {
 		this.direction = direction;
 	}
+	
+	// ------------------------------------------------ //
 	
 	@Override
 	protected void initialize() {
@@ -71,5 +75,10 @@ public class MDMoveCommand extends MDCommand {
 		default: //default to forward
 			driveSystem.forward(speed);
 		}
+	}
+	
+	@Override
+	protected void end() {
+		driveSystem.stop();
 	}
 }

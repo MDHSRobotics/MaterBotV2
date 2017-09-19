@@ -3,6 +3,8 @@
  */
 package org.usfirst.frc.team4141.MDRobotBase.eventmanager;
 
+import org.usfirst.frc.team4141.MDRobotBase.eventmanager.LogNotification.Level;
+
 /**
  * @author maps
  *
@@ -10,7 +12,7 @@ package org.usfirst.frc.team4141.MDRobotBase.eventmanager;
 public class LogNotification extends Notification {
 	public enum Level{
 		INFO,
-		WARN,
+		DEBUG,
 		ERROR
 	};
 	
@@ -34,11 +36,11 @@ public class LogNotification extends Notification {
 	 */
 
 	public LogNotification(Level level, String source,String message) {
-		this(level,source,message,true,true,false,true);
+		this(level,source,message,true,null,false);
 	}
 
-	public LogNotification(Level level, String source,String message,boolean showJavaConsole,boolean broadcast, boolean record, boolean display) {
-		super("LogNotification",showJavaConsole, broadcast,record,display);
+	public LogNotification(Level level, String source,String message,boolean showInConsole,String target, boolean record) {
+		super("LogNotification",showInConsole, target, record);
 		this.message = message;
 		this.source = source;
 		this.level = level;

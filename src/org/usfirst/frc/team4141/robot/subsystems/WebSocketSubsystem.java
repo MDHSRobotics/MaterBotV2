@@ -18,9 +18,12 @@ import org.usfirst.frc.team4141.MDRobotBase.eventmanager.EventManager;
 import org.usfirst.frc.team4141.MDRobotBase.eventmanager.EventManagerWebSocket;
 import org.usfirst.frc.team4141.MDRobotBase.eventmanager.JSON;
 import org.usfirst.frc.team4141.MDRobotBase.eventmanager.MessageHandler;
+import org.usfirst.frc.team4141.MDRobotBase.eventmanager.Request;
+import org.usfirst.frc.team4141.MDRobotBase.notifications.ConsoleConnectionNotification;
 import org.usfirst.frc.team4141.MDRobotBase.notifications.RobotConfigurationNotification;
 import org.usfirst.frc.team4141.MDRobotBase.notifications.RobotLogNotification;
 import org.usfirst.frc.team4141.MDRobotBase.notifications.RobotNotification;
+import org.usfirst.frc.team4141.robot.subsystems.WebSocketSubsystem.Remote;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Notifier;
@@ -30,17 +33,36 @@ public class WebSocketSubsystem extends MDSubsystem implements MessageHandler{
 	private EventManager eventManager;
 	private Notifier dispatcher;
 	private double updatePeriod = 0.1;  //0.1 seconds
-
+	
+	/**
+	 * This enum holds the two types of variables. The console being the interface
+	 * that we use to communicate with the robot, and the tegra being the on-board
+	 * Processor.
+	 */
+	public enum Remote {
+		console,
+		tegra
+	}
+	
+	// ------------------------------------------------ //
+	
+	/**
+	 * The constructor is used to hold the parameters robot and name.
+	 *  
+	 * @param robot the default name used after the MDRobotBase in the constructor
+	 * @param name the default name used after the string in the constructor
+	 */
 	public WebSocketSubsystem(MDRobotBase robot, String name) {
 		super(robot, name);
 		setCore(true);
 	}
-	
-	
 
+	/**
+	 * This method holds the default command used in a subsystem. 
+	 */
 	@Override
 	protected void initDefaultCommand() {
-//		System.out.println("WebSocketSubsystem.initDefaultCommand()");
+		System.out.println("WebSocketSubsystem.initDefaultCommand()");
 		dispatcher = new Notifier(new Dispatcher(eventManager));
 		dispatcher.startPeriodic(updatePeriod);
 	}
@@ -62,47 +84,28 @@ public class WebSocketSubsystem extends MDSubsystem implements MessageHandler{
 //		else{
 //			System.out.println("websockets disabled");
 //		}
-		System.out.println("starting event manager");
+		debug("starting event manager");
 		try {
 			eventManager.start();
-			announce();
 		} catch (Exception e) {
-			System.out.println("unable to start web socket manager");
+			debug("unable to start web socket manager");
 			e.printStackTrace();
 		}
 	}
-	private JmDNS jmdns;
 
-    private void announce() {
-    	 try {
-             // Create a JmDNS instance
-             jmdns = JmDNS.create(InetAddress.getLocalHost());
-
-             // Register a service
-             ServiceInfo serviceInfo = ServiceInfo.create("_ws._tcp.local.", "Team4141Robot", eventManager.getPort(), "");
-             jmdns.registerService(serviceInfo);
-
-         } catch (IOException e) {
-             System.out.println(e.getMessage());
-         }		
-		
-	}
+	// ------------------------------------------------ //
     
-    
-
-	//
-    //EventManager helper methods
-	public void post(RobotNotification notification){
+	public void post(RobotNotification notification){ // EventManager Helper Methods
 		if(eventManager.isWebSocketsEnabled()){
 			eventManager.post(notification);
-		}
+		} 
 	}
 
 	@SuppressWarnings({"rawtypes" })
 	@Override
-	public void process(String messageText) {
-//		System.out.println("Robot received message: "+messageText);
-		Map message = JSON.parse(messageText);
+	public void process(Request request) {
+		//System.out.println("Robot received message: "+request.getMessage());
+		Map message = JSON.parse(request.getMessage());
 		if(message.containsKey("type")){
 			String type = message.get("type").toString();
 			if(type.equals("consoleButtonUpdate")){
@@ -112,19 +115,66 @@ public class WebSocketSubsystem extends MDSubsystem implements MessageHandler{
 				updateSetting(message);
 			}
 			if(type.equals("remoteIdentification")){
-				addRemote(message);
+				identifyRemote(request,message);
+			}
+			if(type.equals("targetAcquiredNotification")){
+				targetAcquired(request,message);
 			}
 		}
 		message.keySet();
 	}
 
-	private void addRemote(Map message) {
-		if(message.containsKey("id")){
-			System.out.printf("%s connected!\n",message.get("id"));
+	private void targetAcquired(Request request, Map message) {
+		if(message.containsKey("filter") && message.containsKey("targetAcquired")){
+			HolySeeSubsystem visionSystem = (HolySeeSubsystem) getRobot().getSubsystems().get("HolySeeSubsystem");
+			String filter = (String)message.get("filter");
+			boolean targetAcquired = ((Boolean)message.get("targetAcquired")).booleanValue();
+			System.out.println("filter "+ filter +" targetAcquired: "+(targetAcquired?"true":"false"));
+			if(filter.equals("steamAR")){
+			
+			}
+			else if(filter.equals("gearAR")){
+	
+			}
+			else if(filter.equals("circleAR")){
+	
+			}
 		}
 	}
 
+	// ------------------------------------------------ //
 
+	private void identifyRemote(Request request, Map message) {
+		if(message.containsKey("id")){
+			request.getSocket().setName((String)message.get("id"));
+			debug(message.get("id")+" connected!");
+			eventManager.identify((String)message.get("id"),request.getSocket());
+			if(message.get("id").equals(Remote.console.toString())){
+				log("identifyRemote",Remote.console.toString()+" connected.");
+				eventManager.post(new RobotConfigurationNotification(getRobot()));
+//				String consoleAddress="10.41.41.101";  //TODO:  get from Request object
+				String consoleAddress=request.getSocket().getSession().getRemoteAddress().getHostString();
+				if(getRobot().getSubsystems()!=null && getRobot().getSubsystems().containsKey("HolySeeSubsystem")){
+					HolySeeSubsystem visionSystem = (HolySeeSubsystem) getRobot().getSubsystems().get("HolySeeSubsystem");
+					visionSystem.setConsoleAddress(consoleAddress);
+					if(visionSystem.getVisionConnected()){
+						eventManager.post(new ConsoleConnectionNotification(getRobot(),visionSystem.getConsoleAddress()));
+					}
+				}
+			}
+			if(message.get("id").equals(Remote.tegra.toString())){
+				log("identifyRemote",Remote.console.toString()+" connected.");
+				if(getRobot().getSubsystems()!=null && getRobot().getSubsystems().containsKey("HolySeeSubsystem")){
+					HolySeeSubsystem visionSystem = (HolySeeSubsystem) getRobot().getSubsystems().get("HolySeeSubsystem");
+					visionSystem.setVisionConnected(true);
+					visionSystem.setTegraAddress(request.getSocket().getSession().getRemoteAddress().getHostName());
+					if(visionSystem.getConsoleAddress()!=null && visionSystem.getConsoleAddress().length()>0){
+						eventManager.post(new ConsoleConnectionNotification(getRobot(),visionSystem.getConsoleAddress()));
+					}
+				}
+			}
+		}
+	}
 
 	@SuppressWarnings("rawtypes")
 	private void updateSetting(Map message) {
@@ -138,21 +188,21 @@ public class WebSocketSubsystem extends MDSubsystem implements MessageHandler{
 			String settingName = (String)(message.get("settingName"));
 			if(geRobot().getSubsystems().containsKey(subsystemName)){
 				MDSubsystem subsystem = getRobot().getSubsystems().get(subsystemName);
-				System.out.println("changing setting for subsystem "+subsystem.getName());
+				debug("changing setting for subsystem "+subsystem.getName());
 				if(subsystem.hasSetting(settingName)){
 					ConfigSetting setting = subsystem.getSetting(settingName);
-					System.out.println("updating setting "+setting.getName());
+					debug("updating setting "+setting.getName());
 					if(message.containsKey("value")){
 						setting.setValue(message.get("value"));
-						System.out.println("value now set to "+setting.getValue().toString());
+						debug("value now set to "+setting.getValue().toString());
 					}
 					if(message.containsKey("min")){
 						setting.setMin(message.get("min"));
-						System.out.println("min now set to "+setting.getMin().toString());
+						debug("min now set to "+setting.getMin().toString());
 					}
 					if(message.containsKey("max")){
 						setting.setMax(message.get("max"));
-						System.out.println("max now set to "+setting.getMax().toString());
+						debug("max now set to "+setting.getMax().toString());
 					}
 					subsystem.settingChangeListener(setting);
 					ConfigPreferenceManager.save(setting);
@@ -176,7 +226,7 @@ public class WebSocketSubsystem extends MDSubsystem implements MessageHandler{
 				if(button.getName().equals(name)){
 					button.setPressed(pressed);
 					if(name.equals("ExampleCommand1") && pressed){
-						System.out.println("need to rumble");
+						debug("need to rumble");
 						getRobot().getOi().getConsole().setRumble(Joystick.RumbleType.kLeftRumble,0.5);
 					}
 				}
@@ -184,33 +234,44 @@ public class WebSocketSubsystem extends MDSubsystem implements MessageHandler{
 		}
 	}
 
+	// ------------------------------------------------ //
+	
 	public MDRobotBase geRobot() {
-		
 		return getRobot();
 	}
 	
 	@Override
 	public void settingChangeListener(ConfigSetting changedSetting) {
-		System.out.println(changedSetting.getPath()+ " was changed to "+ changedSetting.getValue().toString());
+		debug(changedSetting.getPath()+ " was changed to "+ changedSetting.getValue().toString());
 		if(changedSetting.getName().equals("enableWebSockets") && changedSetting.getType().equals(Type.binary)){
 			//we know that enableWe
 			if(changedSetting.getBoolean()){
-				System.out.println("enabling websockets");
+				debug("enabling websockets");
 				eventManager.enableWebSockets();
 			}
 			else{
-				System.out.println("disabling websockets");
+				debug("disabling websockets");
 				eventManager.disableWebSockets();
 			}
 		}
 	}
 
+	// ------------------------------------------------ //
+	
 	@Override
-	public void connect(EventManagerWebSocket socket) {
-		eventManager.post(new RobotLogNotification(this.getClass().getName()+".connect()","Connection"));
-		eventManager.post(new RobotConfigurationNotification(getRobot()));
+	public void connect(EventManagerWebSocket socket) {	
+	}
 
-		
+	@Override
+	public void close(EventManagerWebSocket socket) {
+        System.out.println("session closed: "+socket.getName());
+
+		if(socket.getName().equals(Remote.tegra.toString())){
+			if(getRobot().getSubsystems()!=null && getRobot().getSubsystems().containsKey("HolySeeSubsystem")){
+				HolySeeSubsystem visionSystem = (HolySeeSubsystem) getRobot().getSubsystems().get("HolySeeSubsystem");
+				visionSystem.setVisionConnected(false);
+			}
+		}
 	}
 
 }
