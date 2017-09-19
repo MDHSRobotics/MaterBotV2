@@ -13,6 +13,9 @@ import org.usfirst.frc.team4141.robot.subsystems.MDDriveSubsystem;
 import org.usfirst.frc.team4141.robot.subsystems.MDDriveSubsystem.MotorPosition;
 import org.usfirst.frc.team4141.robot.subsystems.MDDriveSubsystem.Type;
 
+import com.ctre.CANTalon;
+
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Victor;
 
 /**
@@ -51,13 +54,20 @@ public class Robot extends MDRobotBase {
 		//We have 2 types of drive systems, tank drive and mecanum drive
 		//uncomment the desired drive system and adjust the motor configuration as needed
 		//Mecanum example :
-		add(new MDDriveSubsystem(this, "driveSystem", Type.MecanumDrive)
-				.add(MotorPosition.frontRight, new Victor(0))
-				.add(MotorPosition.rearRight, new Victor(1))
-				.add(MotorPosition.frontLeft, new Victor(2))
-				.add(MotorPosition.rearLeft, new Victor(3))
+		add(new MDDriveSubsystem(this, "driveSystem", Type.TankDrive)
 				.add("accelerometer", new MD_BuiltInAccelerometer())
 				.add("IMU", new MD_IMU())
+				.add(MotorPosition.frontLeft, new CANTalon(3))
+				.add(MotorPosition.frontRight, new CANTalon(4))
+				.add(MotorPosition.rearLeft, new CANTalon(5))
+				.add(MotorPosition.rearRight, new CANTalon(6))
+				.add("Drive-F", new DoubleConfigSetting(0.0, 1.0, 0.0))
+		 	    .add("Drive-P", new DoubleConfigSetting(0.0, 1.0, 0.1))
+				.add("Drive-I", new DoubleConfigSetting(0.0, 1.0, 0.8))
+				.add("Drive-D", new DoubleConfigSetting(0.0, 1.0, 0.1))
+				.add("a", new DoubleConfigSetting(0.0, 1.0, 0.25)) //High Speed - Turn Factor
+		 	    .add("b", new DoubleConfigSetting(0.0, 1.0, 0.4)) //Slow Speed - Turn Factor
+				.add("c", new DoubleConfigSetting(0.0, 1.0, 1.0)) //Speed Governor
 				.configure()
 		);	
 		

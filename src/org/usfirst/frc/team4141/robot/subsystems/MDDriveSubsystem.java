@@ -47,30 +47,24 @@ public class MDDriveSubsystem extends MDSubsystem {
 	
 	private RobotDrive robotDrive;
 	private Type type;
- // private boolean isHighGear = false;
 	private boolean isFlipped = false;
 	private boolean resettingGyro = false;
 	private long gyroResetStart;
 	private long gyroResetDuration = 150;
 	private double speed = 0;
 	private double c = 1.0;
-	public static String rightShiftSolenoidName = "rightShiftSolenoid";
-//	public static String leftShiftSolenoidName = "leftShiftSolenoid";
-	private Solenoid rightShiftSolenoid;
-//	private Solenoid leftShiftSolenoid;
 	private MD_IMU imu;
 	private TankDriveInterpolator interpolator = new TankDriveInterpolator();
 	
-//	private double F=0.0;
-//	private double P=0.0;
-//	private double I=0.1;
-//	private double D=0.0;
+	private double F=0.0;
+	private double P=0.0;
+	private double I=0.1;
+	private double D=0.0;
 //	private double rpm=1.0;
-//	
-//	private CANTalon rearLeftTalon;
-//	private CANTalon rearRightTalon;
-//	private CANTalon frontLeftTalon;
-//	private CANTalon frontRightTalon;
+	private CANTalon rearLeftTalon;
+	private CANTalon rearRightTalon;
+	private CANTalon frontLeftTalon;
+	private CANTalon frontRightTalon;
 	
 	// ------------------------------------------------ //
 	
@@ -160,11 +154,11 @@ public class MDDriveSubsystem extends MDSubsystem {
 						new MultiSpeedController(new SpeedController[]{get(MotorPosition.rearRight), get(MotorPosition.frontRight)}));
 			}
 			
-			if(getSolenoids()==null 
-					|| !getSolenoids().containsKey(rightShiftSolenoidName) || !(getSolenoids().get(rightShiftSolenoidName) instanceof Solenoid)) {
-					throw new IllegalArgumentException("Invalid MDDriveSubsystem configuraton, missing shift solenoid.");
-			}	
-			rightShiftSolenoid=(Solenoid) getSolenoids().get(rightShiftSolenoidName);
+//			if(getSolenoids()==null 
+//					|| !getSolenoids().containsKey(rightShiftSolenoidName) || !(getSolenoids().get(rightShiftSolenoidName) instanceof Solenoid)) {
+//					throw new IllegalArgumentException("Invalid MDDriveSubsystem configuraton, missing shift solenoid.");
+//			}	
+//			rightShiftSolenoid=(Solenoid) getSolenoids().get(rightShiftSolenoidName);
 
 //			if(getSolenoids()==null 
 //					|| !getSolenoids().containsKey(leftShiftSolenoidName) || !(getSolenoids().get(leftShiftSolenoidName) instanceof Solenoid)) {
@@ -180,10 +174,10 @@ public class MDDriveSubsystem extends MDSubsystem {
 		    if(getSensors()==null && !getSensors().containsKey("High Gear")){
 				throw new IllegalArgumentException("Invalid MDDriveSubsystem configuraton, missing Gear Shift Sensors.");
 			}
-//		    rearLeftTalon = (CANTalon)(getMotors().get(MotorPosition.rearLeft));
-//		    rearRightTalon = (CANTalon)(getMotors().get(MotorPosition.rearRight));
-//		    frontLeftTalon = (CANTalon)(getMotors().get(MotorPosition.frontLeft));
-//		    frontRightTalon = (CANTalon)(getMotors().get(MotorPosition.frontRight));
+		    rearLeftTalon = (CANTalon)(getMotors().get(MotorPosition.rearLeft));
+		    rearRightTalon = (CANTalon)(getMotors().get(MotorPosition.rearRight));
+		    frontLeftTalon = (CANTalon)(getMotors().get(MotorPosition.frontLeft));
+		    frontRightTalon = (CANTalon)(getMotors().get(MotorPosition.frontRight));
 			
 			
 			break;
