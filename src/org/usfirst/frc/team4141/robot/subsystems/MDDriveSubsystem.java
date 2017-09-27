@@ -56,15 +56,16 @@ public class MDDriveSubsystem extends MDSubsystem {
 	private MD_IMU imu;
 	private TankDriveInterpolator interpolator = new TankDriveInterpolator();
 	
-	private double F=0.0;
-	private double P=0.0;
-	private double I=0.1;
-	private double D=0.0;
+//	private double F=0.0;
+//	private double P=0.0;
+//	private double I=0.1;
+//	private double D=0.0;
 //	private double rpm=1.0;
-	private CANTalon rearLeftTalon;
-	private CANTalon rearRightTalon;
-	private CANTalon frontLeftTalon;
-	private CANTalon frontRightTalon;
+//	rearLeftTalon.setPID(p, i, d, f);//chapter 12
+//	private CANTalon rearRightTalon;
+//	private CANTalon frontLeftTalon;
+//	private CANTalon frontRightTalon;
+
 	
 	// ------------------------------------------------ //
 	
@@ -174,10 +175,10 @@ public class MDDriveSubsystem extends MDSubsystem {
 		    if(getSensors()==null && !getSensors().containsKey("High Gear")){
 				throw new IllegalArgumentException("Invalid MDDriveSubsystem configuraton, missing Gear Shift Sensors.");
 			}
-		    rearLeftTalon = (CANTalon)(getMotors().get(MotorPosition.rearLeft));
-		    rearRightTalon = (CANTalon)(getMotors().get(MotorPosition.rearRight));
-		    frontLeftTalon = (CANTalon)(getMotors().get(MotorPosition.frontLeft));
-		    frontRightTalon = (CANTalon)(getMotors().get(MotorPosition.frontRight));
+//		    rearLeftTalon = (CANTalon)(getMotors().get(MotorPosition.rearLeft));
+//		    rearRightTalon = (CANTalon)(getMotors().get(MotorPosition.rearRight));
+//		    frontLeftTalon = (CANTalon)(getMotors().get(MotorPosition.frontLeft));
+//		    frontRightTalon = (CANTalon)(getMotors().get(MotorPosition.frontRight));
 			
 			
 			break;
@@ -276,7 +277,7 @@ public class MDDriveSubsystem extends MDSubsystem {
 		case MecanumDrive:
 			double magnitude= calculateMagnitude(joystick.getRawAxis(0),joystick.getRawAxis(1));
 			double direction = calculateDirection(-joystick.getRawAxis(0),-joystick.getRawAxis(1));
-			double rotation = joystick.getRawAxis(4);
+			double rotation = joystick.getRawAxis(1);
 			robotDrive.mecanumDrive_Polar(magnitude, direction, rotation);
 			break;
 		default:
@@ -284,7 +285,7 @@ public class MDDriveSubsystem extends MDSubsystem {
 		 //	double leftTriggerValue = -joystick.getRawAxis(2);
 			double forwardAxisValue = -joystick.getRawAxis(1);
 			double forward = (forwardAxisValue)*(1.0-(1.0-c));
-		  	double rotate = -joystick.getRawAxis(4); //(Changed to accompass shifting w/controller and deadzoned)
+		  	double rotate = -joystick.getRawAxis(0); //(Changed to accompass shifting w/controller and deadzoned)
 	  	  //debug("forward = " + forward + ", rotate = " + rotate);
 		  	double[] speeds = interpolator.calculate(forward, rotate);
 		    //debug("left: "+speeds[0]+", right: "+speeds[1]);
