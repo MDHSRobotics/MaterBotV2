@@ -42,6 +42,9 @@ public class MDDriveSubsystem extends MDSubsystem {
 		frontRight,
 		rearRight
 	}
+	public enum TalonPosition{
+		
+	}
 	
 	// ------------------------------------------------ //
 	
@@ -65,6 +68,7 @@ public class MDDriveSubsystem extends MDSubsystem {
 //	private CANTalon rearRightTalon;
 //	private CANTalon frontLeftTalon;
 //	private CANTalon frontRightTalon;
+//	private CANTalon rearLeftTalon;
 
 	
 	// ------------------------------------------------ //
@@ -153,6 +157,7 @@ public class MDDriveSubsystem extends MDSubsystem {
 				}
 				robotDrive = new RobotDrive(new MultiSpeedController(new SpeedController[]{get(MotorPosition.rearLeft), get(MotorPosition.frontLeft)}),
 						new MultiSpeedController(new SpeedController[]{get(MotorPosition.rearRight), get(MotorPosition.frontRight)}));
+
 			}
 			
 //			if(getSolenoids()==null 
@@ -175,10 +180,6 @@ public class MDDriveSubsystem extends MDSubsystem {
 		    if(getSensors()==null && !getSensors().containsKey("High Gear")){
 				throw new IllegalArgumentException("Invalid MDDriveSubsystem configuraton, missing Gear Shift Sensors.");
 			}
-//		    rearLeftTalon = (CANTalon)(getMotors().get(MotorPosition.rearLeft));
-//		    rearRightTalon = (CANTalon)(getMotors().get(MotorPosition.rearRight));
-//		    frontLeftTalon = (CANTalon)(getMotors().get(MotorPosition.frontLeft));
-//		    frontRightTalon = (CANTalon)(getMotors().get(MotorPosition.frontRight));
 			
 			
 			break;
@@ -289,7 +290,7 @@ public class MDDriveSubsystem extends MDSubsystem {
 	  	  //debug("forward = " + forward + ", rotate = " + rotate);
 		  	double[] speeds = interpolator.calculate(forward, rotate);
 		    //debug("left: "+speeds[0]+", right: "+speeds[1]);
-			robotDrive.tankDrive(-speeds[0], -speeds[1]);
+			robotDrive.tankDrive(speeds[0], -speeds[1]);
 		}
 	}
 	
