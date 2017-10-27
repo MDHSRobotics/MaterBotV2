@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="var" path="wpilib" sourcepath="wpilib.sources"/>
-	<classpathentry kind="var" path="networktables" sourcepath="networktables.sources"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
-	<classpathentry kind="lib" path="tools/gson-2.6.2.jar"/>
-	<classpathentry kind="lib" path="tools/jetty-http-9.3.7.v20160115.jar"/>
-	<classpathentry kind="lib" path="tools/jetty-io-9.3.7.v20160115.jar"/>
-	<classpathentry kind="lib" path="tools/jetty-server-9.3.7.v20160115.jar"/>
-	<classpathentry kind="lib" path="tools/jetty-util-9.3.7.v20160115.jar"/>
-	<classpathentry kind="lib" path="tools/servlet-api-3.1.jar"/>
-	<classpathentry kind="lib" path="tools/slf4j-api-1.7.21.jar"/>
-	<classpathentry kind="lib" path="tools/slf4j-simple-1.7.21.jar"/>
-	<classpathentry kind="lib" path="tools/websocket-api-9.3.7.v20160115.jar"/>
-	<classpathentry kind="lib" path="tools/websocket-common-9.3.7.v20160115.jar"/>
-	<classpathentry kind="lib" path="tools/websocket-server-9.3.7.v20160115.jar"/>
-	<classpathentry kind="lib" path="tools/websocket-servlet-9.3.7.v20160115.jar"/>
+	<classpathentry exported="true" kind="var" path="wpilib" sourcepath="wpilib.sources"/>
+	<classpathentry exported="true" kind="var" path="networktables" sourcepath="networktables.sources"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry exported="true" kind="lib" path="tools/gson-2.6.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="tools/jetty-http-9.3.7.v20160115.jar"/>
+	<classpathentry exported="true" kind="lib" path="tools/jetty-io-9.3.7.v20160115.jar"/>
+	<classpathentry exported="true" kind="lib" path="tools/jetty-server-9.3.7.v20160115.jar"/>
+	<classpathentry exported="true" kind="lib" path="tools/jetty-util-9.3.7.v20160115.jar"/>
+	<classpathentry exported="true" kind="lib" path="tools/servlet-api-3.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="tools/slf4j-api-1.7.21.jar"/>
+	<classpathentry exported="true" kind="lib" path="tools/slf4j-simple-1.7.21.jar"/>
+	<classpathentry exported="true" kind="lib" path="tools/websocket-api-9.3.7.v20160115.jar"/>
+	<classpathentry exported="true" kind="lib" path="tools/websocket-common-9.3.7.v20160115.jar"/>
+	<classpathentry exported="true" kind="lib" path="tools/websocket-server-9.3.7.v20160115.jar"/>
+	<classpathentry exported="true" kind="lib" path="tools/websocket-servlet-9.3.7.v20160115.jar"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="var" path="opencv" sourcepath="opencv.sources"/>
-	<classpathentry kind="var" path="cscore" sourcepath="cscore.sources"/>
-	<classpathentry kind="var" path="USERLIBS_DIR/CTRLib.jar"/>
-	<classpathentry kind="var" path="USERLIBS_DIR/gson-2.6.2.jar"/>
-	<classpathentry kind="var" path="USERLIBS_DIR/jetty-http-9.3.7.v20160115.jar"/>
-	<classpathentry kind="var" path="USERLIBS_DIR/jetty-io-9.3.7.v20160115.jar"/>
-	<classpathentry kind="var" path="USERLIBS_DIR/jetty-server-9.3.7.v20160115.jar"/>
-	<classpathentry kind="var" path="USERLIBS_DIR/jetty-util-9.3.7.v20160115.jar"/>
-	<classpathentry kind="var" path="USERLIBS_DIR/servlet-api-3.1.jar"/>
-	<classpathentry kind="var" path="USERLIBS_DIR/slf4j-api-1.7.21.jar"/>
-	<classpathentry kind="var" path="USERLIBS_DIR/slf4j-simple-1.7.21.jar"/>
-	<classpathentry kind="var" path="USERLIBS_DIR/websocket-api-9.3.7.v20160115.jar"/>
-	<classpathentry kind="var" path="USERLIBS_DIR/websocket-common-9.3.7.v20160115.jar"/>
-	<classpathentry kind="var" path="USERLIBS_DIR/websocket-server-9.3.7.v20160115.jar"/>
-	<classpathentry kind="var" path="USERLIBS_DIR/websocket-servlet-9.3.7.v20160115.jar"/>
+	<classpathentry exported="true" kind="var" path="opencv" sourcepath="opencv.sources"/>
+	<classpathentry exported="true" kind="var" path="cscore" sourcepath="cscore.sources"/>
+	<classpathentry exported="true" kind="var" path="USERLIBS_DIR/CTRLib.jar"/>
+	<classpathentry exported="true" kind="var" path="USERLIBS_DIR/gson-2.6.2.jar"/>
+	<classpathentry exported="true" kind="var" path="USERLIBS_DIR/jetty-http-9.3.7.v20160115.jar"/>
+	<classpathentry exported="true" kind="var" path="USERLIBS_DIR/jetty-io-9.3.7.v20160115.jar"/>
+	<classpathentry exported="true" kind="var" path="USERLIBS_DIR/jetty-server-9.3.7.v20160115.jar"/>
+	<classpathentry exported="true" kind="var" path="USERLIBS_DIR/jetty-util-9.3.7.v20160115.jar"/>
+	<classpathentry exported="true" kind="var" path="USERLIBS_DIR/servlet-api-3.1.jar"/>
+	<classpathentry exported="true" kind="var" path="USERLIBS_DIR/slf4j-api-1.7.21.jar"/>
+	<classpathentry exported="true" kind="var" path="USERLIBS_DIR/slf4j-simple-1.7.21.jar"/>
+	<classpathentry exported="true" kind="var" path="USERLIBS_DIR/websocket-api-9.3.7.v20160115.jar"/>
+	<classpathentry exported="true" kind="var" path="USERLIBS_DIR/websocket-common-9.3.7.v20160115.jar"/>
+	<classpathentry exported="true" kind="var" path="USERLIBS_DIR/websocket-server-9.3.7.v20160115.jar"/>
+	<classpathentry exported="true" kind="var" path="USERLIBS_DIR/websocket-servlet-9.3.7.v20160115.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
